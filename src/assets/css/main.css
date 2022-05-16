@@ -1,0 +1,94 @@
+/* Notiboy
+	1)Fonts
+	2)Root Variables
+	3) Notification Pane
+	4)Sidebar
+*/
+
+
+/* 1) Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap");
+
+/* 2) Root Variables */
+:root{
+	--primary: #0f0034;
+	--secondary: #09001f;
+	--teritary: #8800ff;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 10px;
+	background-color: var(--primary);
+	font-family: "Sora", sans-serif;
+}
+
+/* 3) Notification Pane */
+.notification-pane {
+	background: var(--secondary);
+	border-radius: 3rem;
+	margin-right: 8%;
+	margin-bottom: 4%;
+	margin-left: 1%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow: hidden;
+}
+.notification-header {
+	height: 20%;
+}
+.notification-main {
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-y: auto;
+	font-size: 1.3rem;
+	color: white;
+}
+  
+.notification-card {
+	width: 80%;
+	height: auto;
+	margin-bottom: 2rem;
+	border: 0.3rem solid var(--teritary);
+	border-radius: 0.6rem;
+}
+  
+.notification-footer {
+	height: 10%;
+}
+
+/* Scrollbar designing */
+::-webkit-scrollbar {
+	width: 10px;
+}
+  
+::-webkit-scrollbar-thumb:hover {
+	background: var(--teritary);
+}
+  
+::-webkit-scrollbar-thumb {
+	background: var(--teritary);
+	border-radius: 1rem;
+}
+
+/* 4) Sidebar */
+.sidebar-menu {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: space-around;
+	color: white;
+	list-style: none;
+	align-items: flex-start;
+	padding-left: 8rem;
+	font-size: 1.5rem;
+}
+  
+.sidebar-menu li {
+	cursor: pointer;
+}
