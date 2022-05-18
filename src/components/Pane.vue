@@ -9,86 +9,60 @@
     </div>
     <!-- <div class="notification-header"></div> -->
     <!-- Notification area which will be injected with notification cards -->
-    <div class="channel-main">
-      <div class="channel-card">
-        <div class="channel-card-name">
-          <p class="channel-name">AoA</p>
-          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
-        </div>
-        <div class="optin">Opt-In</div>
-      </div>
-      <div class="channel-card">
-        <div class="channel-card-name">
-          <p class="channel-name">Angrypenguins NFT</p>
-          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
-        </div>
-        <div class="optin">Opt-Out</div>
-      </div>
-      <div class="channel-card">
-        <div class="channel-card-name">
-          <p class="channel-name">Rand Labs</p>
-          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
-        </div>
-        <div class="optin">Opt-In</div>
-      </div>
-      <div class="channel-card">
-        <div class="channel-card-name">
-          <p class="channel-name">Rand Labs</p>
-          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
-        </div>
-        <div class="optin">Opt-In</div>
-      </div>
-      <div class="channel-card">
-        <div class="channel-card-name">
-          <p class="channel-name">Rand Labs</p>
-          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
-        </div>
-        <div class="optin">Opt-In</div>
-      </div>
-    </div>
+    
     <!-- Notification footer -->
     <div class="notification-footer"></div>
   </div>
 </template>
 
 <style scoped>
-.channel-main{
-  width: 90%;
+/* Notification Pane */
+.notification-pane {
+	background: var(--secondary);
+	border-radius: 3rem;
+	margin-right: 8%;
+	margin-bottom: 4%;
+	margin-left: 1%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	overflow-y: auto;
-	font-size: 1.2rem;
-	color: white;
+	overflow: hidden;
 }
 
-.channel-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 70%;
-    height: auto;
-	margin-bottom: 2rem;
-	background-color:  var(--primary);
-	border-radius: 0.6rem;
-    padding: 3% 2% 3% 2%;
+/* Search Bar */
+.search {
+	width: 25%;
+	display: flex;
+	margin: 4% 0;
 }
-
-.channel-card-name{
-  display: flex;
-  font-size: 1.8rem;
-  font-weight: bold;
-  align-items: center;
+  
+.searchTerm {
+	width: 100%;
+	border: 3px solid var(--primary);
+	border-right: none;
+	padding: 5px;
+	height: 20px;
+	border-radius: 5px 0 0 5px;
+	outline: none;
+	color: #ffffff;
+	background-color: var(--primary);
+	font-family: "Sora", sans-serif;
 }
-
-.optin{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 15%;
-  height: 50%;
-  border-radius: 0.6rem;
-  background-color: var(--teritary);
-  cursor: pointer;
+  
+.searchTerm:focus{
+	color: #ffffff;
+	font-family: "Sora", sans-serif;
+}
+  
+.searchButton {
+	width: 40px;
+	height: 36px;
+	border: 1px solid var(--primary);
+	background: var(--primary);
+	text-align: center;
+	color: #fff;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+	font-size: 20px;
 }
 </style>

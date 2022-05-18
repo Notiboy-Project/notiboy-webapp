@@ -40,7 +40,7 @@
 
 <style scoped>
 .channel-main{
-    width: 90%;
+  width: 90%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -55,9 +55,9 @@
     align-items: center;
     width: 70%;
     height: auto;
-	margin-bottom: 2rem;
-	background-color:  var(--primary);
-	border-radius: 0.6rem;
+	  margin-bottom: 2rem;
+	  background-color:  var(--primary);
+	  border-radius: 0.6rem;
     padding: 3% 2% 3% 2%;
 }
 

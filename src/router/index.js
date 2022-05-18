@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
+
 import Home from "../views/Home.vue";
+import Connect from "../views/Connect.vue";
 
 const routes = [
-  {
-    path: "/",
-    name: "Home",
-    component: Home,
-  },
+  { path: '/', redirect: '/notibox' },
+  { path: '/notibox', component: Home },
+  { path: '/connect', component: Connect}
   // {
   //   path: "/about",
   //   name: "About",
