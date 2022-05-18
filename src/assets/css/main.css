@@ -40,24 +40,6 @@ body {
 .notification-header {
 	height: 20%;
 }
-.notification-main {
-	width: 90%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	overflow-y: auto;
-	font-size: 1.3rem;
-	color: white;
-}
-  
-.notification-card {
-	width: 80%;
-	height: auto;
-	margin-bottom: 2rem;
-	border: 0.3rem solid var(--teritary);
-	border-radius: 0.6rem;
-}
-  
 .notification-footer {
 	height: 10%;
 }
@@ -77,6 +59,16 @@ body {
 }
 
 /* 4) Sidebar */
+.sidebar-scroll{
+	display: flex;
+
+	background: var(--secondary);
+	border-radius: 3rem;
+	margin-right: 8%;
+	margin-bottom: 10%;
+	margin-left: 8%;
+	min-height: 40rem;
+}
 .sidebar-menu {
 	display: flex;
 	flex-direction: column;
@@ -85,10 +77,51 @@ body {
 	color: white;
 	list-style: none;
 	align-items: flex-start;
-	padding-left: 8rem;
-	font-size: 1.5rem;
 }
   
 .sidebar-menu li {
 	cursor: pointer;
+	font-size: 1.5rem;
+	transition: font-size 0.5s ease;
+}
+
+.sidebar-menu li:hover{
+	font-size: 1.7rem;
+}
+
+/* Search Bar */
+.search {
+	width: 25%;
+	display: flex;
+	margin: 4% 0;
+}
+  
+.searchTerm {
+	width: 100%;
+	border: 3px solid var(--primary);
+	border-right: none;
+	padding: 5px;
+	height: 20px;
+	border-radius: 5px 0 0 5px;
+	outline: none;
+	color: #ffffff;
+	background-color: var(--primary);
+	font-family: "Sora", sans-serif;
+}
+  
+.searchTerm:focus{
+	color: #ffffff;
+	font-family: "Sora", sans-serif;
+}
+  
+.searchButton {
+	width: 40px;
+	height: 36px;
+	border: 1px solid var(--primary);
+	background: var(--primary);
+	text-align: center;
+	color: #fff;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+	font-size: 20px;
 }

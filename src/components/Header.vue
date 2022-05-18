@@ -62,10 +62,11 @@ export default {};
   text-decoration: none;
 }
 .wallet-background {
-  background: #8800ff;
+  background: var(--teritary);
   align-items: center;
   padding-right: 4rem;
   border-radius: 1rem;
+  cursor: pointer;
 }
 /* Navigation for mobile and tablet view */
 .mobile-nav {

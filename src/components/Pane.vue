@@ -1,44 +1,49 @@
 <template>
   <div class="notification-pane">
     <!-- Search bar  -->
-    <div class="notification-header"></div>
+    <div class="search">
+      <input type="text" class="searchTerm" placeholder="What are you looking for?">
+      <button type="submit" class="searchButton">
+        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/search--v1.png"/>
+      </button>
+    </div>
+    <!-- <div class="notification-header"></div> -->
     <!-- Notification area which will be injected with notification cards -->
-    <div class="notification-main">
-      <div class="notification-card">
-        <p>
-          This is a rectangle <br />This is a rectangle <br />This is a
-          rectangle
-        </p>
+    <div class="channel-main">
+      <div class="channel-card">
+        <div class="channel-card-name">
+          <p class="channel-name">AoA</p>
+          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
+        </div>
+        <div class="optin">Opt-In</div>
       </div>
-      <div class="notification-card">
-        <p>
-          This is a rectangle <br />This is a rectangle <br />This is a
-          rectangle
-        </p>
+      <div class="channel-card">
+        <div class="channel-card-name">
+          <p class="channel-name">Angrypenguins NFT</p>
+          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
+        </div>
+        <div class="optin">Opt-Out</div>
       </div>
-      <div class="notification-card">
-        <p>
-          This is a rectangle <br />This is a rectangle <br />This is a
-          rectangle
-        </p>
+      <div class="channel-card">
+        <div class="channel-card-name">
+          <p class="channel-name">Rand Labs</p>
+          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
+        </div>
+        <div class="optin">Opt-In</div>
       </div>
-      <div class="notification-card">
-        <p>
-          This is a rectangle <br />This is a rectangle <br />This is a
-          rectangle
-        </p>
+      <div class="channel-card">
+        <div class="channel-card-name">
+          <p class="channel-name">Rand Labs</p>
+          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
+        </div>
+        <div class="optin">Opt-In</div>
       </div>
-      <div class="notification-card">
-        <p>
-          This is a rectangle <br />This is a rectangle <br />This is a
-          rectangle
-        </p>
-      </div>
-      <div class="notification-card">
-        <p>
-          This is a rectangle <br />This is a rectangle <br />This is a
-          rectangle
-        </p>
+      <div class="channel-card">
+        <div class="channel-card-name">
+          <p class="channel-name">Rand Labs</p>
+          <img src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"/>
+        </div>
+        <div class="optin">Opt-In</div>
       </div>
     </div>
     <!-- Notification footer -->
@@ -46,4 +51,44 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.channel-main{
+  width: 90%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-y: auto;
+	font-size: 1.2rem;
+	color: white;
+}
+
+.channel-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    height: auto;
+	margin-bottom: 2rem;
+	background-color:  var(--primary);
+	border-radius: 0.6rem;
+    padding: 3% 2% 3% 2%;
+}
+
+.channel-card-name{
+  display: flex;
+  font-size: 1.8rem;
+  font-weight: bold;
+  align-items: center;
+}
+
+.optin{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15%;
+  height: 50%;
+  border-radius: 0.6rem;
+  background-color: var(--teritary);
+  cursor: pointer;
+}
+</style>

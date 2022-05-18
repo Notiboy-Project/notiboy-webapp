@@ -27,9 +27,9 @@ export default {
 <style scoped>
 .home {
   display: flex;
-  height: 100vh;
   flex-direction: column;
   justify-content: center;
+  max-height: 100vh;
 }
 .notification-container {
   display: grid;
