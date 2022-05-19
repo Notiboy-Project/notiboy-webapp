@@ -36,4 +36,11 @@ export default {
   min-height: 80%;
   grid-template-columns: 1fr 3fr;
 }
+
+@media only screen and (max-width: 981px) {
+	.notification-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
 </style>

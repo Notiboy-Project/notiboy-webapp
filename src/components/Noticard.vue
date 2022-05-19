@@ -90,5 +90,28 @@
 
 .notification-card-timestamp{
     padding-left: 80%;
-}  
+}
+
+@media only screen and (max-width: 1300px) {
+	.notification-card-timestamp{
+    padding-left: 75%;
+  }
+}
+@media only screen and (max-width: 1045px) {
+	.notification-card-timestamp{
+    padding-left: 70%;
+  }
+}
+@media only screen and (max-width: 630px) {
+	.notification-card-timestamp{
+    padding-left: 50%;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+	.notification-card-timestamp{
+    padding-left: 35%;
+  }
+}
+
 </style>

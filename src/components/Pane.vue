@@ -9,12 +9,20 @@
     </div>
     <!-- <div class="notification-header"></div> -->
     <!-- Notification area which will be injected with notification cards -->
-    
+    <noticard></noticard>
     <!-- Notification footer -->
     <div class="notification-footer"></div>
   </div>
 </template>
 
+<script>
+import Noticard from '@/components/Noticard.vue'
+export default {
+	components: {
+		noticard:Noticard
+  	},
+}
+</script>
 <style scoped>
 /* Notification Pane */
 .notification-pane {
@@ -64,5 +72,11 @@
 	border-radius: 0 5px 5px 0;
 	cursor: pointer;
 	font-size: 20px;
+}
+
+@media only screen and (max-width: 981px) {
+	.notification-pane {
+		margin-right: 1%;
+  	}
 }
 </style>

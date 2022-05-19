@@ -14,7 +14,7 @@
     </div>
   </div>
   <!-- Mobile Nav -->
-  <!-- <div class="mobile-nav">
+  <div class="mobile-nav">
     <label>
       <span></span>
       <span></span>
@@ -25,7 +25,7 @@
     </div>
     <div>
     </div>
-  </div> -->
+  </div>
 </template>
 
 <script>
@@ -35,6 +35,7 @@ export default {};
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 /* The navigation for desktop view */
+
 .main-nav {
   display: flex;
   justify-content: space-between;
@@ -70,10 +71,10 @@ export default {};
 }
 /* Navigation for mobile and tablet view */
 .mobile-nav {
-  display: flex;
+  display: none;
   justify-content: space-between;
   align-content: center;
-  margin: 1rem 10rem 0 10rem;
+  margin: 1rem 5rem 0 5rem;
 }
 label {
   display: flex;
@@ -85,8 +86,24 @@ label {
 label span {
   background: #fff;
   border-radius: 8rem;
-  height: 0.7rem;
+  height: 0.5rem;
   margin: 0.4rem 0;
   transition: 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
 }
+
+@media only screen and (max-width: 981px) {
+
+  .main-nav{
+    display: none;
+  }
+  .mobile-nav{
+    display: flex;
+  }
+  .brand_logo a img {
+    padding: 1rem 0 2rem 1rem;
+    width: 5rem;
+    height: auto;
+  }
+}
+
 </style>

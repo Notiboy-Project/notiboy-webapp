@@ -45,4 +45,10 @@
   padding: 1.5rem;
   border-radius: 1rem;
 }
+
+@media only screen and (max-width: 981px) {
+	.sidebar-scroll{
+		display: none;
+	}
+}
 </style>
