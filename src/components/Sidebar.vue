@@ -1,14 +1,49 @@
 <template>
   <div class="sidebar-scroll">
     <ul class="sidebar-menu">
-      <li>Noti Box</li>
-      <li class="sidebar-clicked">Public Channels</li>
-      <li>Private Channels</li>
+      <li :class="{'sidebar-clicked': notiClick}" @click="notiClicked">Noti Box</li>
+      <li :class="{'sidebar-clicked': publicClick}" @click="publicClicked">Public Channels</li>
+      <li :class="{'sidebar-clicked': privateClick}" @click="privateClicked">Private Channels</li>
       <li>Create Channel</li>
       <li>Send Notification</li>
     </ul>
   </div>
 </template>
+
+<script>
+export default {
+	data(){
+		return{
+			notiClick: true,
+			publicClick:false,
+			privateClick: false
+		}
+	},
+
+	methods:{
+		notiClicked(){
+			this.notiClick = true,
+			this.publicClick = false,
+			this.privateClick = false,
+			this.$emit('pane-selection','noticlick')
+		},
+
+		publicClicked(){
+			this.notiClick = false,
+			this.publicClick = true,
+			this.privateClick = false,
+			this.$emit('pane-selection','publicclick')
+		},
+
+		privateClicked(){
+			this.notiClick = false,
+			this.publicClick = false,
+			this.privateClick = true,
+			this.$emit('pane-selection','privateclick')
+		}
+	}
+}
+</script>
 
 <style scoped>
 .sidebar-scroll{
@@ -36,14 +71,11 @@
 	transition: font-size 0.5s ease;
 }
 
-.sidebar-menu li:hover{
-	font-size: 1.7rem;
-}
-
 .sidebar-clicked{
   background-color: var(--teritary);
   padding: 1.5rem;
   border-radius: 1rem;
+  transition: all 1s linear;
 }
 
 @media only screen and (max-width: 981px) {

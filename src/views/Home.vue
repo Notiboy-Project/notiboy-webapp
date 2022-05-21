@@ -4,7 +4,7 @@
     <main-header @nav-opened="navStatus = true"></main-header>
     <mobile-overlay @nav-closed="navStatus = false" :nav-overlay="navStatus"></mobile-overlay>
     <div class="notification-container">
-      <main-sidebar></main-sidebar>
+      <main-sidebar @pane-selection="changePane"></main-sidebar>
       <notification-pane v-if="currentPane == 'notification'"></notification-pane>
       <public-pane v-if="currentPane == 'public'"></public-pane>
     </div>
@@ -26,6 +26,18 @@ export default {
       currentPane: 'public'
     }
   },
+
+  methods:{
+    changePane(changevar){
+      console.log(changevar)
+      if(changevar == 'noticlick'){
+        this.currentPane = 'notification'
+      }else if(changevar == 'publicclick'){
+        this.currentPane = 'public'
+      }
+    }
+  },
+
   components: {
     mainHeader: Header,
     mainSidebar: Sidebar,
