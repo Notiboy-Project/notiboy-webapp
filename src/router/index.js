@@ -4,18 +4,9 @@ import Home from "../views/Home.vue";
 import Connect from "../views/Connect.vue";
 
 const routes = [
-  { path: '/', redirect: '/notibox' },
-  { path: '/notibox', component: Home },
-  { path: '/connect', component: Connect}
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  // },
+  { path: '/', redirect: '/dashboard' },
+  { path: '/connect', component: Connect},
+  { path: '/dashboard', component: Home}
 ];
 
 const router = createRouter({

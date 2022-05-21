@@ -1,10 +1,12 @@
 <template>
   <!-- Home view which consist of header, notification pane, sidebar -->
   <div class="home">
-    <main-header></main-header>
+    <main-header @nav-opened="navStatus = true"></main-header>
+    <mobile-overlay @nav-closed="navStatus = false" :nav-overlay="navStatus"></mobile-overlay>
     <div class="notification-container">
       <main-sidebar></main-sidebar>
-      <main-pane></main-pane>
+      <notification-pane v-if="currentPane == 'notification'"></notification-pane>
+      <public-pane v-if="currentPane == 'public'"></public-pane>
     </div>
   </div>
 </template>
@@ -13,13 +15,23 @@
 // @ is an alias to /src
 import Header from "@/components/Header.vue";
 import Sidebar from "@/components/Sidebar.vue";
-import Pane from "@/components/Pane.vue";
+import NotificationPane from "@/components/NotificationPane.vue";
+import PublicPane from "@/components/PublicPane.vue";
+import Overlay from "@/components/Overlay.vue";
 
 export default {
+  data(){
+    return{
+      navStatus: false,
+      currentPane: 'public'
+    }
+  },
   components: {
     mainHeader: Header,
     mainSidebar: Sidebar,
-    mainPane: Pane,
+    notificationPane: NotificationPane,
+    publicPane: PublicPane,
+    mobileOverlay: Overlay
   },
 };
 </script>

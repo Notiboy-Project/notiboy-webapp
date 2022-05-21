@@ -2,7 +2,7 @@
   <!-- Header consisting of desktop and mobile view -->
   <div class="main-nav">
     <div class="brand_logo">
-      <a href="!#"><img src="../assets/logo.png" alt="" /></a>
+      <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
     <div class="main-address">
       <p>AD5J43O3N6UPEUF....</p>
@@ -15,13 +15,13 @@
   </div>
   <!-- Mobile Nav -->
   <div class="mobile-nav">
-    <label>
+    <label @click="navOpen">
       <span></span>
       <span></span>
       <span></span>
     </label>
     <div class="brand_logo">
-      <a href="!#"><img src="../assets/logo.png" alt=""></a>
+      <a href="#"><img src="../assets/logo.png" alt=""></a>
     </div>
     <div>
     </div>
@@ -29,7 +29,15 @@
 </template>
 
 <script>
-export default {};
+export default {
+
+  emits: ['nav-opened'],
+  methods:{
+    navOpen(){
+      this.$emit('nav-opened')
+    }
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -100,7 +108,7 @@ label span {
     display: flex;
   }
   .brand_logo a img {
-    padding: 1rem 0 2rem 1rem;
+    padding: 1rem 0 1rem 0;
     width: 5rem;
     height: auto;
   }
