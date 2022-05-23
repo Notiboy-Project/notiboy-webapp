@@ -1,5 +1,5 @@
 <template>
-  <div class="notification-pane">
+  <main-pane>
     <!-- Search bar  -->
     <search-bar></search-bar>
     <!-- <div class="notification-header"></div> -->
@@ -7,7 +7,7 @@
 	<channel-card></channel-card>
     <!-- Notification footer -->
     <div class="notification-footer"></div>
-  </div>
+  </main-pane>
 </template>
 
 <script>

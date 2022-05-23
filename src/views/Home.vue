@@ -23,7 +23,7 @@ export default {
   data(){
     return{
       navStatus: false,
-      currentPane: 'public'
+      currentPane: 'notification'
     }
   },
 

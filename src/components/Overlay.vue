@@ -3,7 +3,6 @@
 
         <!-- Button to close the overlay navigation -->
         <a href="#" class="closebtn" @click="closeNav">&times;</a>
-
         <!-- Overlay content -->
         <div class="overlay-content">
             <a href="#">Noti Box</a>
