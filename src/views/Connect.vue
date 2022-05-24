@@ -1,12 +1,12 @@
 <template>
-    <div class="connect">
-        <main-header></main-header>
-        <div class="connect-container">
-            <div></div>
-            <wallet-connect></wallet-connect>
-            <div></div>
-        </div>
+  <div class="connect">
+    <main-header></main-header>
+    <div class="connect-container">
+      <div></div>
+      <wallet-connect></wallet-connect>
+      <div></div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -17,7 +17,7 @@ import Wallets from "@/components/Wallets.vue";
 export default {
   components: {
     mainHeader: Header,
-    walletConnect: Wallets
+    walletConnect: Wallets,
   },
 };
 </script>

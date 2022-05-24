@@ -21,22 +21,20 @@
       <span></span>
     </label>
     <div class="brand_logo">
-      <a href="#"><img src="../assets/logo.png" alt=""></a>
+      <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
-    <div>
-    </div>
+    <div></div>
   </div>
 </template>
 
 <script>
 export default {
-
-  emits: ['nav-opened'],
-  methods:{
-    navOpen(){
-      this.$emit('nav-opened')
-    }
-  }
+  emits: ["nav-opened"],
+  methods: {
+    navOpen() {
+      this.$emit("nav-opened");
+    },
+  },
 };
 </script>
 
@@ -100,11 +98,10 @@ label span {
 }
 
 @media only screen and (max-width: 981px) {
-
-  .main-nav{
+  .main-nav {
     display: none;
   }
-  .mobile-nav{
+  .mobile-nav {
     display: flex;
   }
   .brand_logo a img {
@@ -113,5 +110,4 @@ label span {
     height: auto;
   }
 }
-
 </style>

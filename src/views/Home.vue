@@ -2,10 +2,17 @@
   <!-- Home view which consist of header, notification pane, sidebar -->
   <div class="home">
     <main-header @nav-opened="navStatus = true"></main-header>
-    <mobile-overlay @nav-closed="navStatus = false" :nav-overlay="navStatus"></mobile-overlay>
+    <!-- Receives an emitted event and then send it to overlay -->
+    <mobile-overlay
+      @pane-selection="changePane"
+      @nav-closed="navStatus = false"
+      :nav-overlay="navStatus"
+    ></mobile-overlay>
     <div class="notification-container">
       <main-sidebar @pane-selection="changePane"></main-sidebar>
-      <notification-pane v-if="currentPane == 'notification'"></notification-pane>
+      <notification-pane
+        v-if="currentPane == 'notification'"
+      ></notification-pane>
       <public-pane v-if="currentPane == 'public'"></public-pane>
     </div>
   </div>
@@ -20,22 +27,21 @@ import PublicPane from "@/components/PublicPane.vue";
 import Overlay from "@/components/Overlay.vue";
 
 export default {
-  data(){
-    return{
+  data() {
+    return {
       navStatus: false,
-      currentPane: 'notification'
-    }
+      currentPane: "notification",
+    };
   },
 
-  methods:{
-    changePane(changevar){
-      console.log(changevar)
-      if(changevar == 'noticlick'){
-        this.currentPane = 'notification'
-      }else if(changevar == 'publicclick'){
-        this.currentPane = 'public'
+  methods: {
+    changePane(changevar) {
+      if (changevar == "noticlick") {
+        this.currentPane = "notification";
+      } else if (changevar == "publicclick") {
+        this.currentPane = "public";
       }
-    }
+    },
   },
 
   components: {
@@ -43,7 +49,7 @@ export default {
     mainSidebar: Sidebar,
     notificationPane: NotificationPane,
     publicPane: PublicPane,
-    mobileOverlay: Overlay
+    mobileOverlay: Overlay,
   },
 };
 </script>
@@ -62,7 +68,7 @@ export default {
 }
 
 @media only screen and (max-width: 981px) {
-	.notification-container {
+  .notification-container {
     display: flex;
     flex-direction: column;
   }
