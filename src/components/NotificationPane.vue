@@ -35,7 +35,7 @@ export default {
 	overflow: hidden;
 }
 
-@media only screen and (max-width: 981px) {
+@media only screen and (max-width: 980px) {
 	.notification-pane {
 		margin-right: 1%;
   	}
