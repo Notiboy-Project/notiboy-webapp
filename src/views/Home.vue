@@ -1,7 +1,10 @@
 <template>
   <!-- Home view which consist of header, notification pane, sidebar -->
   <div class="home">
-    <main-header @nav-opened="navStatus = true"></main-header>
+    <main-header 
+      @nav-opened="navStatus = true"
+      :show="true"
+    ></main-header>
     <!-- Receives an emitted event and then send it to overlay -->
     <mobile-overlay
       @pane-selection="changePane"

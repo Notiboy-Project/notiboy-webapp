@@ -11,12 +11,10 @@
 
 <script>
 // @ is an alias to /src
-import Header from "@/components/ConnectHeader.vue";
 import Wallets from "@/components/Wallets.vue";
 
 export default {
   components: {
-    mainHeader: Header,
     walletConnect: Wallets,
   },
 };

@@ -4,10 +4,10 @@
     <div class="brand_logo">
       <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
-    <div class="main-address">
+    <div v-if="show == true" class="main-address">
       <p>AD5J43O3N6UPEUF....</p>
     </div>
-    <div class="wallet">
+    <div v-if="show == true" class="wallet">
       <ul class="wallet-background">
         <p>Disconnect</p>
       </ul>
@@ -30,6 +30,7 @@
 <script>
 export default {
   emits: ["nav-opened"],
+  props: ["show"],
   methods: {
     navOpen() {
       this.$emit("nav-opened");
