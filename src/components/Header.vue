@@ -1,20 +1,26 @@
 <template>
   <!-- Header consisting of desktop and mobile view -->
-  <div class="main-nav">
+  <div v-if="show" class="main-nav">
     <div class="brand_logo">
       <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
-    <div v-if="show == true" class="main-address">
-      <p>AD5J43O3N6UPEUF....</p>
+    <div class="main-address">
+      <p>{{ updatedAddress }}</p>
     </div>
-    <div v-if="show == true" class="wallet">
+    <div class="wallet">
       <ul class="wallet-background">
         <p>Disconnect</p>
       </ul>
     </div>
   </div>
+  <!-- Header for connect page -->
+  <div v-if="!show" class="connect-nav">
+    <div class="brand_logo">
+      <a href="#"><img src="../assets/logo.png" alt="" /></a>
+    </div>
+  </div>
   <!-- Mobile Nav -->
-  <div class="mobile-nav">
+  <div v-if="show" class="mobile-nav">
     <label @click="navOpen">
       <span></span>
       <span></span>
@@ -28,7 +34,11 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
+  computed: {
+    ...mapGetters(["updatedAddress"]),
+  },
   emits: ["nav-opened"],
   props: ["show"],
   methods: {
@@ -43,7 +53,7 @@ export default {
 <style scoped>
 /* The navigation for desktop view */
 
-.main-nav {
+.main-nav, .connect-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -54,6 +64,7 @@ export default {
   font-weight: bold;
   color: white;
 }
+
 .brand_logo {
   display: flex;
 }

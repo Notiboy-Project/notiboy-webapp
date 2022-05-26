@@ -4,6 +4,7 @@
     <a href="#" class="closebtn" @click="closeNav">&times;</a>
     <!-- Overlay content -->
     <div class="overlay-content">
+      <li>{{updatedAddress}}</li>
       <li @click="notiClicked">Noti Box</li>
       <li @click="publicClicked">Public Channels</li>
       <li @click="privateClicked">Private channels</li>
@@ -14,6 +15,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -22,6 +24,9 @@ export default {
       publicClick: false,
       privateClick: false,
     };
+  },
+  computed: {
+    ...mapGetters(["updatedAddress"]),
   },
   // Takes a prop from parent component, watches it continuously for changes and changes width of the overlay accordingly.
   props: ["navOverlay"],

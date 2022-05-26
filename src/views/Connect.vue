@@ -11,8 +11,10 @@
 
 <script>
 // @ is an alias to /src
+
 import Wallets from "@/components/Wallets.vue";
 
+// window.Buffer = window.Buffer || require("buffer").Buffer;
 export default {
   components: {
     walletConnect: Wallets,

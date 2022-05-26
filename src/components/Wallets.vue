@@ -3,15 +3,15 @@
     <div class="connect-heading">Connect Your Wallet</div>
 
     <div class="wallet-row1">
-      <div class="wallet">
+      <div @click="MyAlgoLogin" class="wallet">
         <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
         <p>My Algo Wallet</p>
       </div>
       <div class="wallet">
         <img
           src="../assets/pera.png"
-          width="30px"
-          height="30px"
+          width="30"
+          height="30"
           alt="Pera Button"
         />
         <p>Pera Wallet</p>
@@ -19,8 +19,8 @@
       <div class="wallet">
         <img
           src="../assets/algosigner.jpg"
-          width="30px"
-          height="30px"
+          width="30"
+          height="30"
           alt="Algo Signer"
         />
         <p>Algo Signer</p>
@@ -28,6 +28,93 @@
     </div>
   </div>
 </template>
+
+<script>
+import MyAlgoConnect from '@randlabs/myalgo-connect';
+import WalletConnect from "@walletconnect/client";
+import QRCodeModal from "algorand-walletconnect-qrcode-modal";
+export default {
+  data(){
+    return{
+      wallet:[],
+      selectedAddress:''
+    }
+  },
+  methods:{
+    //Method extracts the address from the response of my algo wallet and send it to store
+
+    AlgoSignerConnect : async(ledger) => {
+        try{
+            if(!ledger) ledger = 'MainNet';
+            if(window.AlgoSigner !== undefined) {
+                await window.AlgoSigner.connect();
+                return await window.AlgoSigner.accounts({
+                    ledger: ledger
+                })
+            } else {
+                return false;
+            }
+        } catch (err) {
+            return [];
+        }       
+    },
+    //Method to connect with my algo wallet
+    MyAlgoLogin : async () => {
+        try{
+            const myAlgoConnect = new MyAlgoConnect();
+            let response = await myAlgoConnect.connect();
+            let address = (response[0].address)
+            localStorage.setItem('address', address);
+            this.$store.dispatch('selectAddress', address)
+        } catch (err) {
+            return []
+        }       
+    },
+    
+    PeraLogin : async () => {      
+      try {
+          let accounts;
+          const connector = new WalletConnect({
+              bridge: "https://bridge.walletconnect.org", // Required
+              qrcodeModal: QRCodeModal,
+          });
+
+          const connectorInfo = await connector.connect();
+            
+          accounts = connectorInfo.accounts;
+            
+          if (!connector.connected) {
+              connector.createSession();
+          }
+            
+          connector.on("connect", (error, payload) => {
+              if (error) {
+                  throw error;
+              }
+              accounts = payload.params[0];
+          });
+
+          connector.on("session_update", (error, payload) => {
+              if (error) {
+                  throw error;
+              }
+              accounts = payload.params[0];
+          });
+
+          connector.on("disconnect", (error) => {
+              if (error) {
+                  throw error;
+              }
+          });
+          return accounts;
+        
+      } catch (err) {
+        return [];
+      }
+    }
+  }
+}
+</script>
 
 <style scoped>
 /* Notification Pane */
