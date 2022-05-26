@@ -4,7 +4,7 @@
     <a href="#" class="closebtn" @click="closeNav">&times;</a>
     <!-- Overlay content -->
     <div class="overlay-content">
-      <li>{{updatedAddress}}</li>
+      <li>{{ updatedAddress }}</li>
       <li @click="notiClicked">Noti Box</li>
       <li @click="publicClicked">Public Channels</li>
       <li @click="privateClicked">Private channels</li>

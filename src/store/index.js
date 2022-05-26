@@ -11,8 +11,7 @@ export default createStore({
       if (state.address == null) {
         return "";
       } else {
-        return state.address.slice(0,14) + "...";      
-
+        return state.address.slice(0, 14) + "...";
       }
     },
   },
@@ -25,10 +24,10 @@ export default createStore({
     selectAddress(context, address) {
       context.commit("selectAddress", address);
     },
-    updateAddress(context){
-      let address = localStorage.getItem('address')
+    updateAddress(context) {
+      let address = localStorage.getItem("address");
       context.commit("selectAddress", address);
-    }
+    },
   },
   modules: {},
 });

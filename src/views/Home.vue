@@ -42,8 +42,8 @@ export default {
       }
     },
   },
-  created(){
-    this.$store.dispatch('updateAddress')
+  created() {
+    this.$store.dispatch("updateAddress");
   },
   components: {
     mainHeader: Header,

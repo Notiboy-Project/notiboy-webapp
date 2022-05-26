@@ -53,7 +53,8 @@ export default {
 <style scoped>
 /* The navigation for desktop view */
 
-.main-nav, .connect-nav {
+.main-nav,
+.connect-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;

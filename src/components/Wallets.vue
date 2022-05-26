@@ -30,90 +30,89 @@
 </template>
 
 <script>
-import MyAlgoConnect from '@randlabs/myalgo-connect';
+import MyAlgoConnect from "@randlabs/myalgo-connect";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "algorand-walletconnect-qrcode-modal";
 export default {
-  data(){
-    return{
-      wallet:[],
-      selectedAddress:''
-    }
+  data() {
+    return {
+      wallet: [],
+      selectedAddress: "",
+    };
   },
-  methods:{
+  methods: {
     //Method extracts the address from the response of my algo wallet and send it to store
 
-    AlgoSignerConnect : async(ledger) => {
-        try{
-            if(!ledger) ledger = 'MainNet';
-            if(window.AlgoSigner !== undefined) {
-                await window.AlgoSigner.connect();
-                return await window.AlgoSigner.accounts({
-                    ledger: ledger
-                })
-            } else {
-                return false;
-            }
-        } catch (err) {
-            return [];
-        }       
-    },
-    //Method to connect with my algo wallet
-    MyAlgoLogin : async () => {
-        try{
-            const myAlgoConnect = new MyAlgoConnect();
-            let response = await myAlgoConnect.connect();
-            let address = (response[0].address)
-            localStorage.setItem('address', address);
-            this.$store.dispatch('selectAddress', address)
-        } catch (err) {
-            return []
-        }       
-    },
-    
-    PeraLogin : async () => {      
+    AlgoSignerConnect: async (ledger) => {
       try {
-          let accounts;
-          const connector = new WalletConnect({
-              bridge: "https://bridge.walletconnect.org", // Required
-              qrcodeModal: QRCodeModal,
+        if (!ledger) ledger = "MainNet";
+        if (window.AlgoSigner !== undefined) {
+          await window.AlgoSigner.connect();
+          return await window.AlgoSigner.accounts({
+            ledger: ledger,
           });
-
-          const connectorInfo = await connector.connect();
-            
-          accounts = connectorInfo.accounts;
-            
-          if (!connector.connected) {
-              connector.createSession();
-          }
-            
-          connector.on("connect", (error, payload) => {
-              if (error) {
-                  throw error;
-              }
-              accounts = payload.params[0];
-          });
-
-          connector.on("session_update", (error, payload) => {
-              if (error) {
-                  throw error;
-              }
-              accounts = payload.params[0];
-          });
-
-          connector.on("disconnect", (error) => {
-              if (error) {
-                  throw error;
-              }
-          });
-          return accounts;
-        
+        } else {
+          return false;
+        }
       } catch (err) {
         return [];
       }
-    }
-  }
-}
+    },
+    //Method to connect with my algo wallet
+    MyAlgoLogin: async () => {
+      try {
+        const myAlgoConnect = new MyAlgoConnect();
+        let response = await myAlgoConnect.connect();
+        let address = response[0].address;
+        localStorage.setItem("address", address);
+        this.$store.dispatch("selectAddress", address);
+      } catch (err) {
+        return [];
+      }
+    },
+
+    PeraLogin: async () => {
+      try {
+        let accounts;
+        const connector = new WalletConnect({
+          bridge: "https://bridge.walletconnect.org", // Required
+          qrcodeModal: QRCodeModal,
+        });
+
+        const connectorInfo = await connector.connect();
+
+        accounts = connectorInfo.accounts;
+
+        if (!connector.connected) {
+          connector.createSession();
+        }
+
+        connector.on("connect", (error, payload) => {
+          if (error) {
+            throw error;
+          }
+          accounts = payload.params[0];
+        });
+
+        connector.on("session_update", (error, payload) => {
+          if (error) {
+            throw error;
+          }
+          accounts = payload.params[0];
+        });
+
+        connector.on("disconnect", (error) => {
+          if (error) {
+            throw error;
+          }
+        });
+        return accounts;
+      } catch (err) {
+        return [];
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
