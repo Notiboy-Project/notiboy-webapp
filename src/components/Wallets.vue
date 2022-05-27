@@ -7,7 +7,7 @@
         <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
         <p>My Algo Wallet</p>
       </div>
-      <div class="wallet">
+      <div @click="PeraLogin" class="wallet">
         <img
           src="../assets/pera.png"
           width="30"
@@ -16,7 +16,7 @@
         />
         <p>Pera Wallet</p>
       </div>
-      <div class="wallet">
+      <div @click="AlgoSignerConnect" class="wallet">
         <img
           src="../assets/algosigner.jpg"
           width="30"
@@ -48,9 +48,11 @@ export default {
         if (!ledger) ledger = "MainNet";
         if (window.AlgoSigner !== undefined) {
           await window.AlgoSigner.connect();
-          return await window.AlgoSigner.accounts({
+          let response = await window.AlgoSigner.accounts({
             ledger: ledger,
           });
+          console.log(response)
+          return response;
         } else {
           return false;
         }
@@ -70,7 +72,7 @@ export default {
         return [];
       }
     },
-
+    //Method to connect via pera wellet
     PeraLogin: async () => {
       try {
         let accounts;
@@ -106,7 +108,8 @@ export default {
             throw error;
           }
         });
-        return accounts;
+        localStorage.setItem("address", accounts);
+        this.$store.dispatch("selectAddress", accounts);
       } catch (err) {
         return [];
       }
