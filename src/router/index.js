@@ -5,8 +5,8 @@ import Connect from "../views/Connect.vue";
 
 const routes = [
   { path: "/", redirect: "/dashboard" },
-  { path: "/connect", component: Connect },
-  { path: "/dashboard", component: Home },
+  { path: "/connect", name: 'Connect', component: Connect },
+  { path: "/dashboard",name: 'Dashboard', component: Home },
 ];
 
 const router = createRouter({

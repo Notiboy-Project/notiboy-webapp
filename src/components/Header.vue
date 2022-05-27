@@ -7,7 +7,7 @@
     <div class="main-address">
       <p>{{ updatedAddress }}</p>
     </div>
-    <div class="wallet">
+    <div @click="disconnect" class="wallet">
       <ul class="wallet-background">
         <p>Disconnect</p>
       </ul>
@@ -35,6 +35,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import router from '../router'
 export default {
   computed: {
     ...mapGetters(["updatedAddress"]),
@@ -45,6 +46,10 @@ export default {
     navOpen() {
       this.$emit("nav-opened");
     },
+    disconnect(){
+      this.$store.dispatch("disconnect")
+      router.replace({name:'Connect'})
+    }
   },
 };
 </script>
