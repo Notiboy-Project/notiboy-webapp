@@ -10,14 +10,15 @@
     ></mobile-overlay>
     <div class="notification-container">
       <main-sidebar @pane-selection="changePane"></main-sidebar>
-      <notification-pane></notification-pane>
+      <!-- Using props to send the selection from side bar to notification pane -->
+      <notification-pane :selection="currentPane"></notification-pane>
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import { computed } from 'vue'
+// import { computed } from 'vue'
 import Header from "@/components/Header.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import NotificationPane from "@/components/NotificationPane.vue";
@@ -39,11 +40,12 @@ export default {
       }
     },
   },
-  provide() {
-    return {
-      selection: computed(() => this.currentPane)
-    }
-  },
+  // Using provide inject to send the change in selection to grand child component 
+  // provide() {
+  //   return {
+  //     selection: computed(() => this.currentPane)
+  //   }
+  // },
   created() {
     this.$store.dispatch("updateAddress");
   },

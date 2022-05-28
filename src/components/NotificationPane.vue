@@ -21,7 +21,8 @@ export default {
       displayType: this.selection
     }
   },
-  inject:['selection'],
+  props:['selection'],
+  // inject:['selection'],
   components: {
     searchBar: Searchbar,
     notiCard: Noticard,
