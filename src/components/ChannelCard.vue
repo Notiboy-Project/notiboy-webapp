@@ -9,10 +9,10 @@
           />
         </div>
         <div class="channel-card-address">
-          <img
+          <img @click="copyToClipBoard(textToCopy)"
             src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
           />
-          <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
+          <p ref="address" style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
         </div>
       </div>
       <div class="optin">Opt-In</div>
@@ -70,6 +70,21 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data(){
+    return{
+      textToCopy: 'NQCFGXWCNSTB....'
+    }
+  },
+  methods:{
+    copyToClipBoard(textToCopy){
+      navigator.clipboard.writeText(textToCopy);      
+    }
+  }
+}
+</script>
 
 <style scoped>
 .channel-main {

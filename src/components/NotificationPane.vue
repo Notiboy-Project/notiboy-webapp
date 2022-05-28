@@ -4,8 +4,8 @@
     <search-bar></search-bar>
     <!-- <div class="notification-header"></div> -->
     <!-- Notification area which will be injected with notification cards -->
-    <noti-card v-if="displayType =='notification'"></noti-card>
-    <channel-card v-if="displayType =='public'"></channel-card>
+    <noti-card v-if="selection =='notification'"></noti-card>
+    <channel-card v-if="selection =='public'"></channel-card>
     <!-- Notification footer -->
     <div class="notification-footer"></div>
   </main-pane>
@@ -16,11 +16,7 @@ import Searchbar from "@/components/Searchbar.vue";
 import Noticard from "@/components/Noticard.vue";
 import Public from "@/components/ChannelCard.vue";
 export default {
-  data(){
-    return{
-      displayType: this.selection
-    }
-  },
+
   props:['selection'],
   // inject:['selection'],
   components: {
