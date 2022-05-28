@@ -16,7 +16,7 @@
         />
         <p>Pera Wallet</p>
       </div>
-      <div @click="AlgoSignerConnect" class="wallet">
+      <!-- <div @click="AlgoSignerConnect" class="wallet">
         <img
           src="../assets/algosigner.jpg"
           width="30"
@@ -24,7 +24,7 @@
           alt="Algo Signer"
         />
         <p>Algo Signer</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -43,23 +43,22 @@ export default {
   },
   methods: {
     //Method extracts the address from the response of my algo wallet and send it to store
-
-    AlgoSignerConnect: async (ledger) => {
-      try {
-        if (!ledger) ledger = "MainNet";
-        if (window.AlgoSigner !== undefined) {
-          await window.AlgoSigner.connect();
-          let response = await window.AlgoSigner.accounts({
-            ledger: ledger,
-          });
-          console.log(response)
-        } else {
-          return false;
-        }
-      } catch (err) {
-        return [];
-      }
-    },
+    // AlgoSignerConnect: async (ledger) => {
+    //   try {
+    //     if (!ledger) ledger = "MainNet";
+    //     if (window.AlgoSigner !== undefined) {
+    //       await window.AlgoSigner.connect();
+    //       let response = await window.AlgoSigner.accounts({
+    //         ledger: ledger,
+    //       });
+    //       console.log(response)
+    //     } else {
+    //       return false;
+    //     }
+    //   } catch (err) {
+    //     return [];
+    //   }
+    // },
     //Method to connect with my algo wallet
     MyAlgoLogin: async () => {
       try {

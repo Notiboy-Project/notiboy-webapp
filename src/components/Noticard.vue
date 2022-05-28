@@ -48,7 +48,6 @@
     </div>
   </div>
 </template>
-
 <style scoped>
 .notification-main {
   width: 90%;

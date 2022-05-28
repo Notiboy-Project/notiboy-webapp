@@ -10,20 +10,17 @@
     ></mobile-overlay>
     <div class="notification-container">
       <main-sidebar @pane-selection="changePane"></main-sidebar>
-      <notification-pane
-        v-if="currentPane == 'notification'"
-      ></notification-pane>
-      <public-pane v-if="currentPane == 'public'"></public-pane>
+      <notification-pane></notification-pane>
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import { computed } from 'vue'
 import Header from "@/components/Header.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import NotificationPane from "@/components/NotificationPane.vue";
-import PublicPane from "@/components/PublicPane.vue";
 import Overlay from "@/components/Overlay.vue";
 
 export default {
@@ -42,6 +39,11 @@ export default {
       }
     },
   },
+  provide() {
+    return {
+      selection: computed(() => this.currentPane)
+    }
+  },
   created() {
     this.$store.dispatch("updateAddress");
   },
@@ -49,7 +51,7 @@ export default {
     mainHeader: Header,
     mainSidebar: Sidebar,
     notificationPane: NotificationPane,
-    publicPane: PublicPane,
+    // publicPane: PublicPane,
     mobileOverlay: Overlay,
   },
 };
