@@ -1,5 +1,4 @@
 <template>
-  <div class="notification-main">
     <div class="notification-card">
       <div class="notification-card-name">
         <p>Anirand</p>
@@ -46,18 +45,9 @@
         This is a rectangle <br />This is a rectangle <br />This is a rectangle
       </p>
     </div>
-  </div>
 </template>
 <style scoped>
-.notification-main {
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
-  font-size: 1.3rem;
-  color: white;
-}
+
 .notification-card {
   width: 80%;
   height: auto;

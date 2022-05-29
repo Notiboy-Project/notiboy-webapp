@@ -1,5 +1,4 @@
 <template>
-  <div class="channel-main">
     <div class="channel-card">
       <div class="channel-card-details">
         <div class="channel-card-name">
@@ -68,7 +67,6 @@
       </div>
       <div class="optin">Opt-In</div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -87,15 +85,6 @@ export default {
 </script>
 
 <style scoped>
-.channel-main {
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-y: auto;
-  font-size: 1.2rem;
-  color: white;
-}
 
 .channel-card {
   display: flex;

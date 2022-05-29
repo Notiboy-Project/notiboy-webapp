@@ -8,7 +8,7 @@
       <li @click="notiClicked">Noti Box</li>
       <li @click="publicClicked">Public Channels</li>
       <li @click="privateClicked">Private channels</li>
-      <li>Create Channels</li>
+      <li @click="createClicked">Create Channels</li>
       <li>Send Notification</li>
     </div>
   </div>
@@ -23,6 +23,7 @@ export default {
       notiClick: true,
       publicClick: false,
       privateClick: false,
+      createClick:false
     };
   },
   computed: {
@@ -49,23 +50,36 @@ export default {
       (this.notiClick = true),
         (this.publicClick = false),
         (this.privateClick = false),
+        (this.createClick = false),
         this.closeNav();
-      this.$emit("pane-selection", "noticlick");
+        this.$emit("pane-selection", "noticlick");
     },
 
     publicClicked() {
       (this.notiClick = false),
         (this.publicClick = true),
         (this.privateClick = false),
+        (this.createClick = false),
         this.closeNav();
-      this.$emit("pane-selection", "publicclick");
+        this.$emit("pane-selection", "publicclick");
     },
 
     privateClicked() {
       (this.notiClick = false),
         (this.publicClick = false),
         (this.privateClick = true),
+        (this.createClick = false),
+        this.closeNav();
         this.$emit("pane-selection", "privateclick");
+    },
+
+    createClicked() {
+      (this.notiClick = false),
+        (this.publicClick = false),
+        (this.privateClick = false),
+        (this.createClick = true),
+        this.closeNav();
+        this.$emit("pane-selection", "createclick");
     },
   },
 };

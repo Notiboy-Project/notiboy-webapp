@@ -18,8 +18,8 @@
 
 <script>
 // @ is an alias to /src
-// import { computed } from 'vue'
-import Header from "@/components/Header.vue";
+import { computed } from 'vue'
+
 import Sidebar from "@/components/Sidebar.vue";
 import NotificationPane from "@/components/NotificationPane.vue";
 import Overlay from "@/components/Overlay.vue";
@@ -37,20 +37,21 @@ export default {
         this.currentPane = "notification";
       } else if (changevar == "publicclick") {
         this.currentPane = "public";
+      }else if(changevar == "createclick"){
+        this.currentPane = "create"
       }
     },
   },
   // Using provide inject to send the change in selection to grand child component 
-  // provide() {
-  //   return {
-  //     selection: computed(() => this.currentPane)
-  //   }
-  // },
+  provide() {
+    return {
+      selection: computed(() => this.currentPane)
+    }
+  },
   created() {
     this.$store.dispatch("updateAddress");
   },
   components: {
-    mainHeader: Header,
     mainSidebar: Sidebar,
     notificationPane: NotificationPane,
     // publicPane: PublicPane,
