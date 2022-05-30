@@ -1,6 +1,6 @@
 <template>
     <div class="create-card">
-        <input class="channel-name" v-model="channelName" placeholder="Channel Name" />
+        <input class="channel-name" v-model="channelName" maxlength = "20" placeholder="Channel Name" />
         <div class="channel-type">
             <div class="channel-type-private">
                 <input type="radio" id="private" value="private" v-model="channelType" />
