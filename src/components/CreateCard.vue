@@ -51,7 +51,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 30rem;
+  height: 50rem;
   padding-top: 8rem;
   padding-bottom: 5rem;
   font-weight: bold;
