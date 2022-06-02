@@ -19,9 +19,9 @@ export default createStore({
     selectAddress(state, address) {
       state.address = address;
     },
-    disconnect(state){
-      state.address = ""
-    }
+    disconnect(state) {
+      state.address = "";
+    },
   },
   actions: {
     selectAddress(context, address) {
@@ -31,10 +31,10 @@ export default createStore({
       let address = localStorage.getItem("address");
       context.commit("selectAddress", address);
     },
-    disconnect(context){
-      localStorage.removeItem("address")
-      context.commit("disconnect")
-    }
+    disconnect(context) {
+      localStorage.removeItem("address");
+      context.commit("disconnect");
+    },
   },
   modules: {},
 });

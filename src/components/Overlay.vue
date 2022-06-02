@@ -9,7 +9,7 @@
       <li @click="publicClicked">Public Channels</li>
       <li @click="privateClicked">Private channels</li>
       <li @click="createClicked">Create Channels</li>
-      <li>Send Notification</li>
+      <li @click="sendClicked">Send Notification</li>
     </div>
   </div>
 </template>
@@ -23,7 +23,8 @@ export default {
       notiClick: true,
       publicClick: false,
       privateClick: false,
-      createClick:false
+      createClick: false,
+      sendClick: false,
     };
   },
   computed: {
@@ -51,8 +52,9 @@ export default {
         (this.publicClick = false),
         (this.privateClick = false),
         (this.createClick = false),
+        (this.sendClick = false),
         this.closeNav();
-        this.$emit("pane-selection", "noticlick");
+      this.$emit("pane-selection", "noticlick");
     },
 
     publicClicked() {
@@ -60,8 +62,9 @@ export default {
         (this.publicClick = true),
         (this.privateClick = false),
         (this.createClick = false),
+        (this.sendClick = false),
         this.closeNav();
-        this.$emit("pane-selection", "publicclick");
+      this.$emit("pane-selection", "publicclick");
     },
 
     privateClicked() {
@@ -69,8 +72,9 @@ export default {
         (this.publicClick = false),
         (this.privateClick = true),
         (this.createClick = false),
+        (this.sendClick = false),
         this.closeNav();
-        this.$emit("pane-selection", "privateclick");
+      this.$emit("pane-selection", "privateclick");
     },
 
     createClicked() {
@@ -78,8 +82,19 @@ export default {
         (this.publicClick = false),
         (this.privateClick = false),
         (this.createClick = true),
+        (this.sendClick = false),
         this.closeNav();
-        this.$emit("pane-selection", "createclick");
+      this.$emit("pane-selection", "createclick");
+    },
+
+    sendClicked() {
+      (this.notiClick = false),
+        (this.publicClick = false),
+        (this.privateClick = false),
+        (this.createClick = false),
+        (this.sendClick = true),
+        this.closeNav();
+      this.$emit("pane-selection", "sendclick");
     },
   },
 };

@@ -1,22 +1,22 @@
 <template>
-<!-- Search bar  -->
-    <div v-if="selectedComponent != 'create'" class="search">
-      <input type="text" class="searchTerm" placeholder="Search"/>
-      <button type="submit" class="searchButton">
-        <img src="https://img.icons8.com/ios-glyphs/30/ffffff/search--v1.png" />
-      </button>
-    </div>
+  <!-- Search bar  -->
+  <div v-if="selectedComponent == true" class="search">
+    <input type="text" class="searchTerm" placeholder="Search" />
+    <button type="submit" class="searchButton">
+      <img src="https://img.icons8.com/ios-glyphs/30/ffffff/search--v1.png" />
+    </button>
+  </div>
 </template>
 
 <script>
 export default {
-    data(){
-        return{
-            selectedComponent: this.selection
-        }
-    },
-    inject:['selection']
-}
+  data() {
+    return {
+      selectedComponent: this.selection,
+    };
+  },
+  inject: ["selection"],
+};
 </script>
 
 <style scoped>

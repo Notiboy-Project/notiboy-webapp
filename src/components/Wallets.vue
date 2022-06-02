@@ -33,7 +33,7 @@
 import MyAlgoConnect from "@randlabs/myalgo-connect";
 import WalletConnect from "@walletconnect/client";
 import QRCodeModal from "algorand-walletconnect-qrcode-modal";
-import router from '../router';
+import router from "../router";
 export default {
   data() {
     return {
@@ -66,7 +66,7 @@ export default {
         let response = await myAlgoConnect.connect();
         let address = response[0].address;
         localStorage.setItem("address", address);
-        router.replace({name:'Dashboard'})
+        router.replace({ name: "Dashboard" });
       } catch (err) {
         return [];
       }
@@ -108,7 +108,7 @@ export default {
           }
         });
         localStorage.setItem("address", accounts);
-        router.replace({name:'Dashboard'})
+        router.replace({ name: "Dashboard" });
       } catch (err) {
         return [];
       }

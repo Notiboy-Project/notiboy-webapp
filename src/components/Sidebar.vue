@@ -13,7 +13,9 @@
       <li :class="{ 'sidebar-clicked': createClick }" @click="createClicked">
         Create Channel
       </li>
-      <li>Send Notification</li>
+      <li :class="{ 'sidebar-clicked': sendClick }" @click="sendClicked">
+        Send Notification
+      </li>
     </ul>
   </div>
 </template>
@@ -25,7 +27,8 @@ export default {
       notiClick: true,
       publicClick: false,
       privateClick: false,
-      createClick:false,
+      createClick: false,
+      sendClick: false,
     };
   },
   // The methods to emit an event to parent (and from there to side pane) to change the dashboard.
@@ -35,6 +38,7 @@ export default {
         (this.publicClick = false),
         (this.privateClick = false),
         (this.createClick = false),
+        (this.sendClick = false),
         this.$emit("pane-selection", "noticlick");
     },
 
@@ -43,6 +47,7 @@ export default {
         (this.publicClick = true),
         (this.privateClick = false),
         (this.createClick = false),
+        (this.sendClick = false),
         this.$emit("pane-selection", "publicclick");
     },
 
@@ -51,6 +56,7 @@ export default {
         (this.publicClick = false),
         (this.privateClick = true),
         (this.createClick = false),
+        (this.sendClick = false),
         this.$emit("pane-selection", "privateclick");
     },
 
@@ -59,7 +65,17 @@ export default {
         (this.publicClick = false),
         (this.privateClick = false),
         (this.createClick = true),
+        (this.sendClick = false),
         this.$emit("pane-selection", "createclick");
+    },
+
+    sendClicked() {
+      (this.notiClick = false),
+        (this.publicClick = false),
+        (this.privateClick = false),
+        (this.createClick = false),
+        (this.sendClick = true),
+        this.$emit("pane-selection", "sendclick");
     },
   },
 };

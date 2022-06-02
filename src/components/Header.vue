@@ -35,7 +35,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import router from '../router'
+import router from "../router";
 export default {
   computed: {
     ...mapGetters(["updatedAddress"]),
@@ -46,10 +46,10 @@ export default {
     navOpen() {
       this.$emit("nav-opened");
     },
-    disconnect(){
-      this.$store.dispatch("disconnect")
-      router.replace({name:'Connect'})
-    }
+    disconnect() {
+      this.$store.dispatch("disconnect");
+      router.replace({ name: "Connect" });
+    },
   },
 };
 </script>

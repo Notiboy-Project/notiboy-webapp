@@ -18,7 +18,7 @@
 
 <script>
 // @ is an alias to /src
-import { computed } from 'vue'
+import { computed } from "vue";
 
 import Sidebar from "@/components/Sidebar.vue";
 import NotificationPane from "@/components/NotificationPane.vue";
@@ -29,24 +29,31 @@ export default {
     return {
       navStatus: false,
       currentPane: "notification",
+      searchbarStatus: true,
     };
   },
   methods: {
     changePane(changevar) {
       if (changevar == "noticlick") {
         this.currentPane = "notification";
+        this.searchbarStatus = true;
       } else if (changevar == "publicclick") {
         this.currentPane = "public";
-      }else if(changevar == "createclick"){
-        this.currentPane = "create"
+        this.searchbarStatus = true;
+      } else if (changevar == "createclick") {
+        this.currentPane = "create";
+        this.searchbarStatus = false;
+      } else if (changevar == "sendclick") {
+        this.currentPane = "send";
+        this.searchbarStatus = false;
       }
     },
   },
-  // Using provide inject to send the change in selection to grand child component 
+  // Using provide inject to send the change in selection to grand child component
   provide() {
     return {
-      selection: computed(() => this.currentPane)
-    }
+      selection: computed(() => this.searchbarStatus),
+    };
   },
   created() {
     this.$store.dispatch("updateAddress");

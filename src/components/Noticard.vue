@@ -1,53 +1,51 @@
 <template>
-    <div class="notification-card">
-      <div class="notification-card-name">
-        <p>Anirand</p>
-      </div>
-      <p class="notification-card-heading">Rug Number 1</p>
-      <p class="notification-card-notification">
-        We are planning for a rug of rugs. This is anirand metaverse of
-        metaverse.
-      </p>
-      <p class="notification-card-timestamp">12 September 2022</p>
+  <div class="notification-card">
+    <div class="notification-card-name">
+      <p>Anirand</p>
     </div>
-    <div class="notification-card">
-      <div class="notification-card-name">
-        <p>NFD Domains</p>
-        <img
-          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-        />
-      </div>
-      <p class="notification-card-heading">DAO Voting : Event 1</p>
-      <p class="notification-card-notification">
-        The DAO voting will start on Monday. The voting will decide on important
-        features. Make sure you cast your vote to decide on all the important
-        matters regarding DAO.
-      </p>
-      <p class="notification-card-timestamp">12 September 2022</p>
+    <p class="notification-card-heading">Rug Number 1</p>
+    <p class="notification-card-notification">
+      We are planning for a rug of rugs. This is anirand metaverse of metaverse.
+    </p>
+    <p class="notification-card-timestamp">12 September 2022</p>
+  </div>
+  <div class="notification-card">
+    <div class="notification-card-name">
+      <p>NFD Domains</p>
+      <img
+        src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
+      />
     </div>
-    <div class="notification-card">
-      <p>
-        This is a rectangle <br />This is a rectangle <br />This is a rectangle
-      </p>
-    </div>
-    <div class="notification-card">
-      <p>
-        This is a rectangle <br />This is a rectangle <br />This is a rectangle
-      </p>
-    </div>
-    <div class="notification-card">
-      <p>
-        This is a rectangle <br />This is a rectangle <br />This is a rectangle
-      </p>
-    </div>
-    <div class="notification-card">
-      <p>
-        This is a rectangle <br />This is a rectangle <br />This is a rectangle
-      </p>
-    </div>
+    <p class="notification-card-heading">DAO Voting : Event 1</p>
+    <p class="notification-card-notification">
+      The DAO voting will start on Monday. The voting will decide on important
+      features. Make sure you cast your vote to decide on all the important
+      matters regarding DAO.
+    </p>
+    <p class="notification-card-timestamp">12 September 2022</p>
+  </div>
+  <div class="notification-card">
+    <p>
+      This is a rectangle <br />This is a rectangle <br />This is a rectangle
+    </p>
+  </div>
+  <div class="notification-card">
+    <p>
+      This is a rectangle <br />This is a rectangle <br />This is a rectangle
+    </p>
+  </div>
+  <div class="notification-card">
+    <p>
+      This is a rectangle <br />This is a rectangle <br />This is a rectangle
+    </p>
+  </div>
+  <div class="notification-card">
+    <p>
+      This is a rectangle <br />This is a rectangle <br />This is a rectangle
+    </p>
+  </div>
 </template>
 <style scoped>
-
 .notification-card {
   width: 80%;
   height: auto;

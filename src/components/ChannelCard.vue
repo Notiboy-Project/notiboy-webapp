@@ -1,91 +1,85 @@
 <template>
-    <div class="channel-card">
-      <div class="channel-card-details">
-        <div class="channel-card-name">
-          <p class="channel-name">AoA</p>
-          <img
-            src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-          />
-        </div>
-        <div class="channel-card-address">
-          <img @click="copyToClipBoard(textToCopy)"
-            src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
-          />
-          <p ref="address" style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-        </div>
+  <div class="channel-card">
+    <div class="channel-card-details">
+      <div class="channel-card-name">
+        <p class="channel-name">AoA</p>
+        <img
+          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
+        />
       </div>
-      <div class="optin">Opt-In</div>
-    </div>
-    <div class="channel-card">
-      <div class="channel-card-details">
-        <div class="channel-card-name">
-          <p class="channel-name">Angry penguins NFT Series</p>
-          <img
-            src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-          />
-        </div>
-        <div class="channel-card-address">
-          <img
-            src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
-          />
-          <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-        </div>
+      <div class="channel-card-address">
+        <img
+          @click="copyToClipBoard(textToCopy)"
+          src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
+        />
+        <p ref="address" style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
       </div>
-      <div class="optin">Opt-In</div>
     </div>
-    <div class="channel-card">
-      <div class="channel-card-details">
-        <div class="channel-card-name">
-          <p class="channel-name">Rand Labs</p>
-          <img
-            src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-          />
-        </div>
-        <div class="channel-card-address">
-          <img
-            src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
-          />
-          <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-        </div>
+    <div class="optin">Opt-In</div>
+  </div>
+  <div class="channel-card">
+    <div class="channel-card-details">
+      <div class="channel-card-name">
+        <p class="channel-name">Angry penguins NFT Series</p>
+        <img
+          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
+        />
       </div>
-      <div class="optin">Opt-In</div>
-    </div>
-    <div class="channel-card">
-      <div class="channel-card-details">
-        <div class="channel-card-name">
-          <p class="channel-name">Rand Labs</p>
-          <img
-            src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-          />
-        </div>
-        <div class="channel-card-address">
-          <img
-            src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
-          />
-          <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-        </div>
+      <div class="channel-card-address">
+        <img src="https://img.icons8.com/material-rounded/20/ffffff/copy.png" />
+        <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
       </div>
-      <div class="optin">Opt-In</div>
     </div>
+    <div class="optin">Opt-In</div>
+  </div>
+  <div class="channel-card">
+    <div class="channel-card-details">
+      <div class="channel-card-name">
+        <p class="channel-name">Rand Labs</p>
+        <img
+          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
+        />
+      </div>
+      <div class="channel-card-address">
+        <img src="https://img.icons8.com/material-rounded/20/ffffff/copy.png" />
+        <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
+      </div>
+    </div>
+    <div class="optin">Opt-In</div>
+  </div>
+  <div class="channel-card">
+    <div class="channel-card-details">
+      <div class="channel-card-name">
+        <p class="channel-name">Rand Labs</p>
+        <img
+          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
+        />
+      </div>
+      <div class="channel-card-address">
+        <img src="https://img.icons8.com/material-rounded/20/ffffff/copy.png" />
+        <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
+      </div>
+    </div>
+    <div class="optin">Opt-In</div>
+  </div>
 </template>
 
 <script>
 export default {
-  data(){
-    return{
-      textToCopy: 'NQCFGXWCNSTB....'
-    }
+  data() {
+    return {
+      textToCopy: "NQCFGXWCNSTB....",
+    };
   },
-  methods:{
-    copyToClipBoard(textToCopy){
-      navigator.clipboard.writeText(textToCopy);      
-    }
-  }
-}
+  methods: {
+    copyToClipBoard(textToCopy) {
+      navigator.clipboard.writeText(textToCopy);
+    },
+  },
+};
 </script>
 
 <style scoped>
-
 .channel-card {
   display: flex;
   justify-content: space-between;
