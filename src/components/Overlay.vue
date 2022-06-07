@@ -10,6 +10,7 @@
       <li @click="privateClicked">Private channels</li>
       <li @click="createClicked">Create Channels</li>
       <li @click="sendClicked">Send Notification</li>
+      <li>Disconnect</li>
     </div>
   </div>
 </template>

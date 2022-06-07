@@ -7,7 +7,7 @@
         <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
         <p>My Algo Wallet</p>
       </div>
-      <div @click="PeraLogin" class="wallet">
+      <div @click="connectPeraWallet" class="wallet">
         <img
           src="../assets/pera.png"
           width="30"
@@ -31,9 +31,10 @@
 
 <script>
 import MyAlgoConnect from "@randlabs/myalgo-connect";
-import WalletConnect from "@walletconnect/client";
-import QRCodeModal from "algorand-walletconnect-qrcode-modal";
+import { PeraWalletConnect } from "@perawallet/connect";
 import router from "../router";
+const peraWallet = new PeraWalletConnect();
+
 export default {
   data() {
     return {
@@ -72,46 +73,12 @@ export default {
       }
     },
     //Method to connect via pera wellet
-    PeraLogin: async () => {
-      try {
-        let accounts;
-        const connector = new WalletConnect({
-          bridge: "https://bridge.walletconnect.org", // Required
-          qrcodeModal: QRCodeModal,
-        });
-
-        const connectorInfo = await connector.connect();
-
-        accounts = connectorInfo.accounts;
-
-        if (!connector.connected) {
-          connector.createSession();
-        }
-
-        connector.on("connect", (error, payload) => {
-          if (error) {
-            throw error;
-          }
-          accounts = payload.params[0];
-        });
-
-        connector.on("session_update", (error, payload) => {
-          if (error) {
-            throw error;
-          }
-          accounts = payload.params[0];
-        });
-
-        connector.on("disconnect", (error) => {
-          if (error) {
-            throw error;
-          }
-        });
-        localStorage.setItem("address", accounts);
+    connectPeraWallet() {
+      peraWallet.connect().then((accounts) => {
+        let account = accounts[0];
+        localStorage.setItem("address", account);
         router.replace({ name: "Dashboard" });
-      } catch (err) {
-        return [];
-      }
+      });
     },
   },
 };
