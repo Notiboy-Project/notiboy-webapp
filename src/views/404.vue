@@ -1,7 +1,8 @@
 <template>
   <main-header></main-header>
   <div class="notfound">
-    <img src="../assets/404img.png" alt="My Algo Button" />
+    <img src="../assets/404img.png" alt="404 error
+    " />
     <h2>Uh oh... I think we're lost.</h2>
     <h3>The page you're looking for could not be found.</h3>
   </div>
