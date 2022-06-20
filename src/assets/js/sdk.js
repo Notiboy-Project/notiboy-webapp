@@ -5,15 +5,11 @@ const algosdk = require('algosdk');
 // const algod  = require('./client');
 // let client = algod.client;
 
+const token = '';
+const server = 'https://testnet-api.algonode.cloud';
+const port = '';
+const client = new algosdk.Algodv2(token, server, port);
 
-const port="";
-const token={
-    "x-api-key": process.env.API // fill in yours
-};
-
-/*Use the following code to get info from testnet */
-const Testserver="https://testnet-algorand.api.purestake.io/ps2"; 
-let client = new algosdk.Algodv2(token,Testserver,port);
 
 let PASSPHRASE = process.env.PASSPHRASE6;
 let  myAccount = algosdk.mnemonicToSecretKey(PASSPHRASE); 
@@ -36,8 +32,7 @@ console.log(sender);
         }
     };
     let params = await client.getTransactionParams().do();
-    console.log(params);
-    params.fee = 1000;
+
     // logic sig creation
     let filePath = path.join(__dirname, 'logicsig.teal');
     console.log(filePath)
@@ -46,33 +41,64 @@ console.log(sender);
     console.log("Hash = " + results.hash);
     console.log("Result = " + results.result);
     let program = new Uint8Array(Buffer.from(results.result, "base64"));
-    let args = getUint8Int(123987);
+    let args = getUint8Int(2022);
     let lsig = new algosdk.LogicSigAccount(program, args);
     console.log("lsig : " + lsig.address());
-    lsig.sign(myAccount.sk); 
     let appIndex = (94241155);
 
-    // //Opt-in for logic sig
-    // let opttxn = algosdk.makeApplicationOptInTxn(lsig.address(),params,appIndex);
-    // rawSignedTxn = algosdk.signLogicSigTransaction(opttxn, lsig);
-    // let opttx = (await client.sendRawTransaction(rawSignedTxn.blob).do());
+    // // Opt-in for logic sig
+    // let appArgs = [];
+    // let dappName = "Noti Boy"
+    // const enc = new TextEncoder("utf-8")
+    // appArgs.push(enc.encode(dappName))
+    // appArgs.push(enc.encode("dapp"))
+    // let closeRemainderTo = undefined;
+    // let note = undefined;
+    // params.fee = 2000;
+    //let receiver = `HZ57J3K46JIJXILONBBZOHX6BKPXEM2VVXNRFSUED6DKFD5ZD24PMJ3MVA`;
+    // params.flatFee = true;
+    // let transaction1 = algosdk.makePaymentTxnWithSuggestedParams(sender, receiver, 1000000,closeRemainderTo,
+    //        note,params);
+    // let transaction2 = algosdk.makeApplicationOptInTxn(lsig.address(),params,appIndex,appArgs);
+    // transaction2.fee = 0
+    // let txns = [transaction1, transaction2]
+    // let txgroup = algosdk.assignGroupID(txns);
+    // let SignedTxn1 =  algosdk.signTransaction(transaction1, myAccount.sk ); 
+    // let SignedTxn2 = algosdk.signLogicSigTransaction(transaction2, lsig);
+    // let signed = []
+    // signed.push( SignedTxn1.blob )
+    // signed.push( SignedTxn2.blob )
+    // let opttx = (await client.sendRawTransaction(signed).do());
     // await waitForConfirmation(client, opttx.txId);
 
-    //Application call with notification
+    // Application call with notification
     const enc = new TextEncoder("utf-8")
     let appArgs = []
+    receiver = sender;
     appArgs.push(enc.encode("Notify"));
-    let note = enc.encode("This is another notification")
+    params.fee = 2000;
+    params.flatFee = true;
+    let note = enc.encode("This is forth notification.")
+    let closeRemainderTo =undefined;
     let accounts = []
     let  foreignApps = []
     let foreignAssets = []
-    let opttxn = algosdk.makeApplicationNoOpTxn(lsig.address(),params,appIndex,appArgs,accounts,foreignApps,foreignAssets,note);
-    rawSignedTxn = algosdk.signLogicSigTransaction(opttxn, lsig);
-    let opttx = (await client.sendRawTransaction(rawSignedTxn.blob).do());
+    let transaction1 = algosdk.makePaymentTxnWithSuggestedParams(sender, receiver, 0,closeRemainderTo,
+    note,params);
+    let transaction2 = algosdk.makeApplicationNoOpTxn(lsig.address(),params,appIndex,appArgs,accounts,foreignApps,foreignAssets,note);
+    transaction2.fee = 0
+    let txns = [transaction1, transaction2]
+    let txgroup = algosdk.assignGroupID(txns);
+    let SignedTxn1 =  algosdk.signTransaction(transaction1, myAccount.sk ); 
+    let SignedTxn2 = algosdk.signLogicSigTransaction(transaction2, lsig);
+    let signed = []
+    signed.push( SignedTxn1.blob )
+    signed.push( SignedTxn2.blob )
+    let opttx = (await client.sendRawTransaction(signed).do());
     await waitForConfirmation(client, opttx.txId);
 
 })().catch(e => {
-    console.log(e);
+    console.log(e.status);
 });
 
 function getUint8Int(number) {
