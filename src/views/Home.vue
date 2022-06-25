@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       navStatus: false,
-      currentPane: "notification",
+      currentPane: "public",
       searchbarStatus: true,
     };
   },

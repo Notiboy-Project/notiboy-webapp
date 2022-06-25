@@ -10,11 +10,11 @@
       <li :class="{ 'sidebar-clicked': privateClick }" @click="privateClicked">
         Private Channels
       </li>
-      <li :class="{ 'sidebar-clicked': createClick }" @click="createClicked">
-        Create Channel
-      </li>
       <li :class="{ 'sidebar-clicked': sendClick }" @click="sendClicked">
         Send Notification
+      </li>
+      <li :class="{ 'sidebar-clicked': createClick }" @click="createClicked">
+        Create Channel
       </li>
     </ul>
   </div>
@@ -24,8 +24,8 @@
 export default {
   data() {
     return {
-      notiClick: true,
-      publicClick: false,
+      notiClick: false,
+      publicClick: true,
       privateClick: false,
       createClick: false,
       sendClick: false,

@@ -2,65 +2,21 @@
   <div class="channel-card">
     <div class="channel-card-details">
       <div class="channel-card-name">
-        <p class="channel-name">AoA</p>
-        <img
+        <p class="channel-name">{{channel.name}}</p>
+        <img v-if="channel.verified==true"
           src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
         />
       </div>
-      <div class="channel-card-address">
+      <!-- <div class="channel-card-address">
         <img
           @click="copyToClipBoard(textToCopy)"
           src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
         />
         <p ref="address" style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-      </div>
+      </div> -->
     </div>
-    <div class="optin">Opt-In</div>
-  </div>
-  <div class="channel-card">
-    <div class="channel-card-details">
-      <div class="channel-card-name">
-        <p class="channel-name">Angry penguins NFT Series</p>
-        <img
-          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-        />
-      </div>
-      <div class="channel-card-address">
-        <img src="https://img.icons8.com/material-rounded/20/ffffff/copy.png" />
-        <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-      </div>
-    </div>
-    <div class="optin">Opt-In</div>
-  </div>
-  <div class="channel-card">
-    <div class="channel-card-details">
-      <div class="channel-card-name">
-        <p class="channel-name">Rand Labs</p>
-        <img
-          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-        />
-      </div>
-      <div class="channel-card-address">
-        <img src="https://img.icons8.com/material-rounded/20/ffffff/copy.png" />
-        <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-      </div>
-    </div>
-    <div class="optin">Opt-In</div>
-  </div>
-  <div class="channel-card">
-    <div class="channel-card-details">
-      <div class="channel-card-name">
-        <p class="channel-name">Rand Labs</p>
-        <img
-          src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-        />
-      </div>
-      <div class="channel-card-address">
-        <img src="https://img.icons8.com/material-rounded/20/ffffff/copy.png" />
-        <p style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-      </div>
-    </div>
-    <div class="optin">Opt-In</div>
+    <div v-if="channel.optIn == false" class="optin">Opt-In</div>
+    <div v-if="channel.optIn == true" class="optin">Opt-Out</div>
   </div>
 </template>
 
@@ -70,6 +26,9 @@ export default {
     return {
       textToCopy: "NQCFGXWCNSTB....",
     };
+  },
+  props:{
+    channel: Object
   },
   methods: {
     copyToClipBoard(textToCopy) {
@@ -115,7 +74,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 15%;
-  height: 30%;
+  height: 50%;
   border-radius: 0.6rem;
   background-color: var(--teritary);
   cursor: pointer;

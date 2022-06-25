@@ -1,8 +1,8 @@
 require('dotenv').config()
+var base32 = require('hi-base32');
 let  fs = require('fs');
 let path = require('path');
 const algosdk = require('algosdk');
-const { logicSigFromByte } = require('algosdk');
 // const algod  = require('./client');
 // let client = algod.client;
 
@@ -10,6 +10,10 @@ const token = '';
 const server = 'https://testnet-api.algonode.cloud';
 const port = '';
 const client = new algosdk.Algodv2(token, server, port);
+
+// Indexer
+const BASE_SERVER = "https://testnet-idx.algonode.cloud";
+let algoIndexer = new algosdk.Indexer(token, BASE_SERVER, port);
 
 
 let PASSPHRASE = process.env.PASSPHRASE6;
@@ -36,11 +40,11 @@ console.log(sender);
 
     // logic sig creation
     let filePath = path.join(__dirname, 'logicsig.teal');
-    console.log(filePath)
+    //console.log(filePath)
     let data = fs.readFileSync(filePath);
     let results = await client.compile(data).do();
-    console.log("Hash = " + results.hash);
-    console.log("Result = " + results.result);
+    //console.log("Hash = " + results.hash);
+    //console.log("Result = " + results.result);
     let program = new Uint8Array(Buffer.from(results.result, "base64"));
     let args = getUint8Int(2022);
     let lsig = new algosdk.LogicSigAccount(program, args);
@@ -98,13 +102,13 @@ console.log(sender);
 //     let opttx = (await client.sendRawTransaction(signed).do());
 //     await waitForConfirmation(client, opttx.txId);
 
-    // Indexer
-    const BASE_SERVER = "https://testnet-idx.algonode.cloud";
-    let algoIndexer = new algosdk.Indexer(token, BASE_SERVER, port);
-
+    
     let  localState = await algoIndexer.lookupAccountAppLocalStates(lsig.address()).applicationID(appIndex).do();
-    console.log(localState['apps-local-states'][0]['key-value'].length)
-
+    let transactionDetails = localState['apps-local-states'][0]['key-value']
+    let transactionIds= getTransactionIds(transactionDetails)
+    let notifications = await getNotifications(transactionIds)
+    console.log(notifications)
+ 
 })().catch(e => {
     console.log(e.status);
 });
@@ -114,6 +118,48 @@ console.log(sender);
         const bigIntValue = BigInt(number);
         buffer.writeBigUInt64BE(bigIntValue);
         return  [Uint8Array.from(buffer)];
+    }
+
+    function getTransactionIds(notifications){
+        let transactionIds = [];
+        for(let j=0; j< notifications.length; j++){
+            // converting key into array buffer
+            let bufferKey = Buffer.from(notifications[j].key, 'base64')
+            let finalKey;
+            // checking for "index" string to keep it as is
+            let stringConvert =  bufferKey.toString('utf-8')
+            if( stringConvert == "index"){
+                finalKey = stringConvert;
+                continue;
+            }else{
+                // other key values are converted into int
+               finalKey = algosdk.decodeUint64(bufferKey, "mixed")
+            }
+            // Decoding the value into string and removing "===="
+            let decodedValue = base32.encode(Buffer.from(notifications[j].value.bytes, 'base64'));
+            for(let i=decodedValue.length-1; i>=0; i--){
+                if(decodedValue[i] == '='){
+                    decodedValue =  decodedValue.slice(0,-1);
+                }
+                else{
+                    transactionIds.splice(finalKey-1, 0, decodedValue)
+                    break;
+                }
+            }
+        }
+        return transactionIds;
+    }
+
+    async function getNotifications(transactionIds){
+        let notifications =[];
+        for(let i=0; i<transactionIds.length;i++){
+            let txnId = transactionIds[i];
+            let txnInfo = await algoIndexer.lookupTransactionByID(txnId).do();
+  
+            let note = (Buffer.from(txnInfo.transaction.note, 'base64')).toString('utf-8')
+            notifications.unshift(note)
+        }
+        return notifications;
     }
 
 

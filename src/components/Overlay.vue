@@ -8,8 +8,8 @@
       <li @click="notiClicked">Noti Box</li>
       <li @click="publicClicked">Public Channels</li>
       <li @click="privateClicked">Private channels</li>
-      <li @click="createClicked">Create Channels</li>
       <li @click="sendClicked">Send Notification</li>
+      <li @click="createClicked">Create Channels</li>
       <li>Disconnect</li>
     </div>
   </div>
