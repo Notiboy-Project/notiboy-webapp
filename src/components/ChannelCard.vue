@@ -33,7 +33,7 @@ export default {
   methods: {
     copyToClipBoard(textToCopy) {
       navigator.clipboard.writeText(textToCopy);
-    },
+    }
   },
 };
 </script>
@@ -49,6 +49,7 @@ export default {
   background-color: var(--primary);
   border-radius: 0.6rem;
   padding: 3% 2% 3% 2%;
+  cursor: pointer;
 }
 
 .channel-card-details {
@@ -73,8 +74,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 15%;
-  height: 50%;
+  width: 7rem;
+  height: 2.5rem;
   border-radius: 0.6rem;
   background-color: var(--teritary);
   cursor: pointer;
@@ -82,7 +83,7 @@ export default {
 
 @media only screen and (max-width: 981px) {
   .optin {
-    width: 15%;
+    width: 7rem;
     height: 3rem;
     border-radius: 0.6rem;
     background-color: var(--teritary);
@@ -97,7 +98,7 @@ export default {
   }
 
   .optin {
-    width: 6rem;
+    width: 7rem;
     height: 3rem;
     border-radius: 0.6rem;
     background-color: var(--teritary);

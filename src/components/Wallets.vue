@@ -1,39 +1,37 @@
 <template>
-  <div class="wallet-pane">
-    <div class="connect-heading">Connect Your Wallet</div>
-
-    <div class="wallet-row1">
-      <div @click="MyAlgoLogin" class="wallet">
-        <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
-        <p>My Algo Wallet</p>
+  <transition name="modal-fade">
+    <div class="wallet-backdrop">
+      <div class="wallet-pane">
+        <div class="wallet-header">
+          <p class="connect-heading">Connect Your Wallet</p>
+          <!-- Button to close the Wallet Connect -->
+          <button type="button" class="closebtn" @click="closeConnectOverlay">&times;</button>
+        </div>
+        <div class="wallet-row1">
+          <div @click="myAlgoConnect" class="wallet">
+            <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
+            <p>My Algo Wallet</p>
+          </div>
+          <div @click="connectPeraWallet" class="wallet">
+            <img
+              src="../assets/pera.png"
+              width="30"
+              height="30"
+              alt="Pera Button"
+            />
+            <p>Pera Wallet</p>
+          </div>
+        </div>
       </div>
-      <div @click="connectPeraWallet" class="wallet">
-        <img
-          src="../assets/pera.png"
-          width="30"
-          height="30"
-          alt="Pera Button"
-        />
-        <p>Pera Wallet</p>
-      </div>
-      <!-- <div @click="AlgoSignerConnect" class="wallet">
-        <img
-          src="../assets/algosigner.jpg"
-          width="30"
-          height="30"
-          alt="Algo Signer"
-        />
-        <p>Algo Signer</p>
-      </div> -->
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 import MyAlgoConnect from "@randlabs/myalgo-connect";
 import { PeraWalletConnect } from "@perawallet/connect";
-import router from "../router";
 const peraWallet = new PeraWalletConnect();
+import store from '../store'
 
 export default {
   data() {
@@ -43,31 +41,20 @@ export default {
     };
   },
   methods: {
-    //Method extracts the address from the response of my algo wallet and send it to store
-    // AlgoSignerConnect: async (ledger) => {
-    //   try {
-    //     if (!ledger) ledger = "MainNet";
-    //     if (window.AlgoSigner !== undefined) {
-    //       await window.AlgoSigner.connect();
-    //       let response = await window.AlgoSigner.accounts({
-    //         ledger: ledger,
-    //       });
-    //       console.log(response)
-    //     } else {
-    //       return false;
-    //     }
-    //   } catch (err) {
-    //     return [];
-    //   }
-    // },
+    async myAlgoConnect(){
+      if(this.MyAlgoLogin && typeof this.MyAlgoLogin === 'function'){
+        await this.MyAlgoLogin();
+      }
+      this.closeConnectOverlay();
+    },
     //Method to connect with my algo wallet
     MyAlgoLogin: async () => {
       try {
         const myAlgoConnect = new MyAlgoConnect();
-        let response = await myAlgoConnect.connect();
-        let address = response[0].address;
-        localStorage.setItem("address", address);
-        router.replace({ name: "Dashboard" });
+        const response = await myAlgoConnect.connect();
+        const address = response[0].address;
+        localStorage.setItem("notiboy_address", address);
+        store.dispatch("updateAddress");
       } catch (err) {
         return [];
       }
@@ -75,22 +62,40 @@ export default {
     //Method to connect via pera wellet
     connectPeraWallet() {
       peraWallet.connect().then((accounts) => {
-        let account = accounts[0];
-        localStorage.setItem("address", account);
-        router.replace({ name: "Dashboard" });
+        const address= accounts[0];
+        localStorage.setItem("notiboy_address", address);
+        store.dispatch("updateAddress");
+        this.$emit("closeConnectOverlay");
       });
     },
+    // Emit Event to close the wallet connect Overlay
+    closeConnectOverlay(){
+      this.$emit("closeConnectOverlay")
+    }
   },
 };
 </script>
 
 <style scoped>
+/* Wallet model backdrop */
+.wallet-backdrop {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(7, 7, 7, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
 /* Notification Pane */
 .wallet-pane {
-  background: var(--secondary);
+  background: var(--primary);
   border-radius: 3rem;
-  margin-right: 8%;
-  margin-bottom: 4%;
+  margin-right: 2%;
+  margin-bottom: 2%;
   margin-left: 1%;
   display: flex;
   flex-direction: column;
@@ -98,13 +103,25 @@ export default {
   align-items: center;
   min-height: 60vh;
 }
-
+.wallet-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wallet-header .closebtn {
+  font-size: 6rem;
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--teritary);
+  border: none;
+  background: transparent;
+}
 .connect-heading {
   color: #ffffff;
-  font-size: 5rem;
+  font-size: 3rem;
   padding: 2% 0;
+  margin-right: 5rem;
 }
-
 .wallet-row1 {
   display: flex;
   flex-direction: row;
@@ -121,17 +138,49 @@ export default {
   justify-content: space-evenly;
   border: 0.3rem solid var(--teritary);
   border-radius: 0.3rem;
-  width: 20rem;
+  width: 25rem;
   font-size: 1.6rem;
   cursor: pointer;
   margin-bottom: 8%;
 }
 
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+    opacity: 0;
+}
+
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity .5s ease;
+}
+
 @media only screen and (max-width: 980px) {
+  .wallet-pane {
+    background: var(--primary);
+    width: 60%;
+    border-radius: 3rem;
+    margin-right: 8%;
+    margin-bottom: 4%;
+    margin-left: 1%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    min-height: 60vh;
+  }
+  .wallet-header{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
   .connect-heading {
     color: #ffffff;
     font-size: 3.5rem;
     padding: 2% 0;
+  }
+  .wallet-header .closebtn {
+    font-size: 4rem;
+    text-decoration: none;
   }
   .wallet-row1 {
     display: flex;
@@ -145,9 +194,10 @@ export default {
 
 @media only screen and (max-width: 850px) {
   .wallet-pane {
-    background: var(--secondary);
+    background: var(--primary);
+    width: 70%;
     border-radius: 3rem;
-    margin-right: 8%;
+    margin-right: 1%;
     margin-bottom: 1%;
     margin-left: 1%;
     display: flex;
@@ -165,10 +215,31 @@ export default {
 
 @media only screen and (max-width: 580px) {
   .wallet-pane {
-    background: var(--secondary);
+    background: var(--primary);
+    width: 80%;
     border-radius: 3rem;
-    margin-right: 8%;
+    margin-right: 3%;
     margin-bottom: 1%;
+    margin-left: 3%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .connect-heading {
+    color: #ffffff;
+    font-size: 2.5rem;
+    padding: 2% 0;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .wallet-pane {
+    background: var(--primary);
+    width: 100%;
+    border-radius: 3rem;
+    margin-bottom: 1%;
+    margin-right: 1%;
     margin-left: 1%;
     display: flex;
     flex-direction: column;
@@ -177,35 +248,20 @@ export default {
   }
   .connect-heading {
     color: #ffffff;
-    font-size: 2.3rem;
+    font-size: 2.5rem;
     padding: 2% 0;
   }
-}
-
-@media only screen and (max-width: 480px) {
-  .wallet-pane {
-    background: var(--secondary);
-    width: 100%;
-    border-radius: 3rem;
-    margin-bottom: 1%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
+  .wallet-header .closebtn {
+    font-size: 5rem;
+    text-decoration: none;
   }
-  .connect-heading {
-    color: #ffffff;
-    font-size: 1.8rem;
-    padding: 2% 0;
-  }
-
   .wallet {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     border: 0.3rem solid var(--teritary);
     border-radius: 0.3rem;
-    width: 15rem;
+    width: 20rem;
     font-size: 1.3rem;
     cursor: pointer;
     margin-bottom: 8%;

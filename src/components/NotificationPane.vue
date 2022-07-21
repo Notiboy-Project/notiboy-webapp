@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import Noticard from "@/components/NotiCard.vue";
@@ -35,12 +36,24 @@ export default {
         {number: 3, channel: 'Securecerts', title:'Immutable Certificates', text: 'Issue immutable certificates via blockchain using securecerts.', date:"21 Sep 2022",verified:true},
         {number: 4, channel: 'Anirand', title:'Rug Number 1', text: 'We are planning for a rug of rugs. This is anirand metaverse of metaverse.', date:"25 Sep 2022",verified:false}
       ],
-      channels:[
+      channelList:[
         {number: 1, name: 'AoA', verified:true, optIn:true},
         {number: 2, name: 'Angry Penguins NFT', verified:true, optIn:false},
         {number: 3, name: 'Rand Labs', verified:false, optIn:false},
         {number: 4, name: 'ANS', verified:true, optIn:false}
       ]
+    }
+  },
+  computed:{
+    ...mapGetters(["searchText"]),
+    channels(){
+      if(this.searchText !=""){
+          return this.channelList.filter(channel =>{
+          return channel.name.toLowerCase().includes(this.searchText.toLowerCase())
+        })
+      }else{
+        return this.channelList
+      }   
     }
   },
   props: ["selection"],

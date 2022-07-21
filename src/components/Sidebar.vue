@@ -1,21 +1,21 @@
 <template>
   <div class="sidebar-scroll">
     <ul class="sidebar-menu">
-      <li :class="{ 'sidebar-clicked': notiClick }" @click="notiClicked">
+      <router-link :to="{name: 'PrivateNotification'}" @click="notiClicked">
         Noti Box
-      </li>
-      <li :class="{ 'sidebar-clicked': publicClick }" @click="publicClicked">
-        Public Channels
-      </li>
-      <li :class="{ 'sidebar-clicked': privateClick }" @click="privateClicked">
+      </router-link>
+      <router-link :to="{name: 'Channels'}"  @click="publicClicked">
+        Channels
+      </router-link>
+      <!-- <li :class="{ 'sidebar-clicked': privateClick }" @click="privateClicked">
         Private Channels
-      </li>
-      <li :class="{ 'sidebar-clicked': sendClick }" @click="sendClicked">
+      </li> -->
+      <router-link :to="{name: 'SendNotification'}"  @click="sendClicked">
         Send Notification
-      </li>
-      <li :class="{ 'sidebar-clicked': createClick }" @click="createClicked">
+      </router-link>
+      <router-link :to="{name: 'CreateChannel'}"  @click="createClicked">
         Create Channel
-      </li>
+      </router-link>
     </ul>
   </div>
 </template>
@@ -24,8 +24,8 @@
 export default {
   data() {
     return {
-      notiClick: false,
-      publicClick: true,
+      notiClick: true,
+      publicClick: false,
       privateClick: false,
       createClick: false,
       sendClick: false,
@@ -34,50 +34,25 @@ export default {
   // The methods to emit an event to parent (and from there to side pane) to change the dashboard.
   methods: {
     notiClicked() {
-      (this.notiClick = true),
-        (this.publicClick = false),
-        (this.privateClick = false),
-        (this.createClick = false),
-        (this.sendClick = false),
-        this.$emit("pane-selection", "noticlick");
+      this.$emit("pane-selection", "noticlick");
     },
 
     publicClicked() {
-      (this.notiClick = false),
-        (this.publicClick = true),
-        (this.privateClick = false),
-        (this.createClick = false),
-        (this.sendClick = false),
-        this.$emit("pane-selection", "publicclick");
+      this.$emit("pane-selection", "publicclick");
     },
 
     privateClicked() {
-      (this.notiClick = false),
-        (this.publicClick = false),
-        (this.privateClick = true),
-        (this.createClick = false),
-        (this.sendClick = false),
-        this.$emit("pane-selection", "privateclick");
+      this.$emit("pane-selection", "privateclick");
     },
 
     createClicked() {
-      (this.notiClick = false),
-        (this.publicClick = false),
-        (this.privateClick = false),
-        (this.createClick = true),
-        (this.sendClick = false),
-        this.$emit("pane-selection", "createclick");
+      this.$emit("pane-selection", "createclick");
     },
 
     sendClicked() {
-      (this.notiClick = false),
-        (this.publicClick = false),
-        (this.privateClick = false),
-        (this.createClick = false),
-        (this.sendClick = true),
-        this.$emit("pane-selection", "sendclick");
+      this.$emit("pane-selection", "sendclick");
     },
-  },
+  }
 };
 </script>
 
@@ -91,25 +66,28 @@ export default {
   margin-left: 8%;
   min-height: 40rem;
 }
-.sidebar-menu {
+.sidebar-menu,
+.sidebar-menu  a {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   justify-content: space-around;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
   color: white;
   list-style: none;
   align-items: flex-start;
 }
 
-.sidebar-menu li {
+.sidebar-menu .router-link-active {
   transition: all 0.5s ease;
   cursor: pointer;
   font-size: 1.5rem;
 }
 /* This css class triggered when clicking options. */
-.sidebar-clicked {
+.router-link-active {
   background-color: var(--teritary);
-  padding: 1.5rem;
+  padding:1.5rem;
   border-radius: 1rem;
 }
 

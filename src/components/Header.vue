@@ -7,9 +7,9 @@
     <div class="main-address">
       <p>{{ updatedAddress }}</p>
     </div>
-    <div @click="disconnect" class="wallet">
+    <div @click="walletInteraction" class="wallet">
       <ul class="wallet-background">
-        <p>Disconnect</p>
+        <p>{{connectionStatus}}</p>
       </ul>
     </div>
   </div>
@@ -35,22 +35,29 @@
 
 <script>
 import { mapGetters } from "vuex";
-import router from "../router";
 export default {
   computed: {
-    ...mapGetters(["updatedAddress"]),
+    ...mapGetters(["updatedAddress", "connectionStatus"]),
   },
+  // Declare the event emiited and props passed nav-opened event emiited for opening the mobile nav. Show prop is 
+  // passed from parent component as a boolean value which determine which navigation to show (mobile or main nav).
   emits: ["nav-opened"],
   props: ["show"],
   methods: {
     navOpen() {
       this.$emit("nav-opened");
     },
-    disconnect() {
-      this.$store.dispatch("disconnect");
-      router.replace({ name: "Connect" });
+    walletInteraction() {
+      if(this.connectionStatus == "Connect"){
+        this.$emit('showConnectOverlay')
+      }else{
+        this.$store.dispatch("disconnect");
+      }     
     },
   },
+  mounted(){
+    this.$store.dispatch("updateAddress");
+  }
 };
 </script>
 
@@ -76,7 +83,7 @@ export default {
 }
 .brand_logo a img {
   padding: 0 0 0 1rem;
-  width: 5rem;
+  width: 7rem;
   height: auto;
 }
 .wallet {

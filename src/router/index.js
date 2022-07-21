@@ -1,13 +1,17 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from "../views/Home.vue";
-import Connect from "../views/Connect.vue";
+import PrivateNotification from "../components/NotiCard.vue";
+import Channels from "../components/ChannelCard.vue";
+import SendNotification from "../components/SendCard.vue";
+import createChannel from "../components/ChannelCard.vue"
 import NotFound from "../views/404.vue";
 
 const routes = [
-  { path: "/", redirect: "/dashboard" },
-  { path: "/connect", name: "Connect", component: Connect },
-  { path: "/dashboard", name: "Dashboard", component: Home },
+  { path: "/", redirect: "/privateNotification" },
+  { path: "/privateNotification", name:"PrivateNotification", component:PrivateNotification},
+  { path: "/channels", name:"Channels", component:Channels},
+  { path: "/sendNotification", name:"SendNotification", component:SendNotification},
+  { path: "/createChannel", name:"CreateChannel", component:createChannel},
   { path: "/:notfound(.*)", name: "Notfound", component: NotFound },
 ];
 

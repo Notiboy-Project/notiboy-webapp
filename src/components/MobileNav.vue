@@ -5,11 +5,11 @@
     <!-- Overlay content -->
     <div class="overlay-content">
       <li>{{ updatedAddress }}</li>
-      <li @click="notiClicked">Noti Box</li>
-      <li @click="publicClicked">Public Channels</li>
-      <li @click="privateClicked">Private channels</li>
-      <li @click="sendClicked">Send Notification</li>
-      <li @click="createClicked">Create Channels</li>
+      <router-link :to="{name: 'PrivateNotification'}" @click="notiClicked">Noti Box</router-link>
+      <router-link :to="{name: 'Channels'}"  @click="publicClicked">Channels</router-link>
+      <!-- <li @click="privateClicked">Private channels</li> -->
+      <router-link :to="{name: 'SendNotification'}"  @click="sendClicked">Send Notification</router-link>
+      <router-link :to="{name: 'CreateChannel'}"  @click="createClicked">Create Channels</router-link>
       <li>Disconnect</li>
     </div>
   </div>
@@ -49,52 +49,27 @@ export default {
     },
 
     notiClicked() {
-      (this.notiClick = true),
-        (this.publicClick = false),
-        (this.privateClick = false),
-        (this.createClick = false),
-        (this.sendClick = false),
-        this.closeNav();
+      this.closeNav();
       this.$emit("pane-selection", "noticlick");
     },
 
     publicClicked() {
-      (this.notiClick = false),
-        (this.publicClick = true),
-        (this.privateClick = false),
-        (this.createClick = false),
-        (this.sendClick = false),
-        this.closeNav();
+      this.closeNav();
       this.$emit("pane-selection", "publicclick");
     },
 
     privateClicked() {
-      (this.notiClick = false),
-        (this.publicClick = false),
-        (this.privateClick = true),
-        (this.createClick = false),
-        (this.sendClick = false),
-        this.closeNav();
+      this.closeNav();
       this.$emit("pane-selection", "privateclick");
     },
 
     createClicked() {
-      (this.notiClick = false),
-        (this.publicClick = false),
-        (this.privateClick = false),
-        (this.createClick = true),
-        (this.sendClick = false),
-        this.closeNav();
+      this.closeNav();
       this.$emit("pane-selection", "createclick");
     },
 
     sendClicked() {
-      (this.notiClick = false),
-        (this.publicClick = false),
-        (this.privateClick = false),
-        (this.createClick = false),
-        (this.sendClick = true),
-        this.closeNav();
+      this.closeNav();
       this.$emit("pane-selection", "sendclick");
     },
   },
@@ -123,6 +98,7 @@ export default {
   margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
 }
 
+.overlay a,
 .overlay li {
   padding: 8px;
   text-decoration: none;
@@ -133,6 +109,8 @@ export default {
   cursor: pointer;
 }
 
+.overlay a:hover,
+.overlay a:focus
 .overlay li:hover,
 .overlay li:focus {
   color: var(--teritary);
