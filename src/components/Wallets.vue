@@ -5,7 +5,9 @@
         <div class="wallet-header">
           <p class="connect-heading">Connect Your Wallet</p>
           <!-- Button to close the Wallet Connect -->
-          <button type="button" class="closebtn" @click="closeConnectOverlay">&times;</button>
+          <button type="button" class="closebtn" @click="closeConnectOverlay">
+            &times;
+          </button>
         </div>
         <div class="wallet-row1">
           <div @click="myAlgoConnect" class="wallet">
@@ -31,7 +33,7 @@
 import MyAlgoConnect from "@randlabs/myalgo-connect";
 import { PeraWalletConnect } from "@perawallet/connect";
 const peraWallet = new PeraWalletConnect();
-import store from '../store'
+import store from "../store";
 
 export default {
   data() {
@@ -41,8 +43,8 @@ export default {
     };
   },
   methods: {
-    async myAlgoConnect(){
-      if(this.MyAlgoLogin && typeof this.MyAlgoLogin === 'function'){
+    async myAlgoConnect() {
+      if (this.MyAlgoLogin && typeof this.MyAlgoLogin === "function") {
         await this.MyAlgoLogin();
       }
       this.closeConnectOverlay();
@@ -62,16 +64,16 @@ export default {
     //Method to connect via pera wellet
     connectPeraWallet() {
       peraWallet.connect().then((accounts) => {
-        const address= accounts[0];
+        const address = accounts[0];
         localStorage.setItem("notiboy_address", address);
         store.dispatch("updateAddress");
         this.$emit("closeConnectOverlay");
       });
     },
     // Emit Event to close the wallet connect Overlay
-    closeConnectOverlay(){
-      this.$emit("closeConnectOverlay")
-    }
+    closeConnectOverlay() {
+      this.$emit("closeConnectOverlay");
+    },
   },
 };
 </script>
@@ -103,7 +105,7 @@ export default {
   align-items: center;
   min-height: 60vh;
 }
-.wallet-header{
+.wallet-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -146,12 +148,12 @@ export default {
 
 .modal-fade-enter-from,
 .modal-fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  transition: opacity .5s ease;
+  transition: opacity 0.5s ease;
 }
 
 @media only screen and (max-width: 980px) {
@@ -168,7 +170,7 @@ export default {
     align-items: center;
     min-height: 60vh;
   }
-  .wallet-header{
+  .wallet-header {
     display: flex;
     justify-content: space-around;
     align-items: center;

@@ -1,23 +1,19 @@
 <template>
-  <div class="notification-card">
-    <div class="notification-card-name">
-      <p>{{ notification.channel }}</p>
-      <img
-        v-if="notification.verified == true"
-        src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
-      />
-    </div>
-    <p class="notification-card-heading">{{ notification.title }}</p>
-    <p class="notification-card-notification">
-      {{ notification.text }}
-    </p>
-    <p class="notification-card-timestamp">{{ notification.date }}</p>
-  </div>
+  <noti-card
+    v-for="notification in notifications"
+    :notification="notification"
+    :key="notification.number"
+  ></noti-card>
 </template>
 <script>
+import NotiCard from "@/cards/NotiCard.vue";
+import { mapGetters } from "vuex";
 export default {
-  props: {
-    notification: Object,
+  computed: {
+    ...mapGetters(["notifications"]),
+  },
+  components: {
+    notiCard: NotiCard,
   },
 };
 </script>

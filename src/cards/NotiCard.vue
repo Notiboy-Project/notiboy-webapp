@@ -1,24 +1,25 @@
 <template>
   <div class="notification-card">
     <div class="notification-card-name">
-      <p>{{notification.channel}}</p>
-      <img v-if="notification.verified==true"
+      <p>{{ notification.channel }}</p>
+      <img
+        v-if="notification.verified == true"
         src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
       />
     </div>
-    <p class="notification-card-heading">{{notification.title}}</p>
+    <p class="notification-card-heading">{{ notification.title }}</p>
     <p class="notification-card-notification">
-      {{notification.text}}
+      {{ notification.text }}
     </p>
-    <p class="notification-card-timestamp">{{notification.date}}</p>
+    <p class="notification-card-timestamp">{{ notification.date }}</p>
   </div>
 </template>
 <script>
 export default {
-  props:{
-    notification: Object
-  }     
-}
+  props: {
+    notification: Object,
+  },
+};
 </script>
 <style scoped>
 .notification-card {

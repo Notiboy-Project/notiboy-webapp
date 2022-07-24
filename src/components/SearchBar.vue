@@ -1,7 +1,13 @@
 <template>
   <!-- Search bar  -->
   <div v-if="selectedComponent == true" class="search">
-    <input type="text" class="searchTerm" v-model="searchText" @keyup="startSeach" placeholder="Search" />
+    <input
+      type="text"
+      class="searchTerm"
+      v-model="searchText"
+      @keyup="startSeach"
+      placeholder="Search"
+    />
     <button type="submit" class="searchButton">
       <img src="https://img.icons8.com/ios-glyphs/30/ffffff/search--v1.png" />
     </button>
@@ -13,16 +19,16 @@ export default {
   data() {
     return {
       selectedComponent: this.selection,
-      searchText:""
+      searchText: "",
     };
   },
   // Injected selection from App to show or hide search bar
   inject: ["selection"],
-  watch:{
-    searchText(){
-      this.$store.dispatch('searchTextUpdate', this.searchText)
-    }
-  }
+  watch: {
+    searchText() {
+      this.$store.dispatch("searchTextUpdate", this.searchText);
+    },
+  },
 };
 </script>
 

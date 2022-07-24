@@ -1,19 +1,16 @@
 <template>
   <div class="sidebar-scroll">
     <ul class="sidebar-menu">
-      <router-link :to="{name: 'PrivateNotification'}" @click="notiClicked">
+      <router-link :to="{ name: 'PersonalNotification' }" @click="notiClicked">
         Noti Box
       </router-link>
-      <router-link :to="{name: 'Channels'}"  @click="publicClicked">
+      <router-link :to="{ name: 'Channels' }" @click="publicClicked">
         Channels
       </router-link>
-      <!-- <li :class="{ 'sidebar-clicked': privateClick }" @click="privateClicked">
-        Private Channels
-      </li> -->
-      <router-link :to="{name: 'SendNotification'}"  @click="sendClicked">
+      <router-link :to="{ name: 'SendNotification' }" @click="sendClicked">
         Send Notification
       </router-link>
-      <router-link :to="{name: 'CreateChannel'}"  @click="createClicked">
+      <router-link :to="{ name: 'CreateChannel' }" @click="createClicked">
         Create Channel
       </router-link>
     </ul>
@@ -22,15 +19,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      notiClick: true,
-      publicClick: false,
-      privateClick: false,
-      createClick: false,
-      sendClick: false,
-    };
-  },
   // The methods to emit an event to parent (and from there to side pane) to change the dashboard.
   methods: {
     notiClicked() {
@@ -52,7 +40,7 @@ export default {
     sendClicked() {
       this.$emit("pane-selection", "sendclick");
     },
-  }
+  },
 };
 </script>
 
@@ -67,7 +55,7 @@ export default {
   min-height: 40rem;
 }
 .sidebar-menu,
-.sidebar-menu  a {
+.sidebar-menu a {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -87,7 +75,7 @@ export default {
 /* This css class triggered when clicking options. */
 .router-link-active {
   background-color: var(--teritary);
-  padding:1.5rem;
+  padding: 1.5rem;
   border-radius: 1rem;
 }
 

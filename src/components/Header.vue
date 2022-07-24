@@ -4,12 +4,21 @@
     <div class="brand_logo">
       <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
+    <div @click.prevent="doAjax" style="cursor: pointer">
+      <img height="30" src="../assets/refresh.png" alt="refresh" />
+    </div>
+    <loading
+      v-model:active="isLoading"
+      :can-cancel="false"
+      :on-cancel="onCancel"
+      :is-full-page="fullPage"
+    />
     <div class="main-address">
       <p>{{ updatedAddress }}</p>
     </div>
     <div @click="walletInteraction" class="wallet">
       <ul class="wallet-background">
-        <p>{{connectionStatus}}</p>
+        <p>{{ connectionStatus }}</p>
       </ul>
     </div>
   </div>
@@ -34,12 +43,19 @@
 </template>
 
 <script>
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 import { mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   computed: {
     ...mapGetters(["updatedAddress", "connectionStatus"]),
   },
-  // Declare the event emiited and props passed nav-opened event emiited for opening the mobile nav. Show prop is 
+  // Declare the event emiited and props passed nav-opened event emiited for opening the mobile nav. Show prop is
   // passed from parent component as a boolean value which determine which navigation to show (mobile or main nav).
   emits: ["nav-opened"],
   props: ["show"],
@@ -48,16 +64,26 @@ export default {
       this.$emit("nav-opened");
     },
     walletInteraction() {
-      if(this.connectionStatus == "Connect"){
-        this.$emit('showConnectOverlay')
-      }else{
+      if (this.connectionStatus == "Connect") {
+        this.$emit("showConnectOverlay");
+      } else {
         this.$store.dispatch("disconnect");
-      }     
+      }
+    },
+    doAjax() {
+      this.isLoading = true;
+      // simulate AJAX
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 5000);
     },
   },
-  mounted(){
+  mounted() {
     this.$store.dispatch("updateAddress");
-  }
+  },
+  components: {
+    Loading,
+  },
 };
 </script>
 

@@ -1,7 +1,11 @@
 <template>
   <!-- Home view which consist of header, notification pane, sidebar -->
   <div class="home">
-    <main-header @nav-opened="navStatus = true" :show="true" @showConnectOverlay="showWalletConnectOverlay"></main-header>
+    <main-header
+      @nav-opened="navStatus = true"
+      :show="true"
+      @showConnectOverlay="showWalletConnectOverlay"
+    ></main-header>
     <!-- Receives an emitted event and then send it to overlay -->
     <mobile-overlay
       @pane-selection="changePane"
@@ -9,13 +13,14 @@
       :nav-overlay="navStatus"
     ></mobile-overlay>
     <!-- An event is emitted when the close button is clicked in the child component -->
-    <walletConnect v-show="walletConnectOverlay" @closeConnectOverlay="closeWalletConnectOverlay"></walletConnect>
+    <walletConnect
+      v-show="walletConnectOverlay"
+      @closeConnectOverlay="closeWalletConnectOverlay"
+    ></walletConnect>
     <div class="notification-container">
       <main-sidebar @pane-selection="changePane"></main-sidebar>
       <!-- Using props to send the selection from side bar to notification pane -->
-      <notification-pane :selection="currentPane">
-         <router-view></router-view>
-      </notification-pane>
+      <notification-pane :selection="currentPane"></notification-pane>
     </div>
   </div>
 </template>
@@ -35,7 +40,7 @@ export default {
       navStatus: false,
       currentPane: "notification",
       searchbarStatus: true,
-      walletConnectOverlay: false
+      walletConnectOverlay: false,
     };
   },
   methods: {
@@ -44,9 +49,9 @@ export default {
         this.currentPane = "notification";
         this.searchbarStatus = true;
       } else if (changevar == "publicclick") {
-        this.currentPane = "public";
+        this.currentPane = "channel";
         this.searchbarStatus = true;
-      }else if (changevar == "privateclick") {
+      } else if (changevar == "privateclick") {
         this.currentPane = "public";
         this.searchbarStatus = true;
       } else if (changevar == "createclick") {
@@ -58,14 +63,15 @@ export default {
       }
     },
 
-    showWalletConnectOverlay(){
-      this.walletConnectOverlay = true
+    showWalletConnectOverlay() {
+      this.walletConnectOverlay = true;
     },
 
-    closeWalletConnectOverlay(){
-      this.walletConnectOverlay = false
-    }
+    closeWalletConnectOverlay() {
+      this.walletConnectOverlay = false;
+    },
   },
+
   // Using provide inject to send the change in selection to grand child component(searchbar)
   provide() {
     return {
@@ -80,7 +86,7 @@ export default {
     notificationPane: NotificationPane,
     // publicPane: PublicPane,
     mobileOverlay: Overlay,
-    walletConnect: WalletConnect
+    walletConnect: WalletConnect,
   },
 };
 </script>

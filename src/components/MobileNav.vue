@@ -5,11 +5,19 @@
     <!-- Overlay content -->
     <div class="overlay-content">
       <li>{{ updatedAddress }}</li>
-      <router-link :to="{name: 'PrivateNotification'}" @click="notiClicked">Noti Box</router-link>
-      <router-link :to="{name: 'Channels'}"  @click="publicClicked">Channels</router-link>
+      <router-link :to="{ name: 'PersonalNotification' }" @click="notiClicked"
+        >Noti Box</router-link
+      >
+      <router-link :to="{ name: 'Channels' }" @click="publicClicked"
+        >Channels</router-link
+      >
       <!-- <li @click="privateClicked">Private channels</li> -->
-      <router-link :to="{name: 'SendNotification'}"  @click="sendClicked">Send Notification</router-link>
-      <router-link :to="{name: 'CreateChannel'}"  @click="createClicked">Create Channels</router-link>
+      <router-link :to="{ name: 'SendNotification' }" @click="sendClicked"
+        >Send Notification</router-link
+      >
+      <router-link :to="{ name: 'CreateChannel' }" @click="createClicked"
+        >Create Channels</router-link
+      >
       <li>Disconnect</li>
     </div>
   </div>
@@ -21,11 +29,6 @@ export default {
   data() {
     return {
       height: "0%",
-      notiClick: true,
-      publicClick: false,
-      privateClick: false,
-      createClick: false,
-      sendClick: false,
     };
   },
   computed: {
@@ -110,8 +113,7 @@ export default {
 }
 
 .overlay a:hover,
-.overlay a:focus
-.overlay li:hover,
+.overlay a:focus .overlay li:hover,
 .overlay li:focus {
   color: var(--teritary);
 }
