@@ -28,7 +28,6 @@
 <script>
 // @ is an alias to /src
 import { computed } from "vue";
-
 import Sidebar from "@/components/Sidebar.vue";
 import NotificationPane from "@/components/NotificationPane.vue";
 import Overlay from "@/components/MobileNav.vue";

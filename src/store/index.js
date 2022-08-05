@@ -1,5 +1,12 @@
 import { createStore } from "vuex";
-
+import algosdk from "algosdk";
+import sdk from '../sdk/index.js';
+const client = new algosdk.Algodv2('', 'https://testnet-api.algonode.cloud', '');
+const indexer = new algosdk.Indexer('', 'https://testnet-idx.algonode.cloud', '');
+const notiBoy = new sdk(client, indexer);
+import MyAlgoConnect from "@randlabs/myalgo-connect";
+const myAlgoWallet = new MyAlgoConnect();
+const delay = require('delay');
 export default createStore({
   state() {
     return {
@@ -49,6 +56,9 @@ export default createStore({
     };
   },
   getters: {
+    userAddress(state){
+      return state.address
+    },
     updatedAddress(state) {
       if (state.address == null) {
         return "";
@@ -112,6 +122,37 @@ export default createStore({
     searchTextUpdate(context, searchText) {
       context.commit("searchTextUpdate", searchText);
     },
+    // async signMyAlgoWallet(_,optInTxn){
+    //    const signedTxn = 
+    //    return signedTxn
+    // },
+    async createChannel(_,channelDetails){
+      try {
+        // creating logic sig
+        const logicsig = await notiBoy.createLogicSig(channelDetails.name);
+
+        //Funding logic sig
+        const fundingTxn = await notiBoy.provideBasicLsigBalance(channelDetails.address, logicsig.address());
+        const signFundingtxn = await myAlgoWallet.signTransaction(fundingTxn.toByte());
+        const response1 = await client.sendRawTransaction(signFundingtxn.blob).do(); 
+        console.log(response1);
+
+        await delay(5000);
+        //opt-in to channel (channel creation)
+        const optInTxn = await notiBoy.optin(channelDetails.name, logicsig.address(),channelDetails.address,'dapp');
+
+        // Group transactions received from opt-in
+        const signedTxn1 = await myAlgoWallet.signTransaction(optInTxn[0].toByte());
+        const signedTxn2 = algosdk.signLogicSigTransaction(optInTxn[1], logicsig);
+        let groupTxns = [];
+        groupTxns.push( signedTxn1.blob )
+        groupTxns.push( signedTxn2.blob )
+        const response2 = await client.sendRawTransaction(groupTxns).do(); 
+        console.log(response2);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   },
   modules: {},
 });

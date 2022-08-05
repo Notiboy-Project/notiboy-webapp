@@ -6,7 +6,7 @@
       maxlength="20"
       placeholder="Channel Name"
     />
-    <div class="channel-type">
+    <!-- <div class="channel-type">
       <div class="channel-type-private">
         <input
           type="radio"
@@ -20,7 +20,7 @@
         <input type="radio" id="public" value="public" v-model="channelType" />
         <label for="public">Public</label>
       </div>
-    </div>
+    </div> -->
     <button @click.prevent="createChannel">Create Channel</button>
 
     <p style="text-align: center">
@@ -30,17 +30,25 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import store from "../store";
 export default {
   data() {
     return {
       channelName: "",
-      channelType: "",
+      address: this.updatedAddress,
+      connection: this.connectionStatus
     };
   },
-
+  computed: {
+    ...mapGetters(["userAddress", "connectionStatus"]),
+  },
   methods: {
     createChannel() {
-      console.log("channel created");
+      store.dispatch('createChannel',{
+        name:this.channelName,
+        address: this.userAddress
+      })
     },
   },
 };

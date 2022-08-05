@@ -4,7 +4,7 @@
     <!-- <div class="notification-header"></div> -->
     <!-- Notification area which will be injected with notification cards -->
     <div class="channel-main">
-      <router-view />
+      <router-view v-if="connectionStatus == 'Disconnect'"></router-view>
       <!-- Dummy Text while not connected & a div for spacing -->
       <div
         v-if="
