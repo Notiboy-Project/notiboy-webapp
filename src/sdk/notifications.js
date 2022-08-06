@@ -115,7 +115,9 @@ export default class Notification extends RPC {
       .lookupAccountAppLocalStates(userAddress)
       .applicationID(APP_INDEX)
       .do();
+    if (localState["apps-local-states"] == null) return [];
     const channelDetails = localState["apps-local-states"][0]["key-value"];
+    if (channelDetails == null) return;
     const transactionIds = this.getTransactionDetails(channelDetails);
     const notifications = [];
     for (let i = 0; i < transactionIds.length; i++) {

@@ -25,14 +25,14 @@
         <label for="public">Public</label>
       </div>
     </div>
-      <input
-        id="receiverAddress"
-        v-if="channelType == 'personal'"
-        type="text"
-        v-model="receiverAddress"
-        placeholder="Please Input User Address"
-        label="userAddress"
-      />
+    <input
+      id="receiverAddress"
+      v-if="channelType == 'personal'"
+      type="text"
+      v-model="receiverAddress"
+      placeholder="Please Input User Address"
+      label="userAddress"
+    />
 
     <textarea
       v-model="notification"
@@ -54,7 +54,7 @@ export default {
       selectedChannel: "Select One Channel",
       notification: "",
       filters: [],
-      receiverAddress:""
+      receiverAddress: "",
     };
   },
 
@@ -83,7 +83,7 @@ export default {
           notification: this.notification,
         });
       }
-    }
+    },
   },
 
   created() {
@@ -133,7 +133,7 @@ select option {
   padding-left: 3rem;
 }
 
-#receiverAddress{
+#receiverAddress {
   background-color: var(--primary);
   border-color: var(--primary);
   border-radius: 0.5rem;
@@ -143,7 +143,7 @@ select option {
   height: 3rem;
 }
 
-textarea{
+textarea {
   background-color: var(--primary);
   color: white;
   width: 30rem;
@@ -158,7 +158,7 @@ textarea{
   padding-top: 15px;
 }
 
-input.channel-name{
+input.channel-name {
   font-weight: bold;
   width: 30rem;
   height: 10rem;

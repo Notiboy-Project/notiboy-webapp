@@ -1,12 +1,14 @@
 <template>
+  <optin />
   <channel-card
     v-for="channel in channelList"
     :channel="channel"
-    :key="channel.number"
+    :key="channel.channelName"
   ></channel-card>
 </template>
 <script>
 import ChannelCard from "@/cards/ChannelCard.vue";
+import Optin from "@/cards/Optin.vue";
 import { mapGetters } from "vuex";
 import store from "../store";
 export default {
@@ -29,6 +31,7 @@ export default {
   },
   components: {
     channelCard: ChannelCard,
+    optin: Optin,
   },
 };
 </script>

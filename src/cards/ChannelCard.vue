@@ -61,7 +61,6 @@ export default {
   background-color: var(--primary);
   border-radius: 0.6rem;
   padding: 3% 2% 3% 2%;
-  cursor: pointer;
 }
 
 .channel-card-details {
@@ -74,6 +73,7 @@ export default {
   font-size: 1.8rem;
   font-weight: bold;
   align-items: center;
+  cursor: pointer;
 }
 .channel-card-address {
   display: flex;

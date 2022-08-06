@@ -7,11 +7,11 @@
         src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
       />
     </div>
-    <p class="notification-card-heading">{{ notification.title }}</p>
+    <!-- <p class="notification-card-heading">{{ notification.title }}</p> -->
     <p class="notification-card-notification">
-      {{ notification.text }}
+      {{ notification.notification }}
     </p>
-    <p class="notification-card-timestamp">{{ notification.date }}</p>
+    <p class="notification-card-timestamp">{{ notification.timeStamp }}</p>
   </div>
 </template>
 <script>

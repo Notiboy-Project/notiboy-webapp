@@ -21,40 +21,8 @@ export default createStore({
       address: "",
       searchText: "",
       connectionStatus: "",
-      notifications: [
-        {
-          number: 1,
-          channel: "Angry Penguins",
-          title: "Prepare for War",
-          text: "We are planning for a war on ice world. Let the world unite.",
-          date: "12 Sep 2022",
-          verified: true,
-        },
-        {
-          number: 2,
-          channel: "A for Algorand",
-          title: "Twitter Spaces",
-          text: "Welcome to twitter spaces everyday morning EST.",
-          date: "18 Sep 2022",
-          verified: true,
-        },
-        {
-          number: 3,
-          channel: "Securecerts",
-          title: "Immutable Certificates",
-          text: "Issue immutable certificates via blockchain using securecerts.",
-          date: "21 Sep 2022",
-          verified: true,
-        },
-        {
-          number: 4,
-          channel: "Anirand",
-          title: "Rug Number 1",
-          text: "We are planning for a rug of rugs. This is anirand metaverse of metaverse.",
-          date: "25 Sep 2022",
-          verified: false,
-        },
-      ],
+      personalNotifications: [],
+      publicNotification: [],
       channels: [],
     };
   },
@@ -75,8 +43,8 @@ export default createStore({
     connectionStatus(state) {
       return state.connectionStatus;
     },
-    notifications(state) {
-      return state.notifications;
+    personalNotifications(state) {
+      return state.personalNotifications;
     },
     channels(state) {
       return state.channels;
@@ -101,6 +69,9 @@ export default createStore({
     },
     updateChannelList(state, channelList) {
       state.channels = channelList;
+    },
+    updatePersonalNotifications(state, personalNotifications) {
+      state.personalNotifications = personalNotifications;
     },
   },
   actions: {
@@ -173,12 +144,12 @@ export default createStore({
         console.error(error);
       }
     },
-
+    //Get list of channels
     async getChannelList(context) {
       const channelList = await notiBoy.listPublicChannels();
       context.commit("updateChannelList", channelList);
     },
-
+    //send public notifications
     async sendPublicNotification(_, channelDetails) {
       try {
         const logicsig = await notiBoy.createLogicSig(
@@ -210,7 +181,7 @@ export default createStore({
         console.log(error);
       }
     },
-
+    //send personal notifications
     async sendPersonalNotification(_, channelDetails) {
       try {
         const logicsig = await notiBoy.createLogicSig(
@@ -242,6 +213,36 @@ export default createStore({
       } catch (error) {
         console.log(error);
       }
+    },
+    //get personal notifications
+    async getPersonalNotifications(context, userAddress) {
+      const personalNotifications = await notiBoy
+        .notification()
+        .getPersonalNotification(userAddress);
+      context.commit("updatePersonalNotifications", personalNotifications);
+    },
+    //optin to channels
+    async channelOptin(_, userAddress) {
+      //opt-in to channel (channel creation)
+      const channelName = "";
+      const optInTxn = await notiBoy.optin(
+        channelName,
+        userAddress,
+        userAddress,
+        "user"
+      );
+      // Group transactions received from opt-in
+      const signedTxn1 = await myAlgoWallet.signTransaction(
+        optInTxn[0].toByte()
+      );
+      const signedTxn2 = await myAlgoWallet.signTransaction(
+        optInTxn[1].toByte()
+      );
+      let groupTxns = [];
+      groupTxns.push(signedTxn1.blob);
+      groupTxns.push(signedTxn2.blob);
+      const response2 = await client.sendRawTransaction(groupTxns).do();
+      console.log(response2);
     },
   },
   modules: {},
