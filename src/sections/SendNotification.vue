@@ -2,35 +2,92 @@
   <div class="send-card">
     <select v-model="selectedChannel" class="channel-name" name="selectedValue">
       <option disabled>Select One Channel</option>
-      <option v-for="item in filters" :key="item" :value="item">
-        {{ item }}
+      <option
+        v-for="channel in userOwnedChannels"
+        :key="channel.channelName"
+        :value="channel.channelName"
+      >
+        {{ channel.channelName }}
       </option>
     </select>
-    <textarea style="resize: none" id="w3review" name="w3review">
-The governance vote session for DAO starting this month.</textarea
-    >
-    <button @click.prevent="createChannel">Send Notification</button>
+    <div class="channel-type">
+      <div class="channel-type-private">
+        <input
+          type="radio"
+          id="personal"
+          value="personal"
+          v-model="channelType"
+        />
+        <label for="personal">Personal</label>
+      </div>
+      <div class="channel-type-public">
+        <input type="radio" id="public" value="public" v-model="channelType" />
+        <label for="public">Public</label>
+      </div>
+    </div>
+      <input
+        id="receiverAddress"
+        v-if="channelType == 'personal'"
+        type="text"
+        v-model="receiverAddress"
+        placeholder="Please Input User Address"
+        label="userAddress"
+      />
 
-    <p style="text-align: center">
-      Note: Notifications you send are stored on a public blockchain.
-    </p>
+    <textarea
+      v-model="notification"
+      placeholder="Please enter the notification"
+      style="resize: none"
+      id="w3review"
+      name="w3review"
+    ></textarea>
+    <button @click.prevent="sendNotification">Send Notification</button>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import store from "../store";
 export default {
   data() {
     return {
-      channelName: "",
       channelType: "",
       selectedChannel: "Select One Channel",
+      notification: "",
       filters: [],
+      receiverAddress:""
     };
   },
 
-  methods: {
-    createChannel() {
-      console.log("channel created");
+  computed: {
+    ...mapGetters(["userAddress", "channels"]),
+    userOwnedChannels() {
+      return this.channels.filter((channel) => {
+        return channel.dappAddress.includes(this.userAddress);
+      });
     },
+  },
+
+  methods: {
+    sendNotification() {
+      if (this.channelType == "public") {
+        store.dispatch("sendPublicNotification", {
+          address: this.userAddress,
+          channelName: this.selectedChannel,
+          notification: this.notification,
+        });
+      } else if (this.channelType == "personal") {
+        store.dispatch("sendPersonalNotification", {
+          address: this.userAddress,
+          receiverAddress: this.receiverAddress,
+          channelName: this.selectedChannel,
+          notification: this.notification,
+        });
+      }
+    }
+  },
+
+  created() {
+    store.dispatch("getChannelList");
   },
 };
 </script>
@@ -66,21 +123,42 @@ select option {
   background: var(--primary);
   color: #fff;
 }
-textarea {
+.channel-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.channel-type-public {
+  padding-left: 3rem;
+}
+
+#receiverAddress{
+  background-color: var(--primary);
+  border-color: var(--primary);
+  border-radius: 0.5rem;
+  font-family: "Sora", sans-serif;
+  color: white;
+  width: 30rem;
+  height: 3rem;
+}
+
+textarea{
   background-color: var(--primary);
   color: white;
   width: 30rem;
-  height: 10rem;
+  height: 6rem;
   max-width: 30rem;
-  max-height: 10rem;
+  max-height: 6rem;
   border-color: var(--primary);
   border-radius: 1rem;
   font-family: "Sora", sans-serif;
   font-size: 1.4rem;
   text-align: center;
+  padding-top: 15px;
 }
 
-input.channel-name {
+input.channel-name{
   font-weight: bold;
   width: 30rem;
   height: 10rem;

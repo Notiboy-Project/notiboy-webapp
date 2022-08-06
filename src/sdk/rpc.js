@@ -2,7 +2,6 @@ import algosdk from "algosdk";
 import * as base32 from "hi-base32";
 
 export default class RPC {
-
   constructor(client, indexer) {
     this.client = client;
     this.indexer = indexer;
@@ -12,21 +11,21 @@ export default class RPC {
     return new Uint8Array(Buffer.from(arg));
   }
 
-  convertToArrayBuffer(arg){
+  convertToArrayBuffer(arg) {
     const args = [];
     args.push([Buffer.from(arg)]);
     return args;
   }
 
-  encodeUint(arg){
+  encodeUint(arg) {
     return algosdk.encodeUint64(arg);
   }
 
-  encodeString(arg){
+  encodeString(arg) {
     return new Uint8Array(Buffer.from(arg, "utf8"));
   }
 
-  base32EncodeArrayBuffer(arg){
+  base32EncodeArrayBuffer(arg) {
     return base32.encode(Buffer.from(arg, "base64"));
   }
 
@@ -65,7 +64,7 @@ export default class RPC {
   }
 
   //Get channel details for private notifications
-  getTransactionDetails(transactionDetails){
+  getTransactionDetails(transactionDetails) {
     let channelDetails = [];
     for (let j = 0; j < transactionDetails.length; j++) {
       // converting key into array buffer
@@ -80,8 +79,8 @@ export default class RPC {
         } else {
           channelDetails.push({
             finalKey,
-            decodedValue
-          })
+            decodedValue,
+          });
           break;
         }
       }

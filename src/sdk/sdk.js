@@ -3,7 +3,7 @@ import {
   // APP_ARG_FOR_DAPP,
   APP_INDEX,
   DAPP_ESCROW,
-  OPTIN_FEE
+  OPTIN_FEE,
 } from "./constants";
 import RPC from "./rpc";
 import Notification from "./notifications";
@@ -18,17 +18,12 @@ export default class SDK extends RPC {
   async createLogicSig(channelName) {
     const teal = LsigTeal(channelName);
     const results = await this.client.compile(teal).do();
-    const program = new Uint8Array(Buffer.from(results.result, 'base64'));
-    return new algosdk.LogicSigAccount(
-      program
-    );  
+    const program = new Uint8Array(Buffer.from(results.result, "base64"));
+    return new algosdk.LogicSigAccount(program);
   }
 
   // Funding logicsig with minimum balance of 1 algo
-  async provideBasicLsigBalance(
-    address,
-    lsig
-  ){
+  async provideBasicLsigBalance(address, lsig) {
     const params = await this.client.getTransactionParams().do();
     return algosdk.makePaymentTxnWithSuggestedParams(
       address,
@@ -48,21 +43,19 @@ export default class SDK extends RPC {
     optinAddress,
     address,
     appArg
-  ){
+  ) {
     //TODO: dapp name validations if necessary
     if (!this.isValidAddress(address)) {
       throw new Error("Invalid address");
     }
     let appArgs = [];
-    if(channelName == ""){
+    if (channelName == "") {
+      appArgs = [this.convertToIntArray(appArg)];
+    } else {
       appArgs = [
         this.convertToIntArray(appArg),
-      ]
-    }else{
-      appArgs = [
-        this.convertToIntArray(appArg),
-        this.convertToIntArray(channelName) 
-      ];  
+        this.convertToIntArray(channelName),
+      ];
     }
     const params = await this.client.getTransactionParams().do();
     params.fee = 2000;
@@ -91,7 +84,7 @@ export default class SDK extends RPC {
     return groupTxns;
   }
   // Get list of public channels
-  async listPublicChannels(){
+  async listPublicChannels() {
     const appInfo = await this.indexer.lookupApplications(APP_INDEX).do();
     let channelDetails = [];
     for (
@@ -107,11 +100,11 @@ export default class SDK extends RPC {
       const addressList = Buffer.from(
         appInfo.application.params["global-state"][i].value.bytes,
         "base64"
-      )
+      );
       channelDetails.push({
         channelName: key,
-        dappAddress: algosdk.encodeAddress(addressList.slice(0,32)),
-        lsigAddress: algosdk.encodeAddress(addressList.slice(33))
+        dappAddress: algosdk.encodeAddress(addressList.slice(0, 32)),
+        lsigAddress: algosdk.encodeAddress(addressList.slice(33)),
       });
     }
     return channelDetails;

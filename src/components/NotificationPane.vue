@@ -31,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["connectionStatus"])
+    ...mapGetters(["connectionStatus"]),
   },
   props: ["selection"],
   components: {

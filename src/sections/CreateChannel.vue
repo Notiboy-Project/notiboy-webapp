@@ -37,7 +37,7 @@ export default {
     return {
       channelName: "",
       address: this.updatedAddress,
-      connection: this.connectionStatus
+      connection: this.connectionStatus,
     };
   },
   computed: {
@@ -45,10 +45,10 @@ export default {
   },
   methods: {
     createChannel() {
-      store.dispatch('createChannel',{
-        name:this.channelName,
-        address: this.userAddress
-      })
+      store.dispatch("createChannel", {
+        name: this.channelName,
+        address: this.userAddress,
+      });
     },
   },
 };

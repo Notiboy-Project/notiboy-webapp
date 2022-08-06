@@ -1,21 +1,19 @@
 import algosdk from "algosdk";
 import RPC from "./rpc";
 
-import { APP_INDEX, ZERO_TXN, APP_ARG_PUB, APP_ARG_PVT, DAPP_ESCROW} from "./constants";
+import {
+  APP_INDEX,
+  ZERO_TXN,
+  APP_ARG_PUB,
+  APP_ARG_PVT,
+  DAPP_ESCROW,
+} from "./constants";
 
 export default class Notification extends RPC {
   // Send Public Notification
-  async sendPublicNotification(
-    address,
-    lsig,
-    dappName,
-    notification
-  ){
+  async sendPublicNotification(address, lsig, dappName, notification) {
     const note = this.encodeString(notification);
-    let appArgs = [
-      this.encodeString(APP_ARG_PUB),
-      this.encodeString(dappName)
-    ];
+    let appArgs = [this.encodeString(APP_ARG_PUB), this.encodeString(dappName)];
 
     const params = await this.client.getTransactionParams().do();
     params.fee = 2000;
@@ -67,22 +65,23 @@ export default class Notification extends RPC {
     return notifications;
   }
 
-  // Send Private Notification
+  // Send Personal Notification
   async sendPersonalNotification(
     address,
     userAddress,
-    channelName,
     lsig,
+    channelName,
     notification
-  ){
+  ) {
     const note = this.encodeString(notification);
     let appArgs = [];
     appArgs.push(this.encodeString(APP_ARG_PVT));
     appArgs.push(this.encodeString(channelName));
-    let accounts = []
-    accounts.push(userAddress)
+    let accounts = [];
+    accounts.push(userAddress);
     const params = await this.client.getTransactionParams().do();
-
+    params.fee = 2000;
+    params.flatFee = true;
     const paymentTxn = algosdk.makePaymentTxnWithSuggestedParams(
       address,
       DAPP_ESCROW,
@@ -103,7 +102,7 @@ export default class Notification extends RPC {
       undefined,
       note
     );
-
+    notificationTransaction.fee = 0;
     const groupTxns = [paymentTxn, notificationTransaction];
 
     algosdk.assignGroupID(groupTxns);
@@ -123,12 +122,12 @@ export default class Notification extends RPC {
       const txnId = transactionIds[i].decodedValue;
       const txnInfo = await this.indexer.lookupTransactionByID(txnId).do();
       const notification = {
-        channel:transactionIds[i].finalKey,
+        channel: transactionIds[i].finalKey,
         notification: this.decodeNote(txnInfo.transaction.note),
         timeStamp: txnInfo.transaction["round-time"],
       };
       notifications.unshift(notification);
     }
     return notifications;
-  }  
+  }
 }

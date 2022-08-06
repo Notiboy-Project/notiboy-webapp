@@ -1,20 +1,20 @@
 <template>
-  <div @click="showPublicChannel" class="channel-card">
+  <div class="channel-card">
     <div class="channel-card-details">
-      <div class="channel-card-name">
-        <p class="channel-name">{{ channel.name }}</p>
+      <div @click="showPublicChannel" class="channel-card-name">
+        <p class="channel-name">{{ channel.channelName }}</p>
         <img
           v-if="channel.verified == true"
           src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
         />
       </div>
-      <!-- <div class="channel-card-address">
-          <img
-            @click="copyToClipBoard(textToCopy)"
-            src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
-          />
-          <p ref="address" style="padding-left: 0.4rem">NQCFGXWCNSTB....</p>
-        </div> -->
+      <div class="channel-card-address">
+        <img
+          @click="copyToClipBoard(channel.dappAddress)"
+          src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
+        />
+        <p ref="address" style="padding-left: 0.4rem">{{ showAddress }}</p>
+      </div>
     </div>
     <div v-if="channel.optIn == false" class="optin">Opt-In</div>
     <div v-if="channel.optIn == true" class="optin">Opt-Out</div>
@@ -25,15 +25,20 @@
 export default {
   data() {
     return {
-      textToCopy: "NQCFGXWCNSTB....",
+      channelAddress: this.channel.dappAddress,
     };
   },
   props: {
     channel: Object,
   },
+  computed: {
+    showAddress() {
+      return this.channelAddress.slice(0, 14) + "...";
+    },
+  },
   methods: {
-    copyToClipBoard(textToCopy) {
-      navigator.clipboard.writeText(textToCopy);
+    copyToClipBoard(channelAddress) {
+      navigator.clipboard.writeText(channelAddress);
     },
     showPublicChannel() {
       this.$router.push({

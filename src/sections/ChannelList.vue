@@ -8,13 +8,14 @@
 <script>
 import ChannelCard from "@/cards/ChannelCard.vue";
 import { mapGetters } from "vuex";
+import store from "../store";
 export default {
   computed: {
-    ...mapGetters(["searchText","channels"]),
+    ...mapGetters(["searchText", "channels"]),
     channelList() {
       if (this.searchText != "") {
         return this.channels.filter((channel) => {
-          return channel.name
+          return channel.channelName
             .toLowerCase()
             .includes(this.searchText.toLowerCase());
         });
@@ -22,6 +23,9 @@ export default {
         return this.channels;
       }
     },
+  },
+  created() {
+    store.dispatch("getChannelList");
   },
   components: {
     channelCard: ChannelCard,
