@@ -25,7 +25,7 @@
 export default {
   data() {
     return {
-      channelAddress: this.channel.dappAddress,
+      channelAddress: this.channel.dappAddress
     };
   },
   props: {
@@ -43,7 +43,7 @@ export default {
     showPublicChannel() {
       this.$router.push({
         name: "PublicNotification",
-        params: { channel: this.channel.name },
+        params: { lsig: this.channel.lsigAddress },
       });
     },
   },

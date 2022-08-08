@@ -19,7 +19,7 @@ const routes = [
     component: Channels,
   },
   {
-    path: "/notification/public/:channel",
+    path: "/notification/public/:lsig",
     name: "PublicNotification",
     component: PublicNotification,
   },

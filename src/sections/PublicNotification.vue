@@ -1,16 +1,22 @@
 <template>
   <noti-card
-    v-for="notification in notifications"
+    v-for="notification in publicNotifications"
     :notification="notification"
-    :key="notification.number"
+    :key="notification.timeStamp"
   ></noti-card>
 </template>
 <script>
 import NotiCard from "@/cards/NotiCard.vue";
 import { mapGetters } from "vuex";
+import { useRoute } from 'vue-router';
+import store from "../store";
 export default {
   computed: {
-    ...mapGetters(["notifications"]),
+    ...mapGetters(["publicNotifications"]),
+  },
+  beforeMount() {
+    const route = useRoute();
+    store.dispatch("getPublicNotifications", route.params.lsig);
   },
   components: {
     notiCard: NotiCard,

@@ -22,7 +22,7 @@ export default createStore({
       searchText: "",
       connectionStatus: "",
       personalNotifications: [],
-      publicNotification: [],
+      publicNotifications: [],
       channels: [],
     };
   },
@@ -45,6 +45,9 @@ export default createStore({
     },
     personalNotifications(state) {
       return state.personalNotifications;
+    },
+    publicNotifications(state) {
+      return state.publicNotifications;
     },
     channels(state) {
       return state.channels;
@@ -72,6 +75,9 @@ export default createStore({
     },
     updatePersonalNotifications(state, personalNotifications) {
       state.personalNotifications = personalNotifications;
+    },
+    updatePublicNotifications(state, publicNotifications) {
+      state.publicNotifications = publicNotifications;
     },
   },
   actions: {
@@ -214,7 +220,7 @@ export default createStore({
         console.log(error);
       }
     },
-    //get personal notifications
+    //Get personal notifications
     async getPersonalNotifications(context, userAddress) {
       const personalNotifications = await notiBoy
         .notification()
@@ -243,6 +249,13 @@ export default createStore({
       groupTxns.push(signedTxn2.blob);
       const response2 = await client.sendRawTransaction(groupTxns).do();
       console.log(response2);
+    },
+    //Get public notifications
+    async getPublicNotifications(context, lsig) {
+      const publicNotifications = await notiBoy
+        .notification()
+        .getPublicNotification(lsig);
+      context.commit("updatePublicNotifications", publicNotifications);
     },
   },
   modules: {},
