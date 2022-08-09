@@ -34,7 +34,7 @@ export default {
   computed: {
     showAddress() {
       return this.channelAddress.slice(0, 14) + "...";
-    },
+    }
   },
   methods: {
     copyToClipBoard(channelAddress) {

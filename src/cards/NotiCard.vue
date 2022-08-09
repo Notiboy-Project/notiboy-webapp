@@ -11,14 +11,20 @@
     <p class="notification-card-notification">
       {{ notification.notification }}
     </p>
-    <p class="notification-card-timestamp">{{ notification.timeStamp }}</p>
+    <p class="notification-card-timestamp">{{ notificationTime}}</p>
   </div>
 </template>
 <script>
+import date from 'date-and-time';
 export default {
   props: {
     notification: Object,
   },
+  computed:{
+    notificationTime(){
+      return date.format(new Date(this.notification.timeStamp * 1000),'YYYY/MM/DD HH:mm')
+    }
+  }
 };
 </script>
 <style scoped>
