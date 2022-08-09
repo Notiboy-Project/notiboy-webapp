@@ -24,8 +24,7 @@
     <button @click.prevent="createChannel">Create Channel</button>
 
     <p style="text-align: center">
-      Note: Public channels are used for sending public notifications and
-      private channels are used to send receiver specific notifications.
+      Note: Personal notifications and public notifications can be sent from the created channels.
     </p>
   </div>
 </template>
@@ -37,7 +36,7 @@ export default {
     return {
       channelName: "",
       address: this.updatedAddress,
-      connection: this.connectionStatus,
+      connection: this.connectionStatus
     };
   },
   computed: {
@@ -45,10 +44,10 @@ export default {
   },
   methods: {
     createChannel() {
-      store.dispatch("createChannel", {
-        name: this.channelName,
-        address: this.userAddress,
-      });
+      store.dispatch('createChannel',{
+        name:this.channelName,
+        address: this.userAddress
+      })
     },
   },
 };
@@ -87,16 +86,6 @@ input.form-control:focus {
   box-shadow: none;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
-}
-
-.channel-type {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.channel-type-public {
-  padding-left: 3rem;
 }
 
 button {

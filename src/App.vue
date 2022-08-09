@@ -27,7 +27,6 @@
 
 <script>
 // @ is an alias to /src
-import { computed } from "vue";
 import Sidebar from "@/components/Sidebar.vue";
 import NotificationPane from "@/components/NotificationPane.vue";
 import Overlay from "@/components/MobileNav.vue";
@@ -37,31 +36,11 @@ export default {
   data() {
     return {
       navStatus: false,
-      currentPane: "notification",
       searchbarStatus: true,
       walletConnectOverlay: false,
     };
   },
   methods: {
-    changePane(changevar) {
-      if (changevar == "noticlick") {
-        this.currentPane = "notification";
-        this.searchbarStatus = true;
-      } else if (changevar == "publicclick") {
-        this.currentPane = "channel";
-        this.searchbarStatus = true;
-      } else if (changevar == "privateclick") {
-        this.currentPane = "public";
-        this.searchbarStatus = true;
-      } else if (changevar == "createclick") {
-        this.currentPane = "create";
-        this.searchbarStatus = false;
-      } else if (changevar == "sendclick") {
-        this.currentPane = "send";
-        this.searchbarStatus = false;
-      }
-    },
-
     showWalletConnectOverlay() {
       this.walletConnectOverlay = true;
     },
@@ -69,13 +48,6 @@ export default {
     closeWalletConnectOverlay() {
       this.walletConnectOverlay = false;
     },
-  },
-
-  // Using provide inject to send the change in selection to grand child component(searchbar)
-  provide() {
-    return {
-      selection: computed(() => this.searchbarStatus),
-    };
   },
   created() {
     this.$store.dispatch("updateAddress");

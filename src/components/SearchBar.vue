@@ -1,6 +1,6 @@
 <template>
   <!-- Search bar  -->
-  <div v-if="selectedComponent == true" class="search">
+  <div class="search">
     <input
       type="text"
       class="searchTerm"
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -22,8 +23,9 @@ export default {
       searchText: "",
     };
   },
-  // Injected selection from App to show or hide search bar
-  inject: ["selection"],
+  computed: {
+    ...mapGetters(["searchBarStatus"]),
+  },
   watch: {
     searchText() {
       this.$store.dispatch("searchTextUpdate", this.searchText);

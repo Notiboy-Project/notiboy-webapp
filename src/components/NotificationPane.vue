@@ -1,6 +1,6 @@
 <template>
   <main-pane>
-    <search-bar></search-bar>
+    <search-bar v-if="searchBarStatus == true"></search-bar>
     <!-- <div class="notification-header"></div> -->
     <!-- Notification area which will be injected with notification cards -->
     <div class="channel-main">
@@ -8,7 +8,7 @@
       <!-- Dummy Text while not connected & a div for spacing -->
       <div
         v-if="
-          (selection == 'create' || selection == 'send') &&
+          //(searchBarStatus == true) &&
           connectionStatus == 'Connect'
         "
         style="margin-top: 90px"
@@ -31,7 +31,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["connectionStatus"]),
+    ...mapGetters(["connectionStatus", "searchBarStatus"]),
   },
   props: ["selection"],
   components: {

@@ -24,6 +24,7 @@ export default createStore({
       personalNotifications: [],
       publicNotifications: [],
       channels: [],
+      searchBarStatus:false
     };
   },
   getters: {
@@ -52,6 +53,9 @@ export default createStore({
     channels(state) {
       return state.channels;
     },
+    searchBarStatus(state){
+      return state.searchBarStatus;
+    }
   },
   mutations: {
     selectAddress(state, address) {
@@ -79,6 +83,9 @@ export default createStore({
     updatePublicNotifications(state, publicNotifications) {
       state.publicNotifications = publicNotifications;
     },
+    updateSearchBarStatus(state, status){
+      state.searchBarStatus = status;
+    }
   },
   actions: {
     selectAddress(context, address) {

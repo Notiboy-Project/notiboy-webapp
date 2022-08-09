@@ -30,7 +30,7 @@
       v-if="channelType == 'personal'"
       type="text"
       v-model="receiverAddress"
-      placeholder="Please Input User Address"
+      placeholder="Please Input Receiver Address"
       label="userAddress"
     />
 
