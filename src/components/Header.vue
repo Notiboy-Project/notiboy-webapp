@@ -4,7 +4,7 @@
     <div class="brand_logo">
       <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
-    <div @click.prevent="doAjax" style="cursor: pointer">
+    <div @click.prevent="doRefresh" style="cursor: pointer">
       <img height="30" src="../assets/refresh.png" alt="refresh" />
     </div>
     <loading
@@ -46,6 +46,7 @@
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
 import { mapGetters } from "vuex";
+import store from "../store";
 export default {
   data() {
     return {
@@ -67,19 +68,18 @@ export default {
       if (this.connectionStatus == "Connect") {
         this.$emit("showConnectOverlay");
       } else {
-        this.$store.dispatch("disconnect");
+        store.dispatch("disconnect");
       }
     },
-    doAjax() {
+    doRefresh() {
       this.isLoading = true;
-      // simulate AJAX
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 5000);
-    },
+      store.dispatch("getPersonalNotifications", this.userAddress)
+      store.dispatch("getChannelList").then(() =>  this.isLoading = false);
+
+    }
   },
   mounted() {
-    this.$store.dispatch("updateAddress");
+    store.dispatch("updateAddress");
   },
   components: {
     Loading,

@@ -1,6 +1,6 @@
 <template>
   <noti-card
-    v-for="notification in publicNotifications"
+    v-for="notification in publicNotificationsList"
     :notification="notification"
     :key="notification.timeStamp"
   ></noti-card>
@@ -12,7 +12,18 @@ import { useRoute } from 'vue-router';
 import store from "../store";
 export default {
   computed: {
-    ...mapGetters(["publicNotifications"]),
+    ...mapGetters(["publicNotifications","searchText"]),
+    publicNotificationsList() {
+      if (this.searchText != "") {
+        return this.publicNotifications.filter((notification) => {
+          return notification.notification
+            .toLowerCase()
+            .includes(this.searchText.toLowerCase());
+        });
+      } else {
+        return this.publicNotifications;
+      }
+    }
   },
   beforeMount() {
     const route = useRoute();
