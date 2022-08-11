@@ -50,7 +50,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      fullPage: true
+      fullPage: true,
     };
   },
   computed: {
@@ -73,10 +73,9 @@ export default {
     },
     doRefresh() {
       this.isLoading = true;
-      store.dispatch("getPersonalNotifications", this.userAddress)
-      store.dispatch("getChannelList").then(() =>  this.isLoading = false);
-
-    }
+      store.dispatch("getPersonalNotifications", this.userAddress);
+      store.dispatch("getChannelList").then(() => (this.isLoading = false));
+    },
   },
   mounted() {
     store.dispatch("updateAddress");

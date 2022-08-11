@@ -9,24 +9,26 @@
     :can-cancel="false"
     :is-full-page="fullPage"
   />
-  <no-notifications v-if="publicNotificationsList.length == 0"></no-notifications>
+  <no-notifications
+    v-if="publicNotificationsList.length == 0"
+  ></no-notifications>
 </template>
 <script>
 import NotiCard from "@/cards/NotiCard.vue";
 import NoNotifications from "@/components/NoNotifications.vue";
 import Loading from "vue-loading-overlay";
 import { mapGetters } from "vuex";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 import store from "../store";
 export default {
-   data() {
+  data() {
     return {
       isLoading: false,
-      fullPage: true
+      fullPage: true,
     };
   },
   computed: {
-    ...mapGetters(["publicNotifications","searchText"]),
+    ...mapGetters(["publicNotifications", "searchText"]),
     publicNotificationsList() {
       if (this.searchText != "") {
         return this.publicNotifications.filter((notification) => {
@@ -37,14 +39,16 @@ export default {
       } else {
         return this.publicNotifications;
       }
-    }
+    },
   },
-  created(){
+  created() {
     this.isLoading = true;
   },
   mounted() {
     const route = useRoute();
-    store.dispatch("getPublicNotifications", route.params.lsig).then(() =>  this.isLoading = false);
+    store
+      .dispatch("getPublicNotifications", route.params.lsig)
+      .then(() => (this.isLoading = false));
   },
   components: {
     notiCard: NotiCard,

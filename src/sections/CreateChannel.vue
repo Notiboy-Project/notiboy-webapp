@@ -24,7 +24,8 @@
     <button @click.prevent="createChannel">Create Channel</button>
 
     <p style="text-align: center">
-      Note: Personal notifications and public notifications can be sent from the created channels.
+      Note: Personal notifications and public notifications can be sent from the
+      created channels.
     </p>
   </div>
 </template>
@@ -36,7 +37,7 @@ export default {
     return {
       channelName: "",
       address: this.updatedAddress,
-      connection: this.connectionStatus
+      connection: this.connectionStatus,
     };
   },
   computed: {
@@ -44,10 +45,10 @@ export default {
   },
   methods: {
     createChannel() {
-      store.dispatch('createChannel',{
-        name:this.channelName,
-        address: this.userAddress
-      })
+      store.dispatch("createChannel", {
+        name: this.channelName,
+        address: this.userAddress,
+      });
     },
   },
 };

@@ -9,7 +9,9 @@
     :can-cancel="false"
     :is-full-page="fullPage"
   />
-  <no-notifications v-if="personalNotificationsList.length == 0"></no-notifications>
+  <no-notifications
+    v-if="personalNotificationsList.length == 0"
+  ></no-notifications>
 </template>
 <script>
 import NotiCard from "@/cards/NotiCard.vue";
@@ -21,11 +23,11 @@ export default {
   data() {
     return {
       isLoading: false,
-      fullPage: true
+      fullPage: true,
     };
   },
   computed: {
-    ...mapGetters(["userAddress","searchText", "personalNotifications"]),
+    ...mapGetters(["userAddress", "searchText", "personalNotifications"]),
     personalNotificationsList() {
       if (this.searchText != "") {
         return this.personalNotifications.filter((notification) => {
@@ -36,11 +38,13 @@ export default {
       } else {
         return this.personalNotifications;
       }
-    }
+    },
   },
   created() {
     this.isLoading = true;
-    store.dispatch("getPersonalNotifications", this.userAddress).then(() =>  this.isLoading = false);
+    store
+      .dispatch("getPersonalNotifications", this.userAddress)
+      .then(() => (this.isLoading = false));
   },
   components: {
     notiCard: NotiCard,

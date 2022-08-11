@@ -51,7 +51,7 @@ export default class Notification extends RPC {
       .applicationID(APP_INDEX)
       .do();
     const transactionDetails = localState["apps-local-states"][0]["key-value"];
-    if(transactionDetails == undefined) return [];
+    if (transactionDetails == undefined) return [];
     const transactionIds = this.getTransactionIds(transactionDetails);
     const notifications = [];
     for (let i = 0; i < transactionIds.length; i++) {

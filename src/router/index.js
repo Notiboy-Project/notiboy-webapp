@@ -13,49 +13,50 @@ const routes = [
     path: "/notification/personal",
     name: "PersonalNotification",
     component: PersonalNotification,
-    beforeEnter: () =>{
-      store.commit('updateSearchBarStatus',true)
-    }
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", true);
+    },
   },
   {
     path: "/notification/channels",
     name: "Channels",
     component: Channels,
-    beforeEnter: () =>{
-      store.commit('updateSearchBarStatus',true)
-    }
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", true);
+    },
   },
   {
     path: "/notification/public/:lsig",
     name: "PublicNotification",
     component: PublicNotification,
-    beforeEnter: () =>{
-      store.commit('updateSearchBarStatus',true)
-    }
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", true);
+    },
   },
   {
     path: "/notification/send",
     name: "SendNotification",
     component: SendNotification,
-    beforeEnter: () =>{
-      store.commit('updateSearchBarStatus',false)
-    }
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", false);
+    },
   },
   {
     path: "/notification/createChannel",
     name: "CreateChannel",
     component: CreateChannel,
-    beforeEnter: () =>{
-      store.commit('updateSearchBarStatus',false)
-    }
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", false);
+    },
   },
-  { path: "/:notfound(.*)",
-    name: "Notfound", 
+  {
+    path: "/:notfound(.*)",
+    name: "Notfound",
     component: NotFound,
-    beforeEnter: () =>{
-      store.commit('updateSearchBarStatus',false)
-    }
-  }
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", false);
+    },
+  },
 ];
 
 const router = createRouter({
