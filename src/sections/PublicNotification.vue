@@ -4,13 +4,27 @@
     :notification="notification"
     :key="notification.timeStamp"
   ></noti-card>
+  <loading
+    v-model:active="isLoading"
+    :can-cancel="false"
+    :is-full-page="fullPage"
+  />
+  <no-notifications v-if="publicNotificationsList.length == 0"></no-notifications>
 </template>
 <script>
 import NotiCard from "@/cards/NotiCard.vue";
+import NoNotifications from "@/components/NoNotifications.vue";
+import Loading from "vue-loading-overlay";
 import { mapGetters } from "vuex";
 import { useRoute } from 'vue-router';
 import store from "../store";
 export default {
+   data() {
+    return {
+      isLoading: false,
+      fullPage: true
+    };
+  },
   computed: {
     ...mapGetters(["publicNotifications","searchText"]),
     publicNotificationsList() {
@@ -25,12 +39,17 @@ export default {
       }
     }
   },
-  beforeMount() {
+  created(){
+    this.isLoading = true;
+  },
+  mounted() {
     const route = useRoute();
-    store.dispatch("getPublicNotifications", route.params.lsig);
+    store.dispatch("getPublicNotifications", route.params.lsig).then(() =>  this.isLoading = false);
   },
   components: {
     notiCard: NotiCard,
+    noNotifications: NoNotifications,
+    Loading,
   },
 };
 </script>

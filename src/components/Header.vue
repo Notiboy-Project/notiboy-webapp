@@ -10,7 +10,6 @@
     <loading
       v-model:active="isLoading"
       :can-cancel="false"
-      :on-cancel="onCancel"
       :is-full-page="fullPage"
     />
     <div class="main-address">
@@ -51,6 +50,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      fullPage: true
     };
   },
   computed: {

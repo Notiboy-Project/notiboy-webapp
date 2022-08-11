@@ -8,7 +8,6 @@
     ></main-header>
     <!-- Receives an emitted event and then send it to overlay -->
     <mobile-overlay
-      @pane-selection="changePane"
       @nav-closed="navStatus = false"
       :nav-overlay="navStatus"
     ></mobile-overlay>
@@ -18,9 +17,9 @@
       @closeConnectOverlay="closeWalletConnectOverlay"
     ></walletConnect>
     <div class="notification-container">
-      <main-sidebar @pane-selection="changePane"></main-sidebar>
+      <main-sidebar></main-sidebar>
       <!-- Using props to send the selection from side bar to notification pane -->
-      <notification-pane :selection="currentPane"></notification-pane>
+      <notification-pane></notification-pane>
     </div>
   </div>
 </template>
