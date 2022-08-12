@@ -46,24 +46,28 @@ export default class Notification extends RPC {
   }
   //Get Public Notification
   async getPublicNotification(lsig) {
-    const localState = await this.indexer
+    try {
+      const localState = await this.indexer
       .lookupAccountAppLocalStates(lsig)
       .applicationID(APP_INDEX)
       .do();
-    const transactionDetails = localState["apps-local-states"][0]["key-value"];
-    if (transactionDetails == undefined) return [];
-    const transactionIds = this.getTransactionIds(transactionDetails);
-    const notifications = [];
-    for (let i = 0; i < transactionIds.length; i++) {
-      const txnId = transactionIds[i];
-      const txnInfo = await this.indexer.lookupTransactionByID(txnId).do();
-      const notification = {
-        notification: this.decodeNote(txnInfo.transaction.note),
-        timeStamp: txnInfo.transaction["round-time"],
-      };
-      notifications.unshift(notification);
-    }
-    return notifications;
+      const transactionDetails = localState["apps-local-states"][0]["key-value"];
+      if (transactionDetails == undefined) return [];
+      const transactionIds = this.getTransactionIds(transactionDetails);
+      const notifications = [];
+      for (let i = 0; i < transactionIds.length; i++) {
+        const txnId = transactionIds[i];
+        const txnInfo = await this.indexer.lookupTransactionByID(txnId).do();
+        const notification = {
+          notification: this.decodeNote(txnInfo.transaction.note),
+          timeStamp: txnInfo.transaction["round-time"],
+        };
+        notifications.unshift(notification);
+      }
+      return notifications;
+    } catch (error) {
+      return []
+    }  
   }
 
   // Send Personal Notification
@@ -112,25 +116,28 @@ export default class Notification extends RPC {
 
   // Get Personal notifications
   async getPersonalNotification(userAddress) {
-    const localState = await this.indexer
+    try {
+      const localState = await this.indexer
       .lookupAccountAppLocalStates(userAddress)
       .applicationID(APP_INDEX)
       .do();
-    if (localState["apps-local-states"] == null) return [];
-    const channelDetails = localState["apps-local-states"][0]["key-value"];
-    if (channelDetails == null) return;
-    const transactionIds = this.getTransactionDetails(channelDetails);
-    const notifications = [];
-    for (let i = 0; i < transactionIds.length; i++) {
-      const txnId = transactionIds[i].decodedValue;
-      const txnInfo = await this.indexer.lookupTransactionByID(txnId).do();
-      const notification = {
-        channel: transactionIds[i].finalKey,
-        notification: this.decodeNote(txnInfo.transaction.note),
-        timeStamp: txnInfo.transaction["round-time"],
-      };
-      notifications.unshift(notification);
-    }
-    return notifications;
+      if (localState["apps-local-states"] == undefined) return [];
+      const channelDetails = localState["apps-local-states"][0]["key-value"];
+      const transactionIds = this.getTransactionDetails(channelDetails);
+      const notifications = [];
+      for (let i = 0; i < transactionIds.length; i++) {
+        const txnId = transactionIds[i].decodedValue;
+        const txnInfo = await this.indexer.lookupTransactionByID(txnId).do();
+        const notification = {
+          channel: transactionIds[i].finalKey,
+          notification: this.decodeNote(txnInfo.transaction.note),
+          timeStamp: txnInfo.transaction["round-time"],
+        };
+        notifications.unshift(notification);
+      }
+      return notifications;
+    } catch (error) {
+      return []
+    }  
   }
 }
