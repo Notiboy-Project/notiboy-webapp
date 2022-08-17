@@ -20,5 +20,6 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### SDK integrated with UI
+As of now the SDK is integrated with UI and will be published as a separate package in the future..
+You can check the SDK at `src/sdk` 
