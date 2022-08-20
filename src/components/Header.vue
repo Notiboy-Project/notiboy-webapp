@@ -4,7 +4,7 @@
     <div class="brand_logo">
       <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
-    <div @click.prevent="doRefresh" style="cursor: pointer">
+    <div v-show="connectionStatus == 'Disconnect'" @click.prevent="doRefresh" style="cursor: pointer">
       <img height="30" src="../assets/refresh.png" alt="refresh" />
     </div>
     <loading
@@ -71,6 +71,7 @@ export default {
         store.dispatch("disconnect");
       }
     },
+    // The method which will refresh the list of personal notifications and list of channnels on click.
     doRefresh() {
       this.isLoading = true;
       store.dispatch("getPersonalNotifications", this.userAddress);
