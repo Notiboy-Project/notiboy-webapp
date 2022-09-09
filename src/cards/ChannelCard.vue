@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import copy from "copy-to-clipboard";
 export default {
   data() {
     return {
@@ -38,7 +39,7 @@ export default {
   },
   methods: {
     copyToClipBoard(channelAddress) {
-      navigator.clipboard.writeText(channelAddress);
+       copy(channelAddress);
     },
     showPublicChannel() {
       this.$router.push({
