@@ -2,19 +2,21 @@
   <transition name="modal-fade">
     <div class="wallet-backdrop">
       <div class="wallet-pane">
-        <div class="wallet-header">
-          <p class="connect-heading">Connect Your Wallet</p>
-          <!-- Button to close the Wallet Connect -->
+        <div class="wallet-close">
           <button type="button" class="closebtn" @click="closeConnectOverlay">
             &times;
           </button>
+        </div>
+        <div class="wallet-header">
+          <p class="connect-heading">Connect Your Wallet</p>
+          <!-- Button to close the Wallet Connect -->
         </div>
         <div class="wallet-row1">
           <div @click="myAlgoConnect" class="wallet">
             <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
             <p>My Algo Wallet</p>
           </div>
-          <div @click="connectPeraWallet" class="wallet">
+          <!-- <div @click="connectPeraWallet" class="wallet">
             <img
               src="../assets/pera.png"
               width="30"
@@ -22,7 +24,7 @@
               alt="Pera Button"
             />
             <p>Pera Wallet</p>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -96,22 +98,22 @@ export default {
 .wallet-pane {
   background: var(--primary);
   border-radius: 3rem;
-  margin-right: 2%;
-  margin-bottom: 2%;
-  margin-left: 1%;
+  padding: 0 2%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
   min-height: 60vh;
 }
 .wallet-header {
   display: flex;
-  justify-content: space-between;
+  margin-top: 5%;
   align-items: center;
 }
-.wallet-header .closebtn {
-  font-size: 6rem;
+.wallet-close{
+  display: flex;
+  justify-content:flex-end;
+}
+.wallet-close .closebtn {
+  font-size: 5rem;
   text-decoration: none;
   cursor: pointer;
   color: var(--teritary);
@@ -131,7 +133,7 @@ export default {
   align-items: center;
   justify-content: space-around;
   color: #ffffff;
-  width: 80%;
+  width: 100%;
 }
 
 .wallet {
@@ -166,8 +168,6 @@ export default {
     margin-left: 1%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
     min-height: 60vh;
   }
   .wallet-header {
@@ -204,8 +204,6 @@ export default {
     margin-left: 1%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
     min-height: 60vh;
   }
   .connect-heading {
@@ -225,8 +223,6 @@ export default {
     margin-left: 3%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
   }
   .connect-heading {
     color: #ffffff;
@@ -245,17 +241,11 @@ export default {
     margin-left: 1%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
   }
   .connect-heading {
     color: #ffffff;
-    font-size: 2.5rem;
+    font-size: 3rem;
     padding: 2% 0;
-  }
-  .wallet-header .closebtn {
-    font-size: 5rem;
-    text-decoration: none;
   }
   .wallet {
     display: flex;

@@ -72,12 +72,14 @@ export default {
 @media only screen and (max-width: 981px) {
   .notification-pane {
     margin-right: 1%;
+    height: 80vh;
   }
 }
 
 @media only screen and (max-width: 526px) {
   .notification-pane {
     margin-right: 1%;
+    height: 80vh;
   }
 }
 </style>
