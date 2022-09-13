@@ -12,9 +12,20 @@ const indexer = new algosdk.Indexer(
   ""
 );
 const notiBoy = new sdk(client, indexer);
+//Conntecting my algo wallet
 import MyAlgoConnect from "@randlabs/myalgo-connect";
 const myAlgoWallet = new MyAlgoConnect();
 const delay = require("delay");
+//Toast Notification
+import {createApp} from 'vue';
+import {useToast} from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+
+const app = createApp({});
+app.mount('#app');
+const $toast = useToast();
+
+
 export default createStore({
   state() {
     return {
@@ -126,10 +137,9 @@ export default createStore({
         const signFundingtxn = await myAlgoWallet.signTransaction(
           fundingTxn.toByte()
         );
-        const response1 = await client
+        await client
           .sendRawTransaction(signFundingtxn.blob)
           .do();
-        console.log(response1);
 
         await delay(5000);
         //opt-in to channel (channel creation)
@@ -151,10 +161,22 @@ export default createStore({
         let groupTxns = [];
         groupTxns.push(signedTxn1.blob);
         groupTxns.push(signedTxn2.blob);
-        const response2 = await client.sendRawTransaction(groupTxns).do();
-        console.log(response2);
+        await client.sendRawTransaction(groupTxns).do();
+        $toast.open({
+          message: "Channel Created",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
       } catch (error) {
-        console.error(error);
+        $toast.open({
+          message: "Channel not created",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
       }
     },
     //Get list of channels
@@ -188,10 +210,22 @@ export default createStore({
         let groupTxns = [];
         groupTxns.push(signedTxn1.blob);
         groupTxns.push(signedTxn2.blob);
-        const response = await client.sendRawTransaction(groupTxns).do();
-        console.log(response);
+        await client.sendRawTransaction(groupTxns).do();
+        $toast.open({
+          message: "Public Notification Send",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
       } catch (error) {
-        console.log(error);
+        $toast.open({
+          message: "An Unexpected Error",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
       }
     },
     //send personal notifications
@@ -221,48 +255,96 @@ export default createStore({
         let groupTxns = [];
         groupTxns.push(signedTxn1.blob);
         groupTxns.push(signedTxn2.blob);
-        const response = await client.sendRawTransaction(groupTxns).do();
-        console.log(response);
+       await client.sendRawTransaction(groupTxns).do();
+        $toast.open({
+          message: "Personal Notification Sent",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
       } catch (error) {
-        console.log(error);
+        $toast.open({
+          message: "Personal Notification not Sent",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
       }
     },
     //Get personal notifications
     async getPersonalNotifications(context, userAddress) {
+     try {
       const personalNotifications = await notiBoy
-        .notification()
-        .getPersonalNotification(userAddress);
+      .notification()
+      .getPersonalNotification(userAddress);
       context.commit("updatePersonalNotifications", personalNotifications);
+     } catch (error) {
+      $toast.open({
+        message: "Something Went Wrong",
+        type: "error",
+        duration: 5000,
+        position: "top-right",
+        dismissible: true
+      });
+     }
     },
     //optin to channels
     async channelOptin(_, userAddress) {
-      //opt-in to channel (channel creation)
-      const channelName = "";
-      const optInTxn = await notiBoy.optin(
-        channelName,
-        userAddress,
-        userAddress,
-        "user"
-      );
-      // Group transactions received from opt-in
-      const signedTxn1 = await myAlgoWallet.signTransaction(
-        optInTxn[0].toByte()
-      );
-      const signedTxn2 = await myAlgoWallet.signTransaction(
-        optInTxn[1].toByte()
-      );
-      let groupTxns = [];
-      groupTxns.push(signedTxn1.blob);
-      groupTxns.push(signedTxn2.blob);
-      const response2 = await client.sendRawTransaction(groupTxns).do();
-      console.log(response2);
+      try {
+        //opt-in to channel (channel creation)
+        const channelName = "";
+        const optInTxn = await notiBoy.optin(
+          channelName,
+          userAddress,
+          userAddress,
+          "user"
+        );
+        // Group transactions received from opt-in
+        const signedTxn1 = await myAlgoWallet.signTransaction(
+          optInTxn[0].toByte()
+        );
+        const signedTxn2 = await myAlgoWallet.signTransaction(
+          optInTxn[1].toByte()
+        );
+        let groupTxns = [];
+        groupTxns.push(signedTxn1.blob);
+        groupTxns.push(signedTxn2.blob);
+        await client.sendRawTransaction(groupTxns).do();
+        $toast.open({
+          message: "Opted Into Channel",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
+      } catch (error) {
+        $toast.open({
+          message: "Opt-in Unsuccessful",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
+      }
     },
     //Get public notifications
     async getPublicNotifications(context, lsig) {
-      const publicNotifications = await notiBoy
+      try {
+        const publicNotifications = await notiBoy
         .notification()
         .getPublicNotification(lsig);
-      context.commit("updatePublicNotifications", publicNotifications);
+        context.commit("updatePublicNotifications", publicNotifications);
+      } catch (error) {
+        $toast.open({
+          message: "Something Went Wrong",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true
+        });
+      }
     },
   },
   modules: {},
