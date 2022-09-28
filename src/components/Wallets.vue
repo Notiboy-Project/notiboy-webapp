@@ -108,9 +108,9 @@ export default {
   margin-top: 5%;
   align-items: center;
 }
-.wallet-close{
+.wallet-close {
   display: flex;
-  justify-content:flex-end;
+  justify-content: flex-end;
 }
 .wallet-close .closebtn {
   font-size: 5rem;

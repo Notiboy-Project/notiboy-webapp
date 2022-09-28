@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import algosdk from "algosdk";
-import sdk from "../sdk/index.js";
+import sdk from "notiboy-js-sdk";
 const client = new algosdk.Algodv2(
   "",
   "https://testnet-api.algonode.cloud",
@@ -17,14 +17,13 @@ import MyAlgoConnect from "@randlabs/myalgo-connect";
 const myAlgoWallet = new MyAlgoConnect();
 const delay = require("delay");
 //Toast Notification
-import {createApp} from 'vue';
-import {useToast} from 'vue-toast-notification';
-import 'vue-toast-notification/dist/theme-sugar.css';
+import { createApp } from "vue";
+import { useToast } from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-sugar.css";
 
 const app = createApp({});
-app.mount('#app');
+app.mount("#app");
 const $toast = useToast();
-
 
 export default createStore({
   state() {
@@ -137,9 +136,7 @@ export default createStore({
         const signFundingtxn = await myAlgoWallet.signTransaction(
           fundingTxn.toByte()
         );
-        await client
-          .sendRawTransaction(signFundingtxn.blob)
-          .do();
+        await client.sendRawTransaction(signFundingtxn.blob).do();
 
         await delay(5000);
         //opt-in to channel (channel creation)
@@ -167,7 +164,7 @@ export default createStore({
           type: "success",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       } catch (error) {
         $toast.open({
@@ -175,7 +172,7 @@ export default createStore({
           type: "error",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       }
     },
@@ -216,7 +213,7 @@ export default createStore({
           type: "success",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       } catch (error) {
         $toast.open({
@@ -224,7 +221,7 @@ export default createStore({
           type: "error",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       }
     },
@@ -255,13 +252,13 @@ export default createStore({
         let groupTxns = [];
         groupTxns.push(signedTxn1.blob);
         groupTxns.push(signedTxn2.blob);
-       await client.sendRawTransaction(groupTxns).do();
+        await client.sendRawTransaction(groupTxns).do();
         $toast.open({
           message: "Personal Notification Sent",
           type: "success",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       } catch (error) {
         $toast.open({
@@ -269,26 +266,26 @@ export default createStore({
           type: "error",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       }
     },
     //Get personal notifications
     async getPersonalNotifications(context, userAddress) {
-     try {
-      const personalNotifications = await notiBoy
-      .notification()
-      .getPersonalNotification(userAddress);
-      context.commit("updatePersonalNotifications", personalNotifications);
-     } catch (error) {
-      $toast.open({
-        message: "Something Went Wrong",
-        type: "error",
-        duration: 5000,
-        position: "top-right",
-        dismissible: true
-      });
-     }
+      try {
+        const personalNotifications = await notiBoy
+          .notification()
+          .getPersonalNotification(userAddress);
+        context.commit("updatePersonalNotifications", personalNotifications);
+      } catch (error) {
+        $toast.open({
+          message: "Something Went Wrong",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      }
     },
     //optin to channels
     async channelOptin(_, userAddress) {
@@ -317,7 +314,7 @@ export default createStore({
           type: "success",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       } catch (error) {
         $toast.open({
@@ -325,7 +322,7 @@ export default createStore({
           type: "error",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       }
     },
@@ -333,8 +330,8 @@ export default createStore({
     async getPublicNotifications(context, lsig) {
       try {
         const publicNotifications = await notiBoy
-        .notification()
-        .getPublicNotification(lsig);
+          .notification()
+          .getPublicNotification(lsig);
         context.commit("updatePublicNotifications", publicNotifications);
       } catch (error) {
         $toast.open({
@@ -342,7 +339,7 @@ export default createStore({
           type: "error",
           duration: 5000,
           position: "top-right",
-          dismissible: true
+          dismissible: true,
         });
       }
     },

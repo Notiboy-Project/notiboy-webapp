@@ -16,6 +16,7 @@
     "core-js": "^3.6.5",
     "date-and-time": "^2.4.1",
     "delay": "^5.0.0",
+    "notiboy-js-sdk": "file:../notiboy-js-sdk",
     "vue": "^3.0.0",
     "vue-loading-overlay": "5.0",
     "vue-router": "^4.0.0-0",

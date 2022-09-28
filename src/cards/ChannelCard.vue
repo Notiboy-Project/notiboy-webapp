@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     copyToClipBoard(channelAddress) {
-       copy(channelAddress);
+      copy(channelAddress);
     },
     showPublicChannel() {
       this.$router.push({

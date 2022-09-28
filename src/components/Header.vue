@@ -4,7 +4,11 @@
     <div class="brand_logo">
       <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
-    <div v-show="connectionStatus == 'Disconnect'" @click.prevent="doRefresh" style="cursor: pointer">
+    <div
+      v-show="connectionStatus == 'Disconnect'"
+      @click.prevent="doRefresh"
+      style="cursor: pointer"
+    >
       <img height="30" src="../assets/refresh.png" alt="refresh" />
     </div>
     <loading
