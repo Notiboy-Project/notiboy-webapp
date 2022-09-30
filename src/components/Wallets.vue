@@ -33,8 +33,6 @@
 
 <script>
 import MyAlgoConnect from "@randlabs/myalgo-connect";
-import { PeraWalletConnect } from "@perawallet/connect";
-const peraWallet = new PeraWalletConnect();
 import store from "../store";
 
 export default {
@@ -64,14 +62,11 @@ export default {
       }
     },
     //Method to connect via pera wellet
-    connectPeraWallet() {
-      peraWallet.connect().then((accounts) => {
-        const address = accounts[0];
-        localStorage.setItem("notiboy_address", address);
-        store.dispatch("updateAddress");
-        this.$emit("closeConnectOverlay");
-      });
-    },
+    // async connectPeraWallet() {
+    //   await store.dispatch("perawalletConnect");
+    //   this.closeConnectOverlay();
+    // },
+
     // Emit Event to close the wallet connect Overlay
     closeConnectOverlay() {
       this.$emit("closeConnectOverlay");
@@ -101,12 +96,13 @@ export default {
   padding: 0 2%;
   display: flex;
   flex-direction: column;
+  min-width: 40%;
   min-height: 60vh;
 }
 .wallet-header {
   display: flex;
   margin-top: 5%;
-  align-items: center;
+  justify-content: center;
 }
 .wallet-close {
   display: flex;
@@ -123,12 +119,11 @@ export default {
 .connect-heading {
   color: #ffffff;
   font-size: 3rem;
-  padding: 2% 0;
-  margin-right: 5rem;
+  padding: 1% 0;
 }
 .wallet-row1 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
@@ -178,7 +173,7 @@ export default {
   .connect-heading {
     color: #ffffff;
     font-size: 3.5rem;
-    padding: 2% 0;
+    padding: 1% 0;
   }
   .wallet-header .closebtn {
     font-size: 4rem;

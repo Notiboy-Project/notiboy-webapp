@@ -10,6 +10,7 @@
     <mobile-overlay
       @nav-closed="navStatus = false"
       :nav-overlay="navStatus"
+      @showConnectOverlay="showWalletConnectOverlay"
     ></mobile-overlay>
     <!-- An event is emitted when the close button is clicked in the child component -->
     <walletConnect

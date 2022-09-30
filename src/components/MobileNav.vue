@@ -18,12 +18,13 @@
       <router-link :to="{ name: 'CreateChannel' }" @click="createClicked"
         >Create Channels</router-link
       >
-      <li>Disconnect</li>
+      <li  @click="walletInteraction">{{connectionStatus}}</li>
     </div>
   </div>
 </template>
 
 <script>
+import store from "../store";
 import { mapGetters } from "vuex";
 export default {
   data() {
@@ -32,7 +33,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["updatedAddress"]),
+    ...mapGetters(["updatedAddress", "connectionStatus"]),
   },
   // Takes a prop from parent component, watches it continuously for changes and changes width of the overlay accordingly.
   props: ["navOverlay"],
@@ -74,6 +75,15 @@ export default {
     sendClicked() {
       this.closeNav();
       this.$emit("pane-selection", "sendclick");
+    },
+
+    walletInteraction() {
+      if (this.connectionStatus == "Connect") {
+        this.$emit("showConnectOverlay");
+      } else {
+        store.dispatch("disconnect");
+      }
+      this.closeNav();
     },
   },
 };
