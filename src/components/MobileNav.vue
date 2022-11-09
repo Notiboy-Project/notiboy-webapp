@@ -18,7 +18,7 @@
       <router-link :to="{ name: 'CreateChannel' }" @click="createClicked"
         >Create Channels</router-link
       >
-      <li  @click="walletInteraction">{{connectionStatus}}</li>
+      <li @click="walletInteraction">{{ connectionStatus }}</li>
     </div>
   </div>
 </template>

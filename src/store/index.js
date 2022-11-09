@@ -270,6 +270,70 @@ export default createStore({
         });
       }
     },
+    //send personal notifications
+    async sendBulkPersonalNotification(_, channelDetails) {
+      try {
+        const logicsig = await notiBoy.createLogicSig(
+          channelDetails.channelName
+        );
+        let paymentTxnArray = [];
+        let lsigTxnArray = [];
+        //create group transactions for signing
+        for (let i = 0; i < channelDetails.receiverAddress.length; i++) {
+          try {
+            const personalNotification = await notiBoy
+              .notification()
+              .sendPersonalNotification(
+                channelDetails.address,
+                channelDetails.receiverAddress[i][0],
+                channelDetails.channelName,
+                logicsig.address(),
+                channelDetails.notification
+              );
+            //split personalNotification to payment txn and lsig transaction for signing
+            paymentTxnArray.push(personalNotification[0].toByte());
+            lsigTxnArray.push(personalNotification[1]);
+          } catch (error) {
+            continue;
+          }
+        }
+        if (paymentTxnArray.length == lsigTxnArray.length) {
+          const signedPaymentTxnArray = await myAlgoWallet.signTransaction(
+            paymentTxnArray
+          );
+          for (let i = 0; i < lsigTxnArray.length; i++) {
+            try {
+              const signedTxn2 = algosdk.signLogicSigTransaction(
+                lsigTxnArray[i],
+                logicsig
+              );
+              //paymentTxn, notificationTransaction
+              let groupTxns = [];
+              groupTxns.push(signedPaymentTxnArray[i].blob);
+              groupTxns.push(signedTxn2.blob);
+              await client.sendRawTransaction(groupTxns).do();
+              $toast.open({
+                message: `Personal Notification ${i} Sent`,
+                type: "success",
+                duration: 1000,
+                position: "top-right",
+                dismissible: true,
+              });
+            } catch (error) {
+              continue;
+            }
+          }
+        }
+      } catch (error) {
+        $toast.open({
+          message: "Personal Notification not Sent",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      }
+    },
     //Get personal notifications
     async getPersonalNotifications(context, userAddress) {
       try {
