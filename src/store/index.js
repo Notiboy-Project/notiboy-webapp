@@ -71,6 +71,9 @@ export default createStore({
     loader(state) {
       return state.loader;
     },
+    optinState(state){
+      return state.optinState
+    }
   },
   mutations: {
     selectAddress(state, address) {
@@ -249,21 +252,21 @@ export default createStore({
         const logicsig = await notiBoy.createLogicSig(
           channelDetails.channelName
         );
-        const publicNotification = await notiBoy
+        const personalNotification = await notiBoy
           .notification()
           .sendPersonalNotification(
             channelDetails.address,
             channelDetails.receiverAddress,
-            logicsig.address(),
             channelDetails.channelName,
+            logicsig.address(),
             channelDetails.notification
           );
         // Group transactions received from public Notification
         const signedTxn1 = await myAlgoWallet.signTransaction(
-          publicNotification[0].toByte()
+          personalNotification[0].toByte()
         );
         const signedTxn2 = algosdk.signLogicSigTransaction(
-          publicNotification[1],
+          personalNotification[1],
           logicsig
         );
         //paymentTxn, notificationTransaction
@@ -429,22 +432,7 @@ export default createStore({
     },
     //Opt-in state
     async optinState(context) {
-      let optinState;
-      const accountInfo = await indexer
-        .lookupAccountByID(context.state.address)
-        .do();
-      for (
-        let i = 0;
-        i < accountInfo["account"]["apps-local-state"].length;
-        i++
-      ) {
-        if (accountInfo["account"]["apps-local-state"][i].id == 100343195) {
-          optinState = true;
-          context.commit("updateOptinState", optinState);
-          return;
-        }
-      }
-      optinState = false;
+      const optinState = notiBoy.getoptinState()
       context.commit("updateOptinState", optinState);
     },
   },
