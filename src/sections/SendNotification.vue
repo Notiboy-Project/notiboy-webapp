@@ -42,12 +42,17 @@
     <Transition>
       <textarea
         v-model="notification"
+        v-if="channelType != 'bulk'"
         placeholder="Please enter the notification"
         style="resize: none"
         id="w3review"
         name="w3review"
       ></textarea>
     </Transition>
+    <div v-if="channelType == 'bulk'">
+      Please use this csv file template to upload receiver details:
+      <a href="/files/uploadfile.csv" download="uploadfile.csv">Upload File</a>
+    </div>
     <div class="send-buttons">
       <div v-if="channelType == 'bulk'" class="send-buttons_upload">
         <input
@@ -117,9 +122,8 @@ export default {
       } else if (this.channelType == "bulk") {
         store.dispatch("sendBulkPersonalNotification", {
           address: this.userAddress,
-          receiverAddress: this.csvFileContent,
+          receiverDetails: this.csvFileContent,
           channelName: this.selectedChannel,
-          notification: this.notification,
         });
       }
     },
@@ -131,7 +135,7 @@ export default {
     },
     parseFile() {
       Papa.parse(this.csvFile, {
-        header: false,
+        header: true,
         skipEmptyLines: true,
         complete: function (results) {
           this.csvFileContent = results.data;

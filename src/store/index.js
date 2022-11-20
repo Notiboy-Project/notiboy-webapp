@@ -35,8 +35,8 @@ export default createStore({
       publicNotifications: [],
       channels: [],
       searchBarStatus: false,
-      loader:false,
-      optinState:false
+      loader: false,
+      optinState: false,
     };
   },
   getters: {
@@ -68,9 +68,9 @@ export default createStore({
     searchBarStatus(state) {
       return state.searchBarStatus;
     },
-    loader(state){
+    loader(state) {
       return state.loader;
-    }
+    },
   },
   mutations: {
     selectAddress(state, address) {
@@ -101,15 +101,15 @@ export default createStore({
     updateSearchBarStatus(state, status) {
       state.searchBarStatus = status;
     },
-    updateLoaderTrue(state){
+    updateLoaderTrue(state) {
       state.loader = true;
     },
-    updateLoaderFalse(state){
+    updateLoaderFalse(state) {
       state.loader = false;
     },
-    updateOptinState(state, optinState){
+    updateOptinState(state, optinState) {
       state.optinState = optinState;
-    }
+    },
   },
   actions: {
     selectAddress(context, address) {
@@ -194,7 +194,9 @@ export default createStore({
     //Get list of channels
     async getChannelList(context) {
       let channelList = await notiBoy.listPublicChannels();
-      channelList.sort((a,b) => (a.status > b.status) ? -1 : ((b.state > a.status) ? 1 : 0))
+      channelList.sort((a, b) =>
+        a.status > b.status ? -1 : b.state > a.status ? 1 : 0
+      );
       context.commit("updateChannelList", channelList);
     },
     //send public notifications
@@ -295,16 +297,16 @@ export default createStore({
         let paymentTxnArray = [];
         let lsigTxnArray = [];
         //create group transactions for signing
-        for (let i = 0; i < channelDetails.receiverAddress.length; i++) {
+        for (let i = 0; i < channelDetails.receiverDetails.length; i++) {
           try {
             const personalNotification = await notiBoy
               .notification()
               .sendPersonalNotification(
                 channelDetails.address,
-                channelDetails.receiverAddress[i][0],
+                channelDetails.receiverDetails[i].Address,
                 channelDetails.channelName,
                 logicsig.address(),
-                channelDetails.notification
+                channelDetails.receiverDetails[i].Notification
               );
             //split personalNotification to payment txn and lsig transaction for signing
             paymentTxnArray.push(personalNotification[0].toByte());
@@ -313,10 +315,12 @@ export default createStore({
             continue;
           }
         }
+        // Checking if txn or lsig is missing
         if (paymentTxnArray.length == lsigTxnArray.length) {
           const signedPaymentTxnArray = await myAlgoWallet.signTransaction(
             paymentTxnArray
           );
+          //Signing all logic sig transactions grouping them with payment transaction and send notification
           for (let i = 0; i < lsigTxnArray.length; i++) {
             try {
               const signedTxn2 = algosdk.signLogicSigTransaction(
@@ -331,7 +335,7 @@ export default createStore({
               $toast.open({
                 message: `Personal Notification ${i} Sent`,
                 type: "success",
-                duration: 1000,
+                duration: 3000,
                 position: "top-right",
                 dismissible: true,
               });
@@ -424,19 +428,25 @@ export default createStore({
       }
     },
     //Opt-in state
-    async optinState(context){
+    async optinState(context) {
       let optinState;
-      const accountInfo = await indexer.lookupAccountByID(context.state.address).do();
-      for(let i=0; i<accountInfo['account']['apps-local-state'].length; i++){
-        if(accountInfo['account']['apps-local-state'][i].id == 100343195){
+      const accountInfo = await indexer
+        .lookupAccountByID(context.state.address)
+        .do();
+      for (
+        let i = 0;
+        i < accountInfo["account"]["apps-local-state"].length;
+        i++
+      ) {
+        if (accountInfo["account"]["apps-local-state"][i].id == 100343195) {
           optinState = true;
-          context.commit("updateOptinState",optinState)
+          context.commit("updateOptinState", optinState);
           return;
         }
       }
-      optinState =false
-      context.commit("updateOptinState",optinState)
-    }
+      optinState = false;
+      context.commit("updateOptinState", optinState);
+    },
   },
   modules: {},
 });

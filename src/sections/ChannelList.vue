@@ -28,7 +28,7 @@ export default {
   },
   mounted() {
     store.dispatch("getChannelList");
-    store.dispatch("optinState")
+    store.dispatch("optinState");
   },
   components: {
     channelCard: ChannelCard,
