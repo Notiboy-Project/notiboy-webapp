@@ -47,7 +47,7 @@ export default createStore({
       if (state.address == null) {
         return "";
       } else {
-        return state.address.slice(0, 14) + "...";
+        return state.address.slice(0, 5) + "..." + state.address.slice(53, 58);
       }
     },
     searchText(state) {

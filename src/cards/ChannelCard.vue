@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     showAddress() {
-      return this.channelAddress.slice(0, 14) + "...";
+      return this.channelAddress.slice(0, 5) + "..." + this.channelAddress.slice(52, 58);
     },
   },
   methods: {
