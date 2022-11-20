@@ -12,6 +12,11 @@
       :nav-overlay="navStatus"
       @showConnectOverlay="showWalletConnectOverlay"
     ></mobile-overlay>
+    <loading
+      v-model:active="loader"
+      :can-cancel="false"
+      :is-full-page="fullPage"
+    />
     <!-- An event is emitted when the close button is clicked in the child component -->
     <walletConnect
       v-show="walletConnectOverlay"
@@ -31,7 +36,8 @@ import Sidebar from "@/components/Sidebar.vue";
 import NotificationPane from "@/components/NotificationPane.vue";
 import Overlay from "@/components/MobileNav.vue";
 import WalletConnect from "@/components/Wallets.vue";
-
+import Loading from "vue-loading-overlay";
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -39,6 +45,9 @@ export default {
       searchbarStatus: true,
       walletConnectOverlay: false,
     };
+  },
+  computed: {
+    ...mapGetters(["loader"]),
   },
   methods: {
     showWalletConnectOverlay() {
@@ -58,6 +67,7 @@ export default {
     // publicPane: PublicPane,
     mobileOverlay: Overlay,
     walletConnect: WalletConnect,
+    Loading,
   },
 };
 </script>

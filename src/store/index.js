@@ -35,6 +35,7 @@ export default createStore({
       publicNotifications: [],
       channels: [],
       searchBarStatus: false,
+      loader:false
     };
   },
   getters: {
@@ -66,6 +67,9 @@ export default createStore({
     searchBarStatus(state) {
       return state.searchBarStatus;
     },
+    loader(state){
+      return state.loader;
+    }
   },
   mutations: {
     selectAddress(state, address) {
@@ -96,6 +100,12 @@ export default createStore({
     updateSearchBarStatus(state, status) {
       state.searchBarStatus = status;
     },
+    updateLoaderTrue(state){
+      state.loader = true;
+    },
+    updateLoaderFalse(state){
+      state.loader = false;
+    }
   },
   actions: {
     selectAddress(context, address) {
@@ -123,7 +133,7 @@ export default createStore({
       context.commit("searchTextUpdate", searchText);
     },
 
-    async createChannel(_, channelDetails) {
+    async createChannel(context, channelDetails) {
       try {
         // creating logic sig
         const logicsig = await notiBoy.createLogicSig(channelDetails.name);
@@ -137,8 +147,9 @@ export default createStore({
           fundingTxn.toByte()
         );
         await client.sendRawTransaction(signFundingtxn.blob).do();
-
+        context.commit("updateLoaderTrue");
         await delay(5000);
+        context.commit("updateLoaderFalse");
         //opt-in to channel (channel creation)
         const optInTxn = await notiBoy.optin(
           channelDetails.name,
