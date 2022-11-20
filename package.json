@@ -15,7 +15,7 @@
     "core-js": "^3.6.5",
     "date-and-time": "^2.4.1",
     "delay": "^5.0.0",
-    "notiboy-js-sdk": "^0.0.2",
+    "notiboy-js-sdk": "^0.0.5",
     "papaparse": "^5.3.2",
     "vue": "^3.0.0",
     "vue-loading-overlay": "5.0",

@@ -4,7 +4,7 @@
       <div @click="showPublicChannel" class="channel-card-name">
         <p class="channel-name">{{ channel.channelName }}</p>
         <img
-          v-if="channel.verified == true"
+          v-if="channel.status == 'verified'"
           src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
         />
       </div>

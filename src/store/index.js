@@ -35,7 +35,8 @@ export default createStore({
       publicNotifications: [],
       channels: [],
       searchBarStatus: false,
-      loader:false
+      loader:false,
+      optinState:false
     };
   },
   getters: {
@@ -105,6 +106,9 @@ export default createStore({
     },
     updateLoaderFalse(state){
       state.loader = false;
+    },
+    updateOptinState(state, optinState){
+      state.optinState = optinState;
     }
   },
   actions: {
@@ -189,7 +193,8 @@ export default createStore({
     },
     //Get list of channels
     async getChannelList(context) {
-      const channelList = await notiBoy.listPublicChannels();
+      let channelList = await notiBoy.listPublicChannels();
+      channelList.sort((a,b) => (a.status > b.status) ? -1 : ((b.state > a.status) ? 1 : 0))
       context.commit("updateChannelList", channelList);
     },
     //send public notifications
@@ -418,6 +423,20 @@ export default createStore({
         });
       }
     },
+    //Opt-in state
+    async optinState(context){
+      let optinState;
+      const accountInfo = await indexer.lookupAccountByID(context.state.address).do();
+      for(let i=0; i<accountInfo['account']['apps-local-state'].length; i++){
+        if(accountInfo['account']['apps-local-state'][i].id == 100343195){
+          optinState = true;
+          context.commit("updateOptinState",optinState)
+          return;
+        }
+      }
+      optinState =false
+      context.commit("updateOptinState",optinState)
+    }
   },
   modules: {},
 });

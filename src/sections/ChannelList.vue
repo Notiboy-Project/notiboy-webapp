@@ -1,5 +1,5 @@
 <template>
-  <optin />
+  <optin v-if="optinState == false"></optin>
   <channel-card
     v-for="channel in channelList"
     :channel="channel"
@@ -13,7 +13,7 @@ import { mapGetters } from "vuex";
 import store from "../store";
 export default {
   computed: {
-    ...mapGetters(["searchText", "channels"]),
+    ...mapGetters(["searchText", "channels", "optinState"]),
     channelList() {
       if (this.searchText != "") {
         return this.channels.filter((channel) => {
@@ -28,6 +28,7 @@ export default {
   },
   mounted() {
     store.dispatch("getChannelList");
+    store.dispatch("optinState")
   },
   components: {
     channelCard: ChannelCard,
