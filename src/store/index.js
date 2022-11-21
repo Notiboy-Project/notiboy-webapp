@@ -432,7 +432,7 @@ export default createStore({
     },
     //Opt-in state
     async optinState(context) {
-      const optinState = notiBoy.getoptinState()
+      const optinState = await notiBoy.getoptinState(context.state.address)
       context.commit("updateOptinState", optinState);
     },
   },
