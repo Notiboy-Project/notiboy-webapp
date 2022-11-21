@@ -49,7 +49,7 @@
         name="w3review"
       ></textarea>
     </Transition>
-    <div v-if="channelType == 'bulk'">
+    <div class="filedetails" v-if="channelType == 'bulk'">
       Please use this csv file template to upload receiver details:
       <a href="/files/uploadfile.csv" download="uploadfile.csv">Upload File</a>
     </div>
@@ -376,5 +376,34 @@ input[type="radio"]:not(:checked)::before {
   font-size: 8px;
   font-style: italic;
   font-weight: normal;
+}
+
+@media only screen and (max-width: 526px) {
+  .channel-type {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .channel-type-public{
+    padding-left: 3rem;
+  }
+}
+
+@media screen and (max-height: 500px){
+  .channel-type{
+    margin-top: 10px;
+  }
+  input{
+    margin-top: 30px;
+  }
+  textarea{
+    margin-top: 20px;
+  }
+  .send-buttons{
+    margin-top: 20px;
+  }
+  .filedetails{
+    margin-top: 10px;
+  }
 }
 </style>
