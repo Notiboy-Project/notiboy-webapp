@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import algosdk from "algosdk";
-import sdk from "../sdk/index.js";
+import sdk from "notiboy-js-sdk";
 const client = new algosdk.Algodv2(
   "",
   "https://testnet-api.algonode.cloud",
@@ -12,9 +12,19 @@ const indexer = new algosdk.Indexer(
   ""
 );
 const notiBoy = new sdk(client, indexer);
+//Conntecting my algo wallet
 import MyAlgoConnect from "@randlabs/myalgo-connect";
 const myAlgoWallet = new MyAlgoConnect();
 const delay = require("delay");
+//Toast Notification
+import { createApp } from "vue";
+import { useToast } from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-sugar.css";
+
+const app = createApp({});
+app.mount("#app");
+const $toast = useToast();
+
 export default createStore({
   state() {
     return {
@@ -25,6 +35,8 @@ export default createStore({
       publicNotifications: [],
       channels: [],
       searchBarStatus: false,
+      loader: false,
+      optinState: false,
     };
   },
   getters: {
@@ -35,7 +47,7 @@ export default createStore({
       if (state.address == null) {
         return "";
       } else {
-        return state.address.slice(0, 14) + "...";
+        return state.address.slice(0, 5) + "..." + state.address.slice(53, 58);
       }
     },
     searchText(state) {
@@ -55,6 +67,12 @@ export default createStore({
     },
     searchBarStatus(state) {
       return state.searchBarStatus;
+    },
+    loader(state) {
+      return state.loader;
+    },
+    optinState(state) {
+      return state.optinState;
     },
   },
   mutations: {
@@ -86,6 +104,15 @@ export default createStore({
     updateSearchBarStatus(state, status) {
       state.searchBarStatus = status;
     },
+    updateLoaderTrue(state) {
+      state.loader = true;
+    },
+    updateLoaderFalse(state) {
+      state.loader = false;
+    },
+    updateOptinState(state, optinState) {
+      state.optinState = optinState;
+    },
   },
   actions: {
     selectAddress(context, address) {
@@ -113,53 +140,106 @@ export default createStore({
       context.commit("searchTextUpdate", searchText);
     },
 
-    async createChannel(_, channelDetails) {
+    async createChannel(context, channelDetails) {
       try {
         // creating logic sig
         const logicsig = await notiBoy.createLogicSig(channelDetails.name);
+        try {
+          const accountInfo = await indexer
+            .lookupAccountByID(logicsig.address())
+            .do();
+          if (accountInfo.account.amount < 1000000) {
+            const error = { status: 404 };
+            throw error;
+          }
 
-        //Funding logic sig
-        const fundingTxn = await notiBoy.provideBasicLsigBalance(
-          channelDetails.address,
-          logicsig.address()
-        );
-        const signFundingtxn = await myAlgoWallet.signTransaction(
-          fundingTxn.toByte()
-        );
-        const response1 = await client
-          .sendRawTransaction(signFundingtxn.blob)
-          .do();
-        console.log(response1);
+          //opt-in to channel (channel creation)
+          const optInTxn = await notiBoy.optin(
+            channelDetails.name,
+            logicsig.address(),
+            channelDetails.address,
+            "dapp"
+          );
 
-        await delay(5000);
-        //opt-in to channel (channel creation)
-        const optInTxn = await notiBoy.optin(
-          channelDetails.name,
-          logicsig.address(),
-          channelDetails.address,
-          "dapp"
-        );
+          // Group transactions received from opt-in
+          const signedTxn1 = await myAlgoWallet.signTransaction(
+            optInTxn[0].toByte()
+          );
+          const signedTxn2 = algosdk.signLogicSigTransaction(
+            optInTxn[1],
+            logicsig
+          );
+          let groupTxns = [];
+          groupTxns.push(signedTxn1.blob);
+          groupTxns.push(signedTxn2.blob);
+          await client.sendRawTransaction(groupTxns).do();
+          $toast.open({
+            message: "Channel Created",
+            type: "success",
+            duration: 5000,
+            position: "top-right",
+            dismissible: true,
+          });
+        } catch (error) {
+          //Checking balance in logic sig
+          if (error.status == 404) {
+            //Funding logic sig
+            const fundingTxn = await notiBoy.provideBasicLsigBalance(
+              channelDetails.address,
+              logicsig.address()
+            );
+            const signFundingtxn = await myAlgoWallet.signTransaction(
+              fundingTxn.toByte()
+            );
+            await client.sendRawTransaction(signFundingtxn.blob).do();
+            context.commit("updateLoaderTrue");
+            await delay(5000);
+            context.commit("updateLoaderFalse");
+            //opt-in to channel (channel creation)
+            const optInTxn = await notiBoy.optin(
+              channelDetails.name,
+              logicsig.address(),
+              channelDetails.address,
+              "dapp"
+            );
 
-        // Group transactions received from opt-in
-        const signedTxn1 = await myAlgoWallet.signTransaction(
-          optInTxn[0].toByte()
-        );
-        const signedTxn2 = algosdk.signLogicSigTransaction(
-          optInTxn[1],
-          logicsig
-        );
-        let groupTxns = [];
-        groupTxns.push(signedTxn1.blob);
-        groupTxns.push(signedTxn2.blob);
-        const response2 = await client.sendRawTransaction(groupTxns).do();
-        console.log(response2);
+            // Group transactions received from opt-in
+            const signedTxn1 = await myAlgoWallet.signTransaction(
+              optInTxn[0].toByte()
+            );
+            const signedTxn2 = algosdk.signLogicSigTransaction(
+              optInTxn[1],
+              logicsig
+            );
+            let groupTxns = [];
+            groupTxns.push(signedTxn1.blob);
+            groupTxns.push(signedTxn2.blob);
+            await client.sendRawTransaction(groupTxns).do();
+            $toast.open({
+              message: "Channel Created",
+              type: "success",
+              duration: 5000,
+              position: "top-right",
+              dismissible: true,
+            });
+          }
+        }
       } catch (error) {
-        console.error(error);
+        $toast.open({
+          message: "Channel not created",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
       }
     },
     //Get list of channels
     async getChannelList(context) {
-      const channelList = await notiBoy.listPublicChannels();
+      let channelList = await notiBoy.listPublicChannels();
+      channelList.sort((a, b) =>
+        a.status > b.status ? -1 : b.status > a.status ? 1 : 0
+      );
       context.commit("updateChannelList", channelList);
     },
     //send public notifications
@@ -188,10 +268,22 @@ export default createStore({
         let groupTxns = [];
         groupTxns.push(signedTxn1.blob);
         groupTxns.push(signedTxn2.blob);
-        const response = await client.sendRawTransaction(groupTxns).do();
-        console.log(response);
+        await client.sendRawTransaction(groupTxns).do();
+        $toast.open({
+          message: "Public Notification Send",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
       } catch (error) {
-        console.log(error);
+        $toast.open({
+          message: "An Unexpected Error",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
       }
     },
     //send personal notifications
@@ -200,69 +292,204 @@ export default createStore({
         const logicsig = await notiBoy.createLogicSig(
           channelDetails.channelName
         );
-        const publicNotification = await notiBoy
+        const personalNotification = await notiBoy
           .notification()
           .sendPersonalNotification(
             channelDetails.address,
             channelDetails.receiverAddress,
-            logicsig.address(),
             channelDetails.channelName,
+            logicsig.address(),
             channelDetails.notification
           );
         // Group transactions received from public Notification
         const signedTxn1 = await myAlgoWallet.signTransaction(
-          publicNotification[0].toByte()
+          personalNotification[0].toByte()
         );
         const signedTxn2 = algosdk.signLogicSigTransaction(
-          publicNotification[1],
+          personalNotification[1],
           logicsig
         );
         //paymentTxn, notificationTransaction
         let groupTxns = [];
         groupTxns.push(signedTxn1.blob);
         groupTxns.push(signedTxn2.blob);
-        const response = await client.sendRawTransaction(groupTxns).do();
-        console.log(response);
+        await client.sendRawTransaction(groupTxns).do();
+        $toast.open({
+          message: "Personal Notification Sent",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
       } catch (error) {
-        console.log(error);
+        $toast.open({
+          message: "Personal Notification not Sent",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      }
+    },
+    //send personal notifications
+    async sendBulkPersonalNotification(_, channelDetails) {
+      try {
+        const logicsig = await notiBoy.createLogicSig(
+          channelDetails.channelName
+        );
+        let paymentTxnArray = [];
+        let lsigTxnArray = [];
+        //create group transactions for signing
+        for (let i = 0; i < channelDetails.receiverDetails.length; i++) {
+          try {
+            const personalNotification = await notiBoy
+              .notification()
+              .sendPersonalNotification(
+                channelDetails.address,
+                channelDetails.receiverDetails[i].Address,
+                channelDetails.channelName,
+                logicsig.address(),
+                channelDetails.receiverDetails[i].Notification
+              );
+            //split personalNotification to payment txn and lsig transaction for signing
+            paymentTxnArray.push(personalNotification[0].toByte());
+            lsigTxnArray.push(personalNotification[1]);
+          } catch (error) {
+            continue;
+          }
+        }
+        // Checking if txn or lsig is missing
+        if (paymentTxnArray.length == lsigTxnArray.length) {
+          const signedPaymentTxnArray = await myAlgoWallet.signTransaction(
+            paymentTxnArray
+          );
+          //Signing all logic sig transactions grouping them with payment transaction and send notification
+          for (let i = 0; i < lsigTxnArray.length; i++) {
+            try {
+              const signedTxn2 = algosdk.signLogicSigTransaction(
+                lsigTxnArray[i],
+                logicsig
+              );
+              //paymentTxn, notificationTransaction
+              let groupTxns = [];
+              groupTxns.push(signedPaymentTxnArray[i].blob);
+              groupTxns.push(signedTxn2.blob);
+              await client.sendRawTransaction(groupTxns).do();
+              $toast.open({
+                message: `Personal Notification ${i} Sent`,
+                type: "success",
+                duration: 3000,
+                position: "top-right",
+                dismissible: true,
+              });
+            } catch (error) {
+              continue;
+            }
+          }
+        }
+      } catch (error) {
+        $toast.open({
+          message: "Personal Notification not Sent",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
       }
     },
     //Get personal notifications
     async getPersonalNotifications(context, userAddress) {
-      const personalNotifications = await notiBoy
-        .notification()
-        .getPersonalNotification(userAddress);
-      context.commit("updatePersonalNotifications", personalNotifications);
+      try {
+        context.dispatch("getChannelList");
+        let personalNotifications = await notiBoy
+          .notification()
+          .getPersonalNotification(userAddress);
+        for (let i = 0; i < personalNotifications.length; i++) {
+          for (let j = 0; j < context.state.channels.length; j++) {
+            if (
+              personalNotifications[i].channel ===
+                context.state.channels[j].channelName &&
+              context.state.channels[j].status === "verified"
+            ) {
+              personalNotifications[i].status = "verified";
+            }
+          }
+        }
+        context.commit("updatePersonalNotifications", personalNotifications);
+      } catch (error) {
+        $toast.open({
+          message: "Something Went Wrong",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      }
     },
     //optin to channels
-    async channelOptin(_, userAddress) {
-      //opt-in to channel (channel creation)
-      const channelName = "";
-      const optInTxn = await notiBoy.optin(
-        channelName,
-        userAddress,
-        userAddress,
-        "user"
-      );
-      // Group transactions received from opt-in
-      const signedTxn1 = await myAlgoWallet.signTransaction(
-        optInTxn[0].toByte()
-      );
-      const signedTxn2 = await myAlgoWallet.signTransaction(
-        optInTxn[1].toByte()
-      );
-      let groupTxns = [];
-      groupTxns.push(signedTxn1.blob);
-      groupTxns.push(signedTxn2.blob);
-      const response2 = await client.sendRawTransaction(groupTxns).do();
-      console.log(response2);
+    async channelOptin(context, userAddress) {
+      try {
+        //opt-in to channel (channel creation)
+        const channelName = "";
+        const optInTxn = await notiBoy.optin(
+          channelName,
+          userAddress,
+          userAddress,
+          "user"
+        );
+        // Group transactions received from opt-in
+        const signedTxn1 = await myAlgoWallet.signTransaction(
+          optInTxn[0].toByte()
+        );
+        const signedTxn2 = await myAlgoWallet.signTransaction(
+          optInTxn[1].toByte()
+        );
+        let groupTxns = [];
+        groupTxns.push(signedTxn1.blob);
+        groupTxns.push(signedTxn2.blob);
+        await client.sendRawTransaction(groupTxns).do();
+        context.commit("updateLoaderTrue");
+        await delay(5000);
+        context.dispatch("optinState");
+        context.commit("updateLoaderFalse");
+        $toast.open({
+          message: "Opted Into Channel",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      } catch (error) {
+        $toast.open({
+          message: "Opt-in Unsuccessful, You may not have the balance or browser may be blocking your wallet.",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      }
     },
     //Get public notifications
     async getPublicNotifications(context, lsig) {
-      const publicNotifications = await notiBoy
-        .notification()
-        .getPublicNotification(lsig);
-      context.commit("updatePublicNotifications", publicNotifications);
+      try {
+        const publicNotifications = await notiBoy
+          .notification()
+          .getPublicNotification(lsig);
+        context.commit("updatePublicNotifications", publicNotifications);
+      } catch (error) {
+        $toast.open({
+          message: "Something Went Wrong",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      }
+    },
+    //Opt-in state
+    async optinState(context) {
+      const optinState = await notiBoy.getoptinState(context.state.address);
+      context.commit("updateOptinState", optinState);
     },
   },
   modules: {},

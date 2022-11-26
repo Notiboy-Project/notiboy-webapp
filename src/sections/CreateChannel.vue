@@ -6,21 +6,6 @@
       maxlength="20"
       placeholder="Channel Name"
     />
-    <!-- <div class="channel-type">
-      <div class="channel-type-private">
-        <input
-          type="radio"
-          id="private"
-          value="private"
-          v-model="channelType"
-        />
-        <label for="private">Private</label>
-      </div>
-      <div class="channel-type-public">
-        <input type="radio" id="public" value="public" v-model="channelType" />
-        <label for="public">Public</label>
-      </div>
-    </div> -->
     <button @click.prevent="createChannel">Create Channel</button>
 
     <p style="text-align: center">

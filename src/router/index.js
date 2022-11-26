@@ -50,7 +50,7 @@ const routes = [
     },
   },
   {
-    path: "/:notfound(.*)",
+    path: "/:pathMatch(.*)*",
     name: "Notfound",
     component: NotFound,
     beforeEnter: () => {

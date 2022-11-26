@@ -4,8 +4,15 @@
     <div class="brand_logo">
       <a href="#"><img src="../assets/logo.png" alt="" /></a>
     </div>
-    <div v-show="connectionStatus == 'Disconnect'" @click.prevent="doRefresh" style="cursor: pointer">
+    <!-- <div
+      v-show="connectionStatus == 'Disconnect'"
+      @click.prevent="doRefresh"
+      style="cursor: pointer"
+    >
       <img height="30" src="../assets/refresh.png" alt="refresh" />
+    </div> -->
+    <div v-if="optinState == false" @click="channelOptin" class="optin">
+      Opt-In
     </div>
     <loading
       v-model:active="isLoading"
@@ -54,7 +61,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["updatedAddress", "connectionStatus"]),
+    ...mapGetters([
+      "userAddress",
+      "updatedAddress",
+      "connectionStatus",
+      "optinState",
+    ]),
   },
   // Declare the event emiited and props passed nav-opened event emiited for opening the mobile nav. Show prop is
   // passed from parent component as a boolean value which determine which navigation to show (mobile or main nav).
@@ -71,12 +83,15 @@ export default {
         store.dispatch("disconnect");
       }
     },
-    // The method which will refresh the list of personal notifications and list of channnels on click.
-    doRefresh() {
-      this.isLoading = true;
-      store.dispatch("getPersonalNotifications", this.userAddress);
-      store.dispatch("getChannelList").then(() => (this.isLoading = false));
+    channelOptin() {
+      store.dispatch("channelOptin", this.userAddress);
     },
+    // // The method which will refresh the list of personal notifications and list of channnels on click.
+    // doRefresh() {
+    //   this.isLoading = true;
+    //   store.dispatch("getPersonalNotifications", this.userAddress);
+    //   store.dispatch("getChannelList").then(() => (this.isLoading = false));
+    // },
   },
   mounted() {
     store.dispatch("updateAddress");
@@ -148,6 +163,18 @@ label span {
   transition: 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
 }
 
+.optin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 7rem;
+  height: 2.5rem;
+  border-radius: 0.6rem;
+  background-color: var(--teritary);
+  padding: 0.65rem;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 981px) {
   .main-nav {
     display: none;
@@ -159,6 +186,13 @@ label span {
     padding: 1rem 0 1rem 0;
     width: 5rem;
     height: auto;
+  }
+  .optin {
+    width: 7rem;
+    height: 3rem;
+    border-radius: 0.6rem;
+    background-color: var(--teritary);
+    cursor: pointer;
   }
 }
 </style>

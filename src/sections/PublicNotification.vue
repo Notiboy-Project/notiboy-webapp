@@ -45,6 +45,7 @@ export default {
     this.isLoading = true;
   },
   mounted() {
+    store.dispatch("optinState");
     const route = useRoute();
     store
       .dispatch("getPublicNotifications", route.params.lsig)

@@ -58,6 +58,7 @@ export default {
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  height: 70vh;
 }
 .channel-main {
   width: 90%;
@@ -72,12 +73,14 @@ export default {
 @media only screen and (max-width: 981px) {
   .notification-pane {
     margin-right: 1%;
+    height: 80vh;
   }
 }
 
 @media only screen and (max-width: 526px) {
   .notification-pane {
     margin-right: 1%;
+    height: 80vh;
   }
 }
 </style>

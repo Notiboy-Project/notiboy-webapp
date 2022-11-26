@@ -2,19 +2,21 @@
   <transition name="modal-fade">
     <div class="wallet-backdrop">
       <div class="wallet-pane">
-        <div class="wallet-header">
-          <p class="connect-heading">Connect Your Wallet</p>
-          <!-- Button to close the Wallet Connect -->
+        <div class="wallet-close">
           <button type="button" class="closebtn" @click="closeConnectOverlay">
             &times;
           </button>
+        </div>
+        <div class="wallet-header">
+          <p class="connect-heading">Connect Your Wallet</p>
+          <!-- Button to close the Wallet Connect -->
         </div>
         <div class="wallet-row1">
           <div @click="myAlgoConnect" class="wallet">
             <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
             <p>My Algo Wallet</p>
           </div>
-          <div @click="connectPeraWallet" class="wallet">
+          <!-- <div @click="connectPeraWallet" class="wallet">
             <img
               src="../assets/pera.png"
               width="30"
@@ -22,7 +24,7 @@
               alt="Pera Button"
             />
             <p>Pera Wallet</p>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -31,8 +33,6 @@
 
 <script>
 import MyAlgoConnect from "@randlabs/myalgo-connect";
-import { PeraWalletConnect } from "@perawallet/connect";
-const peraWallet = new PeraWalletConnect();
 import store from "../store";
 
 export default {
@@ -62,14 +62,11 @@ export default {
       }
     },
     //Method to connect via pera wellet
-    connectPeraWallet() {
-      peraWallet.connect().then((accounts) => {
-        const address = accounts[0];
-        localStorage.setItem("notiboy_address", address);
-        store.dispatch("updateAddress");
-        this.$emit("closeConnectOverlay");
-      });
-    },
+    // async connectPeraWallet() {
+    //   await store.dispatch("perawalletConnect");
+    //   this.closeConnectOverlay();
+    // },
+
     // Emit Event to close the wallet connect Overlay
     closeConnectOverlay() {
       this.$emit("closeConnectOverlay");
@@ -96,22 +93,23 @@ export default {
 .wallet-pane {
   background: var(--primary);
   border-radius: 3rem;
-  margin-right: 2%;
-  margin-bottom: 2%;
-  margin-left: 1%;
+  padding: 0 2%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
+  min-width: 40%;
   min-height: 60vh;
 }
 .wallet-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-top: 5%;
+  justify-content: center;
 }
-.wallet-header .closebtn {
-  font-size: 6rem;
+.wallet-close {
+  display: flex;
+  justify-content: flex-end;
+}
+.wallet-close .closebtn {
+  font-size: 5rem;
   text-decoration: none;
   cursor: pointer;
   color: var(--teritary);
@@ -121,17 +119,16 @@ export default {
 .connect-heading {
   color: #ffffff;
   font-size: 3rem;
-  padding: 2% 0;
-  margin-right: 5rem;
+  padding: 1% 0;
 }
 .wallet-row1 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
   color: #ffffff;
-  width: 80%;
+  width: 100%;
 }
 
 .wallet {
@@ -166,8 +163,6 @@ export default {
     margin-left: 1%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
     min-height: 60vh;
   }
   .wallet-header {
@@ -178,7 +173,7 @@ export default {
   .connect-heading {
     color: #ffffff;
     font-size: 3.5rem;
-    padding: 2% 0;
+    padding: 1% 0;
   }
   .wallet-header .closebtn {
     font-size: 4rem;
@@ -204,8 +199,6 @@ export default {
     margin-left: 1%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
     min-height: 60vh;
   }
   .connect-heading {
@@ -225,8 +218,6 @@ export default {
     margin-left: 3%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
   }
   .connect-heading {
     color: #ffffff;
@@ -245,17 +236,11 @@ export default {
     margin-left: 1%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
   }
   .connect-heading {
     color: #ffffff;
-    font-size: 2.5rem;
+    font-size: 3rem;
     padding: 2% 0;
-  }
-  .wallet-header .closebtn {
-    font-size: 5rem;
-    text-decoration: none;
   }
   .wallet {
     display: flex;

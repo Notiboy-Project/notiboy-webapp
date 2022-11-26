@@ -3,7 +3,7 @@
     <div class="notification-card-name">
       <p>{{ notification.channel }}</p>
       <img
-        v-if="notification.verified == true"
+        v-if="notification.status && notification.status === 'verified'"
         src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
       />
     </div>

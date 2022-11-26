@@ -4,12 +4,13 @@
       <div @click="showPublicChannel" class="channel-card-name">
         <p class="channel-name">{{ channel.channelName }}</p>
         <img
-          v-if="channel.verified == true"
+          v-if="channel.status == 'verified'"
           src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
         />
       </div>
       <div class="channel-card-address">
         <img
+          class="copy-icon"
           @click="copyToClipBoard(channel.dappAddress)"
           src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
         />
@@ -22,6 +23,7 @@
 </template>
 
 <script>
+import copy from "copy-to-clipboard";
 export default {
   data() {
     return {
@@ -33,12 +35,16 @@ export default {
   },
   computed: {
     showAddress() {
-      return this.channelAddress.slice(0, 14) + "...";
+      return (
+        this.channelAddress.slice(0, 5) +
+        "..." +
+        this.channelAddress.slice(52, 58)
+      );
     },
   },
   methods: {
     copyToClipBoard(channelAddress) {
-      navigator.clipboard.writeText(channelAddress);
+      copy(channelAddress);
     },
     showPublicChannel() {
       this.$router.push({
@@ -91,6 +97,10 @@ export default {
   border-radius: 0.6rem;
   background-color: var(--teritary);
   cursor: pointer;
+}
+
+.copy-icon:active{
+  transform: translateY(4px);
 }
 
 @media only screen and (max-width: 981px) {
