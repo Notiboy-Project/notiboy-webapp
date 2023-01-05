@@ -3,14 +3,13 @@
     <input
       class="channel-name"
       v-model="channelName"
-      maxlength="20"
+      maxlength="10"
       placeholder="Channel Name"
     />
     <button @click.prevent="createChannel">Create Channel</button>
 
     <p style="text-align: center">
-      Note: Personal notifications and public notifications can be sent from the
-      created channels.
+      Note: Channel name limited to 10 characters.
     </p>
   </div>
 </template>
@@ -49,16 +48,16 @@ export default {
   padding-bottom: 5rem;
   font-weight: bold;
 }
-
 input.channel-name {
   font-weight: bold;
-  width: 30rem;
+  width: 20rem;
   height: 4rem;
   color: white;
   border: 2px solid var(--tertiary);
   border-radius: 0.5rem;
   background-color: var(--primary);
   padding-left: 0.6rem;
+  text-align: center;
 }
 
 input.channel-name :focus {

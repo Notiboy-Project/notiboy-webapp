@@ -3,7 +3,7 @@
   <channel-card
     v-for="channel in channelList"
     :channel="channel"
-    :key="channel.channelName"
+    :key="channel.channelIndex"
   ></channel-card>
 </template>
 <script>

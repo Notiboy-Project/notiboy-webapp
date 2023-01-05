@@ -16,7 +16,7 @@
             <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
             <p>My Algo Wallet</p>
           </div>
-          <!-- <div @click="connectPeraWallet" class="wallet">
+          <div @click="connectPeraWallet" class="wallet">
             <img
               src="../assets/pera.png"
               width="30"
@@ -24,7 +24,7 @@
               alt="Pera Button"
             />
             <p>Pera Wallet</p>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -62,10 +62,10 @@ export default {
       }
     },
     //Method to connect via pera wellet
-    // async connectPeraWallet() {
-    //   await store.dispatch("perawalletConnect");
-    //   this.closeConnectOverlay();
-    // },
+    async connectPeraWallet() {
+      await store.dispatch("perawalletConnect");
+      this.closeConnectOverlay();
+    },
 
     // Emit Event to close the wallet connect Overlay
     closeConnectOverlay() {
