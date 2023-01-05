@@ -1,15 +1,5 @@
 <template>
   <div class="send-card">
-    <select v-model="selectedChannel" class="channel-name" name="selectedValue">
-      <option disabled>Select One Channel</option>
-      <option
-        v-for="channel in userOwnedChannels"
-        :key="channel.channelName"
-        :value="channel.channelName"
-      >
-        {{ channel.channelName }}
-      </option>
-    </select>
     <div class="channel-type">
       <div class="channel-type-public">
         <input type="radio" id="public" value="public" v-model="channelType" />
@@ -71,7 +61,7 @@
           >
         </div>
       </div>
-      <button @click.prevent="sendNotification">Send Notification</button>
+      <button  @click.prevent="sendNotification">Send Notification</button>
     </div>
   </div>
 </template>
@@ -83,8 +73,8 @@ export default {
   data() {
     return {
       channelType: "",
-      selectedChannel: "Select One Channel",
       notification: "",
+      selectedChannel:[],
       filters: [],
       receiverAddress: "",
       bulkImport: "",
@@ -96,14 +86,9 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["userAddress", "channels"]),
-    userOwnedChannels() {
-      return this.channels.filter((channel) => {
-        return channel.dappAddress.includes(this.userAddress);
-      });
-    },
+    ...mapGetters(["userAddress","searchText", "channels","userAppIndex"]),
   },
-
+ 
   methods: {
     sendNotification() {
       if (this.channelType == "public") {
@@ -146,6 +131,9 @@ export default {
   },
   created() {
     store.dispatch("getChannelList");
+    if(this.userAddress.length === 58){
+      store.dispatch("getAppIndexFromAddress")
+    }
   },
 };
 </script>
@@ -162,7 +150,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 60rem;
-  padding-top: 8rem;
+  padding-top: 10rem;
   padding-bottom: 5rem;
   font-weight: bold;
 }

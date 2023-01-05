@@ -40,6 +40,8 @@ export default createStore({
       searchBarStatus: false,
       loader: false,
       optinState: false,
+      searchBarDefaultText:"Search",
+      userAppIndex:0
     };
   },
   getters: {
@@ -71,12 +73,18 @@ export default createStore({
     searchBarStatus(state) {
       return state.searchBarStatus;
     },
+    searchBarDefaultText(state){
+      return state.searchBarDefaultText;
+    },
     loader(state) {
       return state.loader;
     },
     optinState(state) {
       return state.optinState;
     },
+    userAppIndex(state){
+      return state.userAppIndex;
+    }
   },
   mutations: {
     selectAddress(state, address) {
@@ -107,6 +115,9 @@ export default createStore({
     updateSearchBarStatus(state, status) {
       state.searchBarStatus = status;
     },
+    updatesearchBarDefaultText(state,text){
+      state.searchBarDefaultText = text;
+    },
     updateLoaderTrue(state) {
       state.loader = true;
     },
@@ -116,6 +127,9 @@ export default createStore({
     updateOptinState(state, optinState) {
       state.optinState = optinState;
     },
+    updateUserIndex(state,appIndex){
+      state.userAppIndex = appIndex; 
+    }
   },
   actions: {
     selectAddress(context, address) {
@@ -193,7 +207,6 @@ export default createStore({
           });
         } catch (error) {
           context.commit("updateLoaderFalse");
-          console.log(error)
           $toast.open({
             message: "Could not complete channel registration.",
             type: "error",
@@ -227,32 +240,25 @@ export default createStore({
       context.commit("updateChannelList", channelList);
     },
     //send public notifications
-    async sendPublicNotification(_, channelDetails) {
+    async sendPublicNotification(context, channelDetails) {
       try {
-        const logicsig = await notiboy.createLogicSig(
-          channelDetails.channelName
-        );
         const publicNotification = await notiboy
           .notification()
           .sendPublicNotification(
             channelDetails.address,
-            logicsig.address(),
-            channelDetails.channelName,
+            this.state.userAppIndex,
             channelDetails.notification
           );
-        // Group transactions received from public Notification
-        const signedTxn1 = await myAlgoWallet.signTransaction(
-          publicNotification[0].toByte()
-        );
-        const signedTxn2 = algosdk.signLogicSigTransaction(
-          publicNotification[1],
-          logicsig
-        );
-        //paymentTxn, notificationTransaction
-        let groupTxns = [];
-        groupTxns.push(signedTxn1.blob);
-        groupTxns.push(signedTxn2.blob);
-        await client.sendRawTransaction(groupTxns).do();
+          context.commit("updateLoaderTrue");
+          let wallet = "pera"
+          if (wallet == "myalgo") {
+            const submittedTxn = await context.dispatch("signMyAlgoWallet",[publicNotification]);
+            await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+          } else if (wallet == "pera") {
+            const submittedTxn = await context.dispatch("signPeraWallet",[publicNotification]);
+            await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+          }
+          context.commit("updateLoaderFalse");
         $toast.open({
           message: "Public Notification Send",
           type: "success",
@@ -262,7 +268,7 @@ export default createStore({
         });
       } catch (error) {
         $toast.open({
-          message: "An Unexpected Error",
+          message: "Something went wrong.",
           type: "error",
           duration: 5000,
           position: "top-right",
@@ -535,6 +541,12 @@ export default createStore({
           dismissible: true,
         });
       }
+    },
+    async getAppIndexFromAddress(context){
+      context.commit("updateLoaderTrue");
+      const appIndex = await notiboy.getAddressAppIndex(this.state.address);
+      context.commit("updateUserIndex",appIndex)
+      context.commit("updateLoaderFalse");
     }
   },
   modules: {},

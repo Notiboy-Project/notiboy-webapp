@@ -15,6 +15,7 @@ const routes = [
     component: PersonalNotification,
     beforeEnter: () => {
       store.commit("updateSearchBarStatus", true);
+      store.commit("updatesearchBarDefaultText","Search Channel Name");
     },
   },
   {
@@ -23,6 +24,7 @@ const routes = [
     component: Channels,
     beforeEnter: () => {
       store.commit("updateSearchBarStatus", true);
+      store.commit("updatesearchBarDefaultText","Search Channel Name");
     },
   },
   {

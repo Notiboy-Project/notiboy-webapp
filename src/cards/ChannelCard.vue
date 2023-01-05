@@ -11,7 +11,7 @@
       <div class="channel-card-address">
         <img
           class="copy-icon"
-          @click="copyToClipBoard(channel.dappAddress)"
+          @click="copyToClipBoard(channel.appIndex)"
           src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
         />
         <p ref="address" style="padding-left: 0.4rem">{{ channel.appIndex }}</p>
