@@ -18,7 +18,6 @@ const myAlgoWallet = new MyAlgoConnect();
 //Connecting Pera wallet
 import { PeraWalletConnect } from "@perawallet/connect";
 const peraWallet = new PeraWalletConnect();
-const delay = require("delay");
 //Toast Notification
 import { createApp } from "vue";
 import { useToast } from "vue-toast-notification";
@@ -277,33 +276,28 @@ export default createStore({
       }
     },
     //send personal notifications
-    async sendPersonalNotification(_, channelDetails) {
+    async sendPersonalNotification(context, notificationDetails) {
+      console.log(notificationDetails)
       try {
-        const logicsig = await notiboy.createLogicSig(
-          channelDetails.channelName
-        );
         const personalNotification = await notiboy
-          .notification()
-          .sendPersonalNotification(
-            channelDetails.address,
-            channelDetails.receiverAddress,
-            channelDetails.channelName,
-            logicsig.address(),
-            channelDetails.notification
+        .notification()
+        .sendPersonalNotification(
+            notificationDetails.address,
+            notificationDetails.receiverAddress,
+            notificationDetails.channelAppIndex,
+            notificationDetails.channelName,
+            notificationDetails.notification
           );
-        // Group transactions received from public Notification
-        const signedTxn1 = await myAlgoWallet.signTransaction(
-          personalNotification[0].toByte()
-        );
-        const signedTxn2 = algosdk.signLogicSigTransaction(
-          personalNotification[1],
-          logicsig
-        );
-        //paymentTxn, notificationTransaction
-        let groupTxns = [];
-        groupTxns.push(signedTxn1.blob);
-        groupTxns.push(signedTxn2.blob);
-        await client.sendRawTransaction(groupTxns).do();
+          context.commit("updateLoaderTrue");
+          let wallet = "pera"
+          if (wallet == "myalgo") {
+            const submittedTxn = await context.dispatch("signMyAlgoWallet",[personalNotification]);
+            await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+          } else if (wallet == "pera") {
+            const submittedTxn = await context.dispatch("signPeraWallet",[personalNotification]);
+            await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+          }
+          context.commit("updateLoaderFalse");
         $toast.open({
           message: "Personal Notification Sent",
           type: "success",
@@ -312,8 +306,9 @@ export default createStore({
           dismissible: true,
         });
       } catch (error) {
+        console.log(error)
         $toast.open({
-          message: "Personal Notification not Sent",
+          message: "Personal Notification not Sent.",
           type: "error",
           duration: 5000,
           position: "top-right",
@@ -417,30 +412,22 @@ export default createStore({
       }
     },
     //optin to channels
-    async channelOptin(context, userAddress) {
+    async userChannelOptin(context, userDetails) {
       try {
-        //opt-in to channel (channel creation)
-        const channelName = "";
-        const optInTxn = await notiboy.optin(
-          channelName,
-          userAddress,
-          userAddress,
-          "user"
+        const channelOptinTxn = await notiboy.userChannelOptin(
+          userDetails.userAddress,
+          userDetails.channelAppIndex
         );
-        // Group transactions received from opt-in
-        const signedTxn1 = await myAlgoWallet.signTransaction(
-          optInTxn[0].toByte()
-        );
-        const signedTxn2 = await myAlgoWallet.signTransaction(
-          optInTxn[1].toByte()
-        );
-        let groupTxns = [];
-        groupTxns.push(signedTxn1.blob);
-        groupTxns.push(signedTxn2.blob);
-        await client.sendRawTransaction(groupTxns).do();
+
         context.commit("updateLoaderTrue");
-        await delay(5000);
-        context.dispatch("optinState");
+        let wallet = "myalgo"
+        if (wallet == "myalgo") {
+          const submittedTxn = await context.dispatch("signMyAlgoWallet",[channelOptinTxn]);
+          await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+        } else if (wallet == "pera") {
+          const submittedTxn = await context.dispatch("signPeraWallet",[channelOptinTxn]);
+          await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+        }
         context.commit("updateLoaderFalse");
         $toast.open({
           message: "Opted Into Channel",
@@ -452,7 +439,42 @@ export default createStore({
       } catch (error) {
         $toast.open({
           message:
-            "Opt-in Unsuccessful, You may not have the balance or browser may be blocking your wallet.",
+            "Opt-in Unsuccessful.",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      }
+    },
+    async userChannelOptout(context, userDetails) {
+      try {
+        const channelOptoutTxn = await notiboy.userChannelOptout(
+          userDetails.userAddress,
+          userDetails.channelAppIndex
+        );
+
+        context.commit("updateLoaderTrue");
+        let wallet = "myalgo"
+        if (wallet == "myalgo") {
+          const submittedTxn = await context.dispatch("signMyAlgoWallet",[channelOptoutTxn]);
+          await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+        } else if (wallet == "pera") {
+          const submittedTxn = await context.dispatch("signPeraWallet",[channelOptoutTxn]);
+          await algosdk.waitForConfirmation(client, submittedTxn.txId.toString(), 4);
+        }
+        context.commit("updateLoaderFalse");
+        $toast.open({
+          message: "Opted out of Channel",
+          type: "success",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
+        });
+      } catch (error) {
+        $toast.open({
+          message:
+            "Opt-out Unsuccessful.",
           type: "error",
           duration: 5000,
           position: "top-right",

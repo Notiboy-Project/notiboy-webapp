@@ -17,23 +17,42 @@
         <p ref="address" style="padding-left: 0.4rem">{{ channel.appIndex }}</p>
       </div>
     </div>
-    <div v-if="channel.optIn == false" class="optin">Opt-In</div>
-    <div v-if="channel.optIn == true" class="optin">Opt-Out</div>
+    <div v-show="ishidden == false"  @click="checkOptinState" class="optin">Show Status</div>
+    <div v-if="optinStatus == false" @click="channelOptin" class="optin">Opt-In</div>
+    <div v-if="optinStatus == true" @click="channelOptout" class="optin">Opt-Out</div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import copy from "copy-to-clipboard";
+import store from "../store";
+import algosdk from "algosdk";
+import Notiboy from "notiboy-js-sdk";
+const client = new algosdk.Algodv2(
+  "",
+  "https://testnet-api.algonode.cloud",
+  ""
+);
+const indexer = new algosdk.Indexer(
+  "",
+  "https://testnet-idx.algonode.cloud",
+  ""
+);
+const notiboy = new Notiboy(client, indexer);
 export default {
   data() {
     return {
       channelAddress: this.channel.dappAddress,
+      ishidden:false,
+      optinStatus:Boolean
     };
   },
   props: {
     channel: Object,
   },
   computed: {
+    ...mapGetters(["userAddress"]),
     showAddress() {
       return (
         this.channelAddress.slice(0, 5) +
@@ -52,6 +71,29 @@ export default {
         params: { lsig: this.channel.lsigAddress },
       });
     },
+    async checkOptinState(){
+      this.ishidden = true;
+      this.optinStatus = await notiboy.getChannelScOptinState(
+        this.userAddress,
+        this.channel.appIndex
+      )
+    },
+    channelOptin(){
+      store.dispatch("userChannelOptin",{
+        userAddress:this.userAddress,
+        channelAppIndex:this.channel.appIndex
+      })
+      this.ishidden = false;
+      this.optinStatus = Boolean;
+    },
+    channelOptout(){
+      store.dispatch("userChannelOptout",{
+        userAddress:this.userAddress,
+        channelAppIndex:this.channel.appIndex
+      })
+      this.ishidden = false;
+      this.optinStatus = Boolean;
+    }
   },
 };
 </script>
@@ -92,8 +134,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 7rem;
-  height: 2.5rem;
+  width: 12rem;
+  height: 5rem;
   border-radius: 0.6rem;
   background-color: var(--teritary);
   cursor: pointer;
@@ -105,8 +147,8 @@ export default {
 
 @media only screen and (max-width: 981px) {
   .optin {
-    width: 7rem;
-    height: 3rem;
+    width: 10rem;
+    height: 4rem;
     border-radius: 0.6rem;
     background-color: var(--teritary);
     cursor: pointer;
@@ -120,8 +162,8 @@ export default {
   }
 
   .optin {
-    width: 7rem;
-    height: 3rem;
+    width: 10rem;
+    height: 4rem;
     border-radius: 0.6rem;
     background-color: var(--teritary);
     cursor: pointer;

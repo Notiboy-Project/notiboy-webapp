@@ -53,7 +53,7 @@ export default {
     MyAlgoLogin: async () => {
       try {
         const myAlgoConnect = new MyAlgoConnect();
-        const response = await myAlgoConnect.connect();
+        const response = await myAlgoConnect.connect({ shouldSelectOneAccount: true });
         const address = response[0].address;
         localStorage.setItem("notiboy_address", address);
         store.dispatch("updateAddress");

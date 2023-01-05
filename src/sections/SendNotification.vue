@@ -98,10 +98,18 @@ export default {
           notification: this.notification,
         });
       } else if (this.channelType == "personal") {
+        let channelDetails;
+        for(let i=0; i<this.channels.length; i++){
+          if(this.channels[i].appIndex == this.userAppIndex){
+            channelDetails = this.channels[i];
+            break;
+          }
+        }
         store.dispatch("sendPersonalNotification", {
           address: this.userAddress,
           receiverAddress: this.receiverAddress,
-          channelName: this.selectedChannel,
+          channelAppIndex: channelDetails.appIndex,
+          channelName: channelDetails.channelName,
           notification: this.notification,
         });
       } else if (this.channelType == "bulk") {
