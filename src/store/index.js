@@ -384,22 +384,29 @@ export default createStore({
     //Get personal notifications
     async getPersonalNotifications(context, userAddress) {
       try {
-        context.dispatch("getChannelList");
+        await context.dispatch("getChannelList");
         let personalNotifications = await notiboy
           .notification()
           .getPersonalNotification(userAddress);
-        for (let i = 0; i < personalNotifications.length; i++) {
-          for (let j = 0; j < context.state.channels.length; j++) {
-            if (
-              personalNotifications[i].channel ===
-                context.state.channels[j].channelName &&
-              context.state.channels[j].status === "verified"
-            ) {
-              personalNotifications[i].status = "verified";
+          const sortedPersonalNotifications = personalNotifications.sort(((a,b) => b.timeStamp - a.timeStamp))
+          for (let i = 0; i < sortedPersonalNotifications.length; i++) {
+            for (let j = 0; j < context.state.channels.length; j++) {
+              if (
+                sortedPersonalNotifications[i].appIndex ===
+                  context.state.channels[j].appIndex &&
+                context.state.channels[j].verificationStatus === "v"
+              ) {
+                sortedPersonalNotifications[i].channelName = context.state.channels[j].channelName;
+                sortedPersonalNotifications[i].verificationStatus = "Verified";
+              }else if (sortedPersonalNotifications[i].appIndex ===
+                context.state.channels[j].appIndex &&
+              context.state.channels[j].verificationStatus === "u"){
+                sortedPersonalNotifications[i].channelName = context.state.channels[j].channelName;
+                sortedPersonalNotifications[i].verificationStatus = "unVerified";
+              }
             }
           }
-        }
-        context.commit("updatePersonalNotifications", personalNotifications);
+        context.commit("updatePersonalNotifications", sortedPersonalNotifications);
       } catch (error) {
         $toast.open({
           message: "Something Went Wrong",

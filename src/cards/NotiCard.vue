@@ -1,9 +1,9 @@
 <template>
   <div class="notification-card">
     <div class="notification-card-name">
-      <p>{{ notification.channel }}</p>
+      <p>{{ notification.channelName }}&nbsp;</p>
       <img
-        v-if="notification.status && notification.status === 'verified'"
+        v-if="notification.verificationStatus && notification.verificationStatus === 'unVerified'"
         src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
       />
     </div>
@@ -24,6 +24,7 @@ export default {
     notificationTime() {
       let time;
       if(this.notification.timeStamp){
+        console.log(this.notification.timeStamp)
         time = date.format(
         new Date(this.notification.timeStamp * 1000),
         "YYYY/MM/DD HH:mm"
