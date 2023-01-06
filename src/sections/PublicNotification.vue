@@ -2,7 +2,7 @@
   <noti-card
     v-for="notification in publicNotificationsList"
     :notification="notification"
-    :key="notification.timeStamp"
+    :key="notification.index"
   ></noti-card>
   <loading
     v-model:active="isLoading"
@@ -45,10 +45,10 @@ export default {
     this.isLoading = true;
   },
   mounted() {
-    store.dispatch("optinState");
+    //store.dispatch("optinState");
     const route = useRoute();
     store
-      .dispatch("getPublicNotifications", route.params.lsig)
+      .dispatch("getPublicNotifications", route.params.appIndex)
       .then(() => (this.isLoading = false));
   },
   components: {

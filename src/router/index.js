@@ -28,7 +28,7 @@ const routes = [
     },
   },
   {
-    path: "/notification/public/:lsig",
+    path: "/notification/public/:appIndex",
     name: "PublicNotification",
     component: PublicNotification,
     beforeEnter: () => {

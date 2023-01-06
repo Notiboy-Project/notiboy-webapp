@@ -68,7 +68,7 @@ export default {
     showPublicChannel() {
       this.$router.push({
         name: "PublicNotification",
-        params: { lsig: this.channel.lsigAddress },
+        params: { appIndex: this.channel.appIndex},
       });
     },
     async checkOptinState(){

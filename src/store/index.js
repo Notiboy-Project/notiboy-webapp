@@ -245,7 +245,7 @@ export default createStore({
           .notification()
           .sendPublicNotification(
             channelDetails.address,
-            this.state.userAppIndex,
+            context.state.userAppIndex,
             channelDetails.notification
           );
           context.commit("updateLoaderTrue");
@@ -277,7 +277,6 @@ export default createStore({
     },
     //send personal notifications
     async sendPersonalNotification(context, notificationDetails) {
-      console.log(notificationDetails)
       try {
         const personalNotification = await notiboy
         .notification()
@@ -483,12 +482,14 @@ export default createStore({
       }
     },
     //Get public notifications
-    async getPublicNotifications(context, lsig) {
+    async getPublicNotifications(context, appIndex) {
+      console.log(appIndex)
       try {
         const publicNotifications = await notiboy
           .notification()
-          .getPublicNotification(lsig);
-        context.commit("updatePublicNotifications", publicNotifications);
+          .getPublicNotification(appIndex);
+        const sortedPublicNotifications = publicNotifications.sort((a,b) => b.index - a.index)
+        context.commit("updatePublicNotifications", sortedPublicNotifications);
       } catch (error) {
         $toast.open({
           message: "Something Went Wrong",
@@ -501,7 +502,7 @@ export default createStore({
     },
     //Opt-in state
     async optinState(context) {
-      const optinState = await notiboy.getoptinState(context.state.address);
+      const optinState = await notiboy.getNotiboyOptinState(context.state.address);
       context.commit("updateOptinState", optinState);
     },
     //connect pera wallet
@@ -566,7 +567,7 @@ export default createStore({
     },
     async getAppIndexFromAddress(context){
       context.commit("updateLoaderTrue");
-      const appIndex = await notiboy.getAddressAppIndex(this.state.address);
+      const appIndex = await notiboy.getAddressAppIndex(context.state.address);
       context.commit("updateUserIndex",appIndex)
       context.commit("updateLoaderFalse");
     }

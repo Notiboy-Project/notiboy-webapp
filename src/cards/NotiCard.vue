@@ -22,10 +22,14 @@ export default {
   },
   computed: {
     notificationTime() {
-      return date.format(
+      let time;
+      if(this.notification.timeStamp){
+        time = date.format(
         new Date(this.notification.timeStamp * 1000),
         "YYYY/MM/DD HH:mm"
-      );
+        )
+      }
+      return time
     },
   },
 };
@@ -60,6 +64,7 @@ export default {
 
 .notification-card-notification {
   font-size: 1.3rem;
+  margin-bottom: 3.5rem;
 }
 
 .notification-card-timestamp {
