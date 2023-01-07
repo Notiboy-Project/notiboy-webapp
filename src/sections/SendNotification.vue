@@ -76,8 +76,10 @@
     <p style="line-height: 20px">
       Note: Public notifications limited to 180 characters and Personal
       notifications limited to 280 characters.<br />
-      Mnemonic will be stored temporarily in the browser and will be removed
-      once you close the browser tab.
+      <span v-if="channelType == 'bulk'"
+        >Mnemonic will be stored temporarily in the browser and will be removed
+        once you close the browser tab.</span
+      >
     </p>
   </div>
 </template>

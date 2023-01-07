@@ -58,6 +58,7 @@ export default {
         });
         const address = response[0].address;
         localStorage.setItem("notiboy_address", address);
+        localStorage.setItem("wallet", "myalgo");
         store.dispatch("updateAddress");
       } catch (err) {
         return [];

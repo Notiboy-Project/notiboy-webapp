@@ -17,13 +17,28 @@
         <p ref="address" style="padding-left: 0.4rem">{{ channel.appIndex }}</p>
       </div>
     </div>
-    <div v-show="ishidden == false" @click="checkOptinState" class="optin">
+    <div
+      style="margin-right: 15px"
+      v-show="ishidden == false"
+      @click="checkOptinState"
+      class="optin"
+    >
       Show Status
     </div>
-    <div v-if="optinStatus == false" @click="channelOptin" class="optin">
+    <div
+      style="margin-right: 15px"
+      v-if="optinStatus == false"
+      @click="channelOptin"
+      class="optin"
+    >
       Opt-In
     </div>
-    <div v-if="optinStatus == true" @click="channelOptout" class="optin">
+    <div
+      style="margin-right: 15px"
+      v-if="optinStatus == true"
+      @click="channelOptout"
+      class="optin"
+    >
       Opt-Out
     </div>
   </div>
@@ -109,7 +124,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 70%;
+  width: 100%;
   height: auto;
   margin-bottom: 2rem;
   background-color: var(--primary);
@@ -121,6 +136,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin: 0 0 0 15px;
 }
 .channel-card-name {
   display: flex;
