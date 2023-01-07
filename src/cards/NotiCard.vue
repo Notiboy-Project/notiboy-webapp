@@ -3,7 +3,10 @@
     <div class="notification-card-name">
       <p>{{ notification.channelName }}&nbsp;</p>
       <img
-        v-if="notification.verificationStatus && notification.verificationStatus === 'unVerified'"
+        v-if="
+          notification.verificationStatus &&
+          notification.verificationStatus === 'Verified'
+        "
         src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
       />
     </div>
@@ -23,14 +26,14 @@ export default {
   computed: {
     notificationTime() {
       let time;
-      if(this.notification.timeStamp){
-        console.log(this.notification.timeStamp)
+      if (this.notification.timeStamp) {
+        console.log(this.notification.timeStamp);
         time = date.format(
-        new Date(this.notification.timeStamp * 1000),
-        "YYYY/MM/DD HH:mm"
-        )
+          new Date(this.notification.timeStamp * 1000),
+          "YYYY/MM/DD HH:mm"
+        );
       }
-      return time
+      return time;
     },
   },
 };

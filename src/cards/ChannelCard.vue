@@ -4,7 +4,7 @@
       <div @click="showPublicChannel" class="channel-card-name">
         <p class="channel-name">{{ channel.channelName }}</p>
         <img
-          v-if="channel.verificationStatus == 'verified'"
+          v-if="channel.verificationStatus == 'Verified'"
           src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
         />
       </div>
@@ -17,9 +17,15 @@
         <p ref="address" style="padding-left: 0.4rem">{{ channel.appIndex }}</p>
       </div>
     </div>
-    <div v-show="ishidden == false"  @click="checkOptinState" class="optin">Show Status</div>
-    <div v-if="optinStatus == false" @click="channelOptin" class="optin">Opt-In</div>
-    <div v-if="optinStatus == true" @click="channelOptout" class="optin">Opt-Out</div>
+    <div v-show="ishidden == false" @click="checkOptinState" class="optin">
+      Show Status
+    </div>
+    <div v-if="optinStatus == false" @click="channelOptin" class="optin">
+      Opt-In
+    </div>
+    <div v-if="optinStatus == true" @click="channelOptout" class="optin">
+      Opt-Out
+    </div>
   </div>
 </template>
 
@@ -44,8 +50,8 @@ export default {
   data() {
     return {
       channelAddress: this.channel.dappAddress,
-      ishidden:false,
-      optinStatus:Boolean
+      ishidden: false,
+      optinStatus: Boolean,
     };
   },
   props: {
@@ -68,32 +74,32 @@ export default {
     showPublicChannel() {
       this.$router.push({
         name: "PublicNotification",
-        params: { appIndex: this.channel.appIndex},
+        params: { appIndex: this.channel.appIndex },
       });
     },
-    async checkOptinState(){
+    async checkOptinState() {
       this.ishidden = true;
       this.optinStatus = await notiboy.getChannelScOptinState(
         this.userAddress,
         this.channel.appIndex
-      )
+      );
     },
-    channelOptin(){
-      store.dispatch("userChannelOptin",{
-        userAddress:this.userAddress,
-        channelAppIndex:this.channel.appIndex
-      })
+    channelOptin() {
+      store.dispatch("userChannelOptin", {
+        userAddress: this.userAddress,
+        channelAppIndex: this.channel.appIndex,
+      });
       this.ishidden = false;
       this.optinStatus = Boolean;
     },
-    channelOptout(){
-      store.dispatch("userChannelOptout",{
-        userAddress:this.userAddress,
-        channelAppIndex:this.channel.appIndex
-      })
+    channelOptout() {
+      store.dispatch("userChannelOptout", {
+        userAddress: this.userAddress,
+        channelAppIndex: this.channel.appIndex,
+      });
       this.ishidden = false;
       this.optinStatus = Boolean;
-    }
+    },
   },
 };
 </script>

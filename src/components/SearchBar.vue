@@ -6,7 +6,7 @@
       class="searchTerm"
       v-model="searchText"
       @keyup="startSeach"
-      :placeholder= "searchBarDefaultText"
+      :placeholder="searchBarDefaultText"
     />
     <button type="submit" class="searchButton">
       <img src="https://img.icons8.com/ios-glyphs/30/ffffff/search--v1.png" />
@@ -24,7 +24,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["searchBarStatus","searchBarDefaultText"]),
+    ...mapGetters(["searchBarStatus", "searchBarDefaultText"]),
   },
   watch: {
     searchText() {
