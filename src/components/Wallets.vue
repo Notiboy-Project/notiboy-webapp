@@ -16,7 +16,7 @@
             <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
             <p>My Algo Wallet</p>
           </div>
-          <!-- <div @click="connectPeraWallet" class="wallet">
+          <div @click="connectPeraWallet" class="wallet">
             <img
               src="../assets/pera.png"
               width="30"
@@ -24,7 +24,7 @@
               alt="Pera Button"
             />
             <p>Pera Wallet</p>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
@@ -53,19 +53,22 @@ export default {
     MyAlgoLogin: async () => {
       try {
         const myAlgoConnect = new MyAlgoConnect();
-        const response = await myAlgoConnect.connect();
+        const response = await myAlgoConnect.connect({
+          shouldSelectOneAccount: true,
+        });
         const address = response[0].address;
         localStorage.setItem("notiboy_address", address);
+        localStorage.setItem("wallet", "myalgo");
         store.dispatch("updateAddress");
       } catch (err) {
         return [];
       }
     },
     //Method to connect via pera wellet
-    // async connectPeraWallet() {
-    //   await store.dispatch("perawalletConnect");
-    //   this.closeConnectOverlay();
-    // },
+    async connectPeraWallet() {
+      await store.dispatch("perawalletConnect");
+      this.closeConnectOverlay();
+    },
 
     // Emit Event to close the wallet connect Overlay
     closeConnectOverlay() {

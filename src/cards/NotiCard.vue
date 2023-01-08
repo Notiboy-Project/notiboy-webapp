@@ -1,9 +1,12 @@
 <template>
   <div class="notification-card">
     <div class="notification-card-name">
-      <p>{{ notification.channel }}</p>
+      <p>{{ notification.channelName }}&nbsp;</p>
       <img
-        v-if="notification.status && notification.status === 'verified'"
+        v-if="
+          notification.verificationStatus &&
+          notification.verificationStatus === 'Verified'
+        "
         src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
       />
     </div>
@@ -22,10 +25,15 @@ export default {
   },
   computed: {
     notificationTime() {
-      return date.format(
-        new Date(this.notification.timeStamp * 1000),
-        "YYYY/MM/DD HH:mm"
-      );
+      let time;
+      if (this.notification.timeStamp) {
+        console.log(this.notification.timeStamp);
+        time = date.format(
+          new Date(this.notification.timeStamp * 1000),
+          "YYYY/MM/DD HH:mm"
+        );
+      }
+      return time;
     },
   },
 };
@@ -60,6 +68,7 @@ export default {
 
 .notification-card-notification {
   font-size: 1.3rem;
+  margin-bottom: 3.5rem;
 }
 
 .notification-card-timestamp {

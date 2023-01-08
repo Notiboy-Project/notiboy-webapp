@@ -1,16 +1,27 @@
 <template>
   <div class="create-card">
     <input
+      v-if="userAppIndex == 0"
       class="channel-name"
       v-model="channelName"
-      maxlength="20"
+      maxlength="10"
       placeholder="Channel Name"
     />
-    <button @click.prevent="createChannel">Create Channel</button>
-
-    <p style="text-align: center">
-      Note: Personal notifications and public notifications can be sent from the
-      created channels.
+    <h2 v-if="userAppIndex != 0">
+      Channel is created with appindex {{ userAppIndex }}
+    </h2>
+    <button v-if="userAppIndex == 0" @click.prevent="createChannel">
+      Create Channel
+    </button>
+    <button v-if="userAppIndex != 0" @click.prevent="deleteChannel">
+      Delete Channel
+    </button>
+    <p v-if="userAppIndex == 0" style="text-align: center">
+      Note: Channel name limited to 10 characters.
+    </p>
+    <p v-if="userAppIndex != 0" style="text-align: center">
+      Note: Deleting the channel will remove the records from Notiboy Smart
+      Contract.
     </p>
   </div>
 </template>
@@ -26,7 +37,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["userAddress", "connectionStatus"]),
+    ...mapGetters(["userAddress", "connectionStatus", "userAppIndex"]),
   },
   methods: {
     createChannel() {
@@ -35,6 +46,17 @@ export default {
         address: this.userAddress,
       });
     },
+    deleteChannel() {
+      store.dispatch("deleteChannel", {
+        appIndex: this.userAppIndex,
+        address: this.userAddress,
+      });
+    },
+  },
+  created() {
+    if (this.userAddress.length === 58) {
+      store.dispatch("getAppIndexFromAddress");
+    }
   },
 };
 </script>
@@ -49,16 +71,16 @@ export default {
   padding-bottom: 5rem;
   font-weight: bold;
 }
-
 input.channel-name {
   font-weight: bold;
-  width: 30rem;
+  width: 20rem;
   height: 4rem;
   color: white;
   border: 2px solid var(--tertiary);
   border-radius: 0.5rem;
   background-color: var(--primary);
   padding-left: 0.6rem;
+  text-align: center;
 }
 
 input.channel-name :focus {

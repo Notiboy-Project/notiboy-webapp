@@ -1,19 +1,21 @@
 <template>
-  <!-- <optin v-if="optinState == false"></optin> -->
-  <channel-card
-    v-for="channel in channelList"
-    :channel="channel"
-    :key="channel.channelName"
-  ></channel-card>
+  <global-optin v-if="optinState == false" @click="globaloptin"></global-optin>
+  <div class="channel-container" v-if="optinState == true">
+    <channel-card
+      v-for="channel in channelList"
+      :channel="channel"
+      :key="channel.channelIndex"
+    ></channel-card>
+  </div>
 </template>
 <script>
 import ChannelCard from "@/cards/ChannelCard.vue";
-//import Optin from "@/cards/Optin.vue";
+import GlobalOptin from "@/cards/GlobalOptin.vue";
 import { mapGetters } from "vuex";
 import store from "../store";
 export default {
   computed: {
-    ...mapGetters(["searchText", "channels", "optinState"]),
+    ...mapGetters(["userAddress", "searchText", "channels", "optinState"]),
     channelList() {
       if (this.searchText != "") {
         return this.channels.filter((channel) => {
@@ -26,13 +28,27 @@ export default {
       }
     },
   },
+  methods: {
+    globaloptin() {
+      store.dispatch("userGlobalOptin", this.userAddress);
+    },
+  },
+  created() {
+    store.dispatch("optinState");
+  },
   mounted() {
     store.dispatch("getChannelList");
-    store.dispatch("optinState");
   },
   components: {
     channelCard: ChannelCard,
-    //optin: Optin,
+    globalOptin: GlobalOptin,
   },
 };
 </script>
+<style scoped>
+.channel-container {
+  display: flex;
+  align-items: center;
+  width: 80%;
+}
+</style>

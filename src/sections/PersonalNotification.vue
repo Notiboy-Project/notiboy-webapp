@@ -46,6 +46,7 @@ export default {
       .dispatch("getPersonalNotifications", this.userAddress)
       .then(() => (this.isLoading = false));
   },
+
   components: {
     notiCard: NotiCard,
     noNotifications: NoNotifications,

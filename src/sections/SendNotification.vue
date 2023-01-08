@@ -1,15 +1,5 @@
 <template>
   <div class="send-card">
-    <select v-model="selectedChannel" class="channel-name" name="selectedValue">
-      <option disabled>Select One Channel</option>
-      <option
-        v-for="channel in userOwnedChannels"
-        :key="channel.channelName"
-        :value="channel.channelName"
-      >
-        {{ channel.channelName }}
-      </option>
-    </select>
     <div class="channel-type">
       <div class="channel-type-public">
         <input type="radio" id="public" value="public" v-model="channelType" />
@@ -37,6 +27,16 @@
         v-model="receiverAddress"
         placeholder="Please Input Receiver Address"
         label="userAddress"
+      />
+    </Transition>
+    <Transition>
+      <input
+        id="secretKey"
+        v-if="channelType == 'bulk'"
+        type="text"
+        v-model="mnemonic"
+        placeholder="Enter mnemonic as comma seperated values"
+        label="secretkey"
       />
     </Transition>
     <Transition>
@@ -73,6 +73,14 @@
       </div>
       <button @click.prevent="sendNotification">Send Notification</button>
     </div>
+    <p style="line-height: 20px">
+      Note: Public notifications limited to 180 characters and Personal
+      notifications limited to 280 characters.<br />
+      <span v-if="channelType == 'bulk'"
+        >Mnemonic will be stored temporarily in the browser and will be removed
+        once you close the browser tab.</span
+      >
+    </p>
   </div>
 </template>
 <script>
@@ -83,8 +91,8 @@ export default {
   data() {
     return {
       channelType: "",
-      selectedChannel: "Select One Channel",
       notification: "",
+      selectedChannel: [],
       filters: [],
       receiverAddress: "",
       bulkImport: "",
@@ -92,38 +100,64 @@ export default {
       csvFile: "",
       csvFileContent: [],
       parsed: false,
+      mnemonic: "",
     };
   },
 
   computed: {
-    ...mapGetters(["userAddress", "channels"]),
-    userOwnedChannels() {
-      return this.channels.filter((channel) => {
-        return channel.dappAddress.includes(this.userAddress);
-      });
-    },
+    ...mapGetters(["userAddress", "searchText", "channels", "userAppIndex"]),
   },
 
   methods: {
     sendNotification() {
-      if (this.channelType == "public") {
-        store.dispatch("sendPublicNotification", {
-          address: this.userAddress,
-          channelName: this.selectedChannel,
-          notification: this.notification,
-        });
-      } else if (this.channelType == "personal") {
-        store.dispatch("sendPersonalNotification", {
-          address: this.userAddress,
-          receiverAddress: this.receiverAddress,
-          channelName: this.selectedChannel,
-          notification: this.notification,
-        });
-      } else if (this.channelType == "bulk") {
-        store.dispatch("sendBulkPersonalNotification", {
-          address: this.userAddress,
-          receiverDetails: this.csvFileContent,
-          channelName: this.selectedChannel,
+      try {
+        if (this.userAppIndex == 0) throw Error;
+        if (this.channelType == "public") {
+          store.dispatch("sendPublicNotification", {
+            address: this.userAddress,
+            channelName: this.selectedChannel,
+            notification: this.notification,
+          });
+        } else if (this.channelType == "personal") {
+          const channelDetails = this.getChannelDetails();
+          store.dispatch("sendPersonalNotification", {
+            address: this.userAddress,
+            receiverAddress: this.receiverAddress,
+            channelAppIndex: channelDetails.appIndex,
+            channelName: channelDetails.channelName,
+            notification: this.notification,
+          });
+        } else if (this.channelType == "bulk") {
+          const channelDetails = this.getChannelDetails();
+          console.log(typeof this.mnemonic);
+          if (this.mnemonic.length == 0) {
+            this.$toast.open({
+              message:
+                "Wallets cannot process bulk signing. Please input mnemonic to sign transactions.",
+              type: "error",
+              duration: 6000,
+              position: "top-right",
+              dismissible: true,
+            });
+            return;
+          } else {
+            store.dispatch("sendBulkPersonalNotification", {
+              address: this.userAddress,
+              receiverDetails: this.csvFileContent,
+              channelAppIndex: channelDetails.appIndex,
+              channelName: channelDetails.channelName,
+              mnemonic: this.mnemonic,
+            });
+          }
+        }
+      } catch (error) {
+        this.$toast.open({
+          message:
+            "You have to create a channel to start sending notifications.",
+          type: "error",
+          duration: 5000,
+          position: "top-right",
+          dismissible: true,
         });
       }
     },
@@ -143,9 +177,20 @@ export default {
         }.bind(this),
       });
     },
+    getChannelDetails() {
+      for (let i = 0; i < this.channels.length; i++) {
+        if (this.channels[i].appIndex == this.userAppIndex) {
+          return this.channels[i];
+        }
+      }
+      return {};
+    },
   },
   created() {
     store.dispatch("getChannelList");
+    if (this.userAddress.length === 58) {
+      store.dispatch("getAppIndexFromAddress");
+    }
   },
 };
 </script>
@@ -162,7 +207,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   height: 60rem;
-  padding-top: 8rem;
+  padding-top: 5rem;
   padding-bottom: 5rem;
   font-weight: bold;
 }
@@ -202,6 +247,16 @@ select option {
 }
 
 #receiverAddress {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  border-radius: 0.5rem;
+  font-family: "Sora", sans-serif;
+  color: white;
+  width: 30rem;
+  height: 3rem;
+}
+
+#secretKey {
   background-color: var(--primary);
   border-color: var(--primary);
   border-radius: 0.5rem;

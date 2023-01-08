@@ -15,6 +15,7 @@ const routes = [
     component: PersonalNotification,
     beforeEnter: () => {
       store.commit("updateSearchBarStatus", true);
+      store.commit("updatesearchBarDefaultText", "Search Channel Name");
     },
   },
   {
@@ -23,10 +24,11 @@ const routes = [
     component: Channels,
     beforeEnter: () => {
       store.commit("updateSearchBarStatus", true);
+      store.commit("updatesearchBarDefaultText", "Search Channel Name");
     },
   },
   {
-    path: "/notification/public/:lsig",
+    path: "/notification/public/:appIndex",
     name: "PublicNotification",
     component: PublicNotification,
     beforeEnter: () => {
