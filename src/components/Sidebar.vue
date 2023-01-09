@@ -1,16 +1,16 @@
 <template>
   <div class="sidebar-scroll">
     <ul class="sidebar-menu">
-      <router-link :to="{ name: 'PersonalNotification' }" @click="notiClicked">
+      <router-link v-show="uesrType == 'user'" :to="{ name: 'PersonalNotification' }" @click="notiClicked">
         Noti Box
       </router-link>
-      <router-link :to="{ name: 'Channels' }" @click="publicClicked">
+      <router-link v-show="uesrType == 'user'" :to="{ name: 'Channels' }" @click="publicClicked">
         Channels
       </router-link>
-      <router-link :to="{ name: 'SendNotification' }" @click="sendClicked">
+      <router-link v-show="uesrType == 'creator'" :to="{ name: 'SendNotification' }" @click="sendClicked">
         Send Notification
       </router-link>
-      <router-link :to="{ name: 'CreateChannel' }" @click="createClicked">
+      <router-link v-show="uesrType == 'creator'" :to="{ name: 'CreateChannel' }" @click="createClicked">
         Create Channel
       </router-link>
     </ul>
@@ -18,7 +18,11 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
+  computed:{
+    ...mapGetters(["userType"])
+  },
   // The methods to emit an event to parent (and from there to side pane) to change the dashboard.
   methods: {
     notiClicked() {

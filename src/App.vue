@@ -22,6 +22,8 @@
       v-show="walletConnectOverlay"
       @closeConnectOverlay="closeWalletConnectOverlay"
     ></walletConnect>
+    <!-- Selecting the user type if not selected -->
+    <user-type v-show="userSelectOverlay"></user-type>
     <div class="notification-container">
       <main-sidebar></main-sidebar>
       <!-- Using props to send the selection from side bar to notification pane -->
@@ -38,6 +40,7 @@ import Overlay from "@/components/MobileNav.vue";
 import WalletConnect from "@/components/Wallets.vue";
 import Loading from "vue-loading-overlay";
 import { mapGetters } from "vuex";
+import UserType from '@/components/UserType.vue';
 export default {
   data() {
     return {
@@ -47,7 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["loader"]),
+    ...mapGetters(["loader","userSelectOverlay"]),
   },
   methods: {
     showWalletConnectOverlay() {
@@ -67,7 +70,8 @@ export default {
     // publicPane: PublicPane,
     mobileOverlay: Overlay,
     walletConnect: WalletConnect,
-    Loading,
+    userType:UserType,
+    Loading
   },
 };
 </script>

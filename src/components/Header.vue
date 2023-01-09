@@ -11,9 +11,6 @@
     >
       <img height="30" src="../assets/refresh.png" alt="refresh" />
     </div> -->
-    <div v-if="optinState == false" @click="channelOptin" class="optin">
-      Opt-In
-    </div>
     <loading
       v-model:active="isLoading"
       :can-cancel="false"
@@ -64,8 +61,7 @@ export default {
     ...mapGetters([
       "userAddress",
       "updatedAddress",
-      "connectionStatus",
-      "optinState",
+      "connectionStatus"
     ]),
   },
   // Declare the event emiited and props passed nav-opened event emiited for opening the mobile nav. Show prop is

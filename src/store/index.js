@@ -42,6 +42,8 @@ export default createStore({
       optinState: false,
       searchBarDefaultText: "Search",
       userAppIndex: 0,
+      userType:"",
+      userSelectOverlay:true,
     };
   },
   getters: {
@@ -85,6 +87,12 @@ export default createStore({
     userAppIndex(state) {
       return state.userAppIndex;
     },
+    userType(state){
+      return state.userType;
+    },
+    userSelectOverlay(state){
+      return state.userSelectOverlay;
+    }
   },
   mutations: {
     selectAddress(state, address) {
@@ -133,6 +141,12 @@ export default createStore({
     updateUserIndex(state, appIndex) {
       state.userAppIndex = appIndex;
     },
+    addRemoveUserSelectOverlay(state){
+      state.userSelectOverlay = !state.userSelectOverlay;
+    },
+    updateUserType(state,userType){
+      state.userType = userType;
+    }
   },
   actions: {
     selectAddress(context, address) {
@@ -203,6 +217,7 @@ export default createStore({
             4
           );
           //Channel Registration Ends
+          context.dispatch("getAppIndexFromAddress");
           context.commit("updateLoaderFalse");
 
           $toast.open({
@@ -321,6 +336,7 @@ export default createStore({
           dismissible: true,
         });
       } catch (error) {
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Something went wrong.",
           type: "error",
@@ -361,6 +377,7 @@ export default createStore({
           dismissible: true,
         });
       } catch (error) {
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Personal Notification not Sent.",
           type: "error",
@@ -480,6 +497,7 @@ export default createStore({
           submittedTxn.txId.toString(),
           4
         );
+        context.dispatch("optinState");
         context.commit("updateLoaderFalse");
         $toast.open({
           message: "Registered with Notiboy",
@@ -489,6 +507,7 @@ export default createStore({
           dismissible: true,
         });
       } catch (error) {
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Registration unsuccessful",
           type: "error",
@@ -525,6 +544,7 @@ export default createStore({
           dismissible: true,
         });
       } catch (error) {
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Opt-in Unsuccessful.",
           type: "error",
@@ -561,6 +581,7 @@ export default createStore({
           dismissible: true,
         });
       } catch (error) {
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Opt-out Unsuccessful.",
           type: "error",
@@ -598,14 +619,18 @@ export default createStore({
       context.commit("updateOptinState", optinState);
     },
     //connect pera wallet
-    perawalletConnect({ dispatch }) {
+    perawalletConnect(context) {
       peraWallet
         .connect()
         .then((accounts) => {
           const address = accounts[0];
           localStorage.setItem("notiboy_address", address);
           localStorage.setItem("wallet", "pera");
-          dispatch("updateAddress");
+          context.dispatch("updateAddress");
+          context.dispatch("checkUserType",address);
+        if(this.userType == "unregistered"){
+          context.commit("addRemoveUserSelectOverlay");
+        }
         })
         .catch((e) => console.log(e));
     },
@@ -667,6 +692,34 @@ export default createStore({
       context.commit("updateUserIndex", appIndex);
       context.commit("updateLoaderFalse");
     },
+    //Get user type
+    async checkUserType(context,address){
+      context.commit("updateLoaderTrue");
+      const optinState = await notiboy.getNotiboyOptinState(
+        address
+      );
+      console.log("optinstate",optinState)
+      const appIndex = await notiboy.getAddressAppIndex(
+        address
+      );
+      console.log("appindex", appIndex)
+      context.commit("updateLoaderFalse");
+      if(optinState == true){
+        if(appIndex != 0){
+          localStorage.setItem("userType","creator");
+          context.commit("updateUserType","creator");
+        }else{
+          localStorage.setItem("userType","user");
+          context.commit("updateUserType","user");
+        }
+        context.commit("updateUserIndex",appIndex);
+      }else{
+        localStorage.setItem("userType", "unregistered");
+        context.commit("addRemoveUserSelectOverlay")
+        context.commit("updateUserType","unregistered");
+        context.commit("updateUserIndex",appIndex);
+      }
+    }
   },
   modules: {},
 });

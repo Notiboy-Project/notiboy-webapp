@@ -2,29 +2,29 @@
   <transition name="modal-fade">
     <div class="wallet-backdrop">
       <div class="wallet-pane">
-        <div class="wallet-close">
-          <button type="button" class="closebtn" @click="closeConnectOverlay">
-            &times;
-          </button>
-        </div>
         <div class="wallet-header">
-          <p class="connect-heading">Connect Your Wallet</p>
-          <!-- Button to close the Wallet Connect -->
+          <p class="connect-heading">Who are you?</p>
+        </div>
+        <div>
+          <div class="channel-type">
+            <div class="channel-type-public">
+              <input type="radio" id="creator" value="creator" v-model="userType" />
+              <label for="public">Creator</label>
+            </div>
+            <div class="channel-type-private">
+              <input type="radio" id="user" value="user" v-model="userType" />
+              <label for="personal">User</label>
+            </div>
+          </div>
         </div>
         <div class="wallet-row1">
-          <div @click="myAlgoConnect" class="wallet">
-            <img src="../assets/myalgobutton.svg" alt="My Algo Button" />
-            <p>My Algo Wallet</p>
+          <div @click="storeUserType" class="wallet">
+            <p>Continue</p>
           </div>
-          <div @click="connectPeraWallet" class="wallet">
-            <img
-              src="../assets/pera.png"
-              width="30"
-              height="30"
-              alt="Pera Button"
-            />
-            <p>Pera Wallet</p>
-          </div>
+        </div>
+        <div style="padding-bottom:20px;">
+          <p style="font-size:1.5rem; color:white; text-align:center;">Note: An address cannot 
+simultaneously be <br> channel creator (send notification) & user (receive notification).</p>
         </div>
       </div>
     </div>
@@ -32,53 +32,23 @@
 </template>
 
 <script>
-import MyAlgoConnect from "@randlabs/myalgo-connect";
 import store from "../store";
-import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
       wallet: [],
       selectedAddress: "",
+      userType:"user"
     };
   },
-  computed:{
-    ...mapGetters(["userType"]),
-  },
   methods: {
-    async myAlgoConnect() {
-      if (this.MyAlgoLogin && typeof this.MyAlgoLogin === "function") {
-        await this.MyAlgoLogin();
-      }
-      this.closeConnectOverlay();
+    storeUserType(){
+      localStorage.setItem("usertype",this.userType);
+      store.commit("updateUserType",this.userType);
+      store.commit("addRemoveUserSelectOverlay");
     },
-    //Method to connect with my algo wallet
-    MyAlgoLogin: async () => {
-      try {
-        const myAlgoConnect = new MyAlgoConnect();
-        const response = await myAlgoConnect.connect({
-          shouldSelectOneAccount: true,
-        });
-        const address = response[0].address;
-        localStorage.setItem("notiboy_address", address);
-        localStorage.setItem("wallet", "myalgo");
-        store.dispatch("updateAddress");
-        store.dispatch("checkUserType",address);
-      } catch (err) {
-        return [];
-      }
-    },
-    //Method to connect via pera wellet
-    async connectPeraWallet() {
-      await store.dispatch("perawalletConnect");
-      this.closeConnectOverlay();
-    },
-
-    // Emit Event to close the wallet connect Overlay
-    closeConnectOverlay() {
-      this.$emit("closeConnectOverlay");
-    },
-  },
+  }
 };
 </script>
 
@@ -103,6 +73,7 @@ export default {
   padding: 0 2%;
   display: flex;
   flex-direction: column;
+  justify-content: space-evenly;
   min-width: 40%;
   min-height: 60vh;
 }
@@ -136,6 +107,7 @@ export default {
   justify-content: space-around;
   color: #ffffff;
   width: 100%;
+  padding-top: 40px;
 }
 
 .wallet {
@@ -158,6 +130,75 @@ export default {
 .modal-fade-enter-active,
 .modal-fade-leave-active {
   transition: opacity 0.5s ease;
+}
+
+.channel-type {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  color: white;
+  font-weight: bold;
+  font-size: 1.4rem;
+}
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: var(--primary);
+  position: relative;
+  height: 1.75em;
+  width: 1.75em;
+  outline: none;
+  margin-right: 0.5em;
+  cursor: pointer;
+  border: 2px solid var(--teritary);
+  background: transparent;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: border 0.5s ease;
+  transform: translateY(0.5em);
+}
+input[type="radio"]::before,
+input[type="radio"]::after {
+  content: "";
+  display: flex;
+  justify-self: center;
+  border-radius: 50%;
+  justify-content: center;
+}
+input[type="radio"]::before {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--primary);
+  z-index: 1;
+  opacity: var(--opacity, 1);
+}
+input[type="radio"]::after {
+  position: relative;
+  width: calc(100%);
+  height: calc(100%);
+  background: var(--teritary);
+  top: var(--y, 100%);
+  transition: top 0.5s cubic-bezier(0.48, 1.97, 0.5, 0.63);
+}
+input[type="radio"]:checked {
+  --radio: var(--teritary);
+}
+input[type="radio"]:checked::after {
+  --y: 0%;
+  -webkit-animation: stretch-animate 0.3s ease-out 0.17s;
+  animation: stretch-animate 0.3s ease-out 0.17s;
+}
+input[type="radio"]:checked::before {
+  --opacity: 0;
+}
+input[type="radio"]:checked ~ input[type="radio"]::after {
+  --y: -100%;
+}
+input[type="radio"]:not(:checked)::before {
+  --opacity: 1;
+  transition: opacity 0s linear 0.5s;
 }
 
 @media only screen and (max-width: 980px) {
