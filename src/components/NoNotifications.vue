@@ -11,6 +11,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  padding-top: 100px;
 }
 .dummytext_container img {
   width: 50px;

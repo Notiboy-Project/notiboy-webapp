@@ -4,6 +4,7 @@ import PublicNotification from "../sections/PublicNotification.vue";
 import Channels from "../sections/ChannelList.vue";
 import SendNotification from "../sections/SendNotification.vue";
 import CreateChannel from "../sections/CreateChannel.vue";
+import NotificationCounter from "../sections/NotificationCounter.vue";
 import NotFound from "../views/404.vue";
 import store from "../store";
 
@@ -47,6 +48,14 @@ const routes = [
     path: "/notification/createChannel",
     name: "CreateChannel",
     component: CreateChannel,
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", false);
+    },
+  },
+  {
+    path: "/notification/counter",
+    name: "NotificationCounter",
+    component: NotificationCounter,
     beforeEnter: () => {
       store.commit("updateSearchBarStatus", false);
     },

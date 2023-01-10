@@ -44,6 +44,8 @@ export default createStore({
       userAppIndex: 0,
       userType: "",
       userSelectOverlay: false,
+      notificationCounter:{personalNotification: 0,
+      publicNotification: 0}
     };
   },
   getters: {
@@ -93,6 +95,9 @@ export default createStore({
     userSelectOverlay(state) {
       return state.userSelectOverlay;
     },
+    notificationCounter(state){
+      return state.notificationCounter;
+    }
   },
   mutations: {
     selectAddress(state, address) {
@@ -147,6 +152,9 @@ export default createStore({
     updateUserType(state, userType) {
       state.userType = userType;
     },
+    updateNotificationCounter(state,notificationCounter){
+      state.notificationCounter = notificationCounter;
+    }
   },
   actions: {
     selectAddress(context, address) {
@@ -610,6 +618,13 @@ export default createStore({
           dismissible: true,
         });
       }
+    },
+    async getCounter(context,address){
+      const notificationCounter = await notiboy.getCounter(
+        address
+      )
+      console.log(notificationCounter)
+      context.commit("updateNotificationCounter",notificationCounter)
     },
     //Opt-in state of an address to a smartcontract
     async optinState(context) {

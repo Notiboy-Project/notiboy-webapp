@@ -5,7 +5,6 @@
     <!-- Overlay content -->
     <div class="overlay-content">
       <li>{{ updatedAddress }}</li>
-      <li v-if="optinState == false" @click="optin">Opt-in</li>
       <router-link
         v-show="userType == 'user'"
         :to="{ name: 'PersonalNotification' }"
@@ -50,7 +49,7 @@ export default {
       "userAddress",
       "updatedAddress",
       "connectionStatus",
-      "optinState",
+      "userType",
     ]),
   },
   // Takes a prop from parent component, watches it continuously for changes and changes width of the overlay accordingly.
