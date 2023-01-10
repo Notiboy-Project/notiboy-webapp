@@ -58,6 +58,7 @@ export default {
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  min-height: 40rem;
   height: 70vh;
 }
 .channel-main {

@@ -1,6 +1,6 @@
 {
   "name": "notiboy-webapp",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -14,7 +14,6 @@
     "copy-to-clipboard": "^3.3.2",
     "core-js": "^3.6.5",
     "date-and-time": "^2.4.1",
-    "delay": "^5.0.0",
     "notiboy-js-sdk": "^1.0.8",
     "papaparse": "^5.3.2",
     "vue": "^3.0.0",

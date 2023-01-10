@@ -13,6 +13,9 @@
     <button v-if="userAppIndex == 0" @click.prevent="createChannel">
       Create Channel
     </button>
+    <button v-if="userAppIndex != 0" @click.prevent="downloadCSVData">
+      Download Subacriber List
+    </button>
     <button v-if="userAppIndex != 0" @click.prevent="deleteChannel">
       Delete Channel
     </button>
@@ -34,10 +37,17 @@ export default {
       channelName: "",
       address: this.updatedAddress,
       connection: this.connectionStatus,
+      unParsed: false,
+      csvFileContent: [],
     };
   },
   computed: {
-    ...mapGetters(["userAddress", "connectionStatus", "userAppIndex"]),
+    ...mapGetters([
+      "userAddress",
+      "connectionStatus",
+      "userAppIndex",
+      "subscriberList",
+    ]),
   },
   methods: {
     createChannel() {
@@ -52,10 +62,21 @@ export default {
         address: this.userAddress,
       });
     },
+    downloadCSVData() {
+      let array = this.subscriberList;
+      let csv = array.join("\n");
+      const anchor = document.createElement("a");
+      anchor.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+      anchor.target = "_blank";
+      anchor.download = "subscriberList.csv";
+      anchor.click();
+    },
   },
+
   created() {
     if (this.userAddress.length === 58) {
       store.dispatch("getAppIndexFromAddress");
+      store.dispatch("getsubscriberList", this.userAppIndex);
     }
   },
 };

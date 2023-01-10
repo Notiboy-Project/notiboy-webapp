@@ -44,8 +44,8 @@ export default createStore({
       userAppIndex: 0,
       userType: "",
       userSelectOverlay: false,
-      notificationCounter:{personalNotification: 0,
-      publicNotification: 0}
+      notificationCounter: { personalNotification: 0, publicNotification: 0 },
+      subscriberList: [],
     };
   },
   getters: {
@@ -95,9 +95,12 @@ export default createStore({
     userSelectOverlay(state) {
       return state.userSelectOverlay;
     },
-    notificationCounter(state){
+    notificationCounter(state) {
       return state.notificationCounter;
-    }
+    },
+    subscriberList(state) {
+      return state.subscriberList;
+    },
   },
   mutations: {
     selectAddress(state, address) {
@@ -152,9 +155,12 @@ export default createStore({
     updateUserType(state, userType) {
       state.userType = userType;
     },
-    updateNotificationCounter(state,notificationCounter){
+    updateNotificationCounter(state, notificationCounter) {
       state.notificationCounter = notificationCounter;
-    }
+    },
+    updateSubscriberList(state, subscriberList) {
+      state.subscriberList = subscriberList;
+    },
   },
   actions: {
     selectAddress(context, address) {
@@ -285,6 +291,7 @@ export default createStore({
           submittedTxn.txId.toString(),
           4
         );
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Channel unregistered.",
           type: "success",
@@ -619,12 +626,10 @@ export default createStore({
         });
       }
     },
-    async getCounter(context,address){
-      const notificationCounter = await notiboy.getCounter(
-        address
-      )
-      console.log(notificationCounter)
-      context.commit("updateNotificationCounter",notificationCounter)
+    async getCounter(context, address) {
+      const notificationCounter = await notiboy.getCounter(address);
+      console.log(notificationCounter);
+      context.commit("updateNotificationCounter", notificationCounter);
     },
     //Opt-in state of an address to a smartcontract
     async optinState(context) {
@@ -744,6 +749,10 @@ export default createStore({
         context.commit("updateUserType", "user");
         router.push({ name: "PersonalNotification" });
       }
+    },
+    async getsubscriberList(context, appIndex) {
+      const subscriberList = await notiboy.getOptinAddressList(appIndex);
+      context.commit("updateSubscriberList", subscriberList);
     },
   },
   modules: {},

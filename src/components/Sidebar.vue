@@ -2,34 +2,45 @@
   <div class="sidebar-scroll">
     <ul class="sidebar-menu">
       <router-link
-        v-show="userType == 'user' && connectionStatus =='Disconnect'"
+        v-show="userType == 'user' && connectionStatus == 'Disconnect'"
         :to="{ name: 'PersonalNotification' }"
       >
         Noti Box
       </router-link>
-      <router-link v-show="userType == 'user' && connectionStatus =='Disconnect'" :to="{ name: 'Channels' }">
+      <router-link
+        v-show="userType == 'user' && connectionStatus == 'Disconnect'"
+        :to="{ name: 'Channels' }"
+      >
         Channels
       </router-link>
       <router-link
-        v-show="userType == 'creator' && connectionStatus =='Disconnect'"
+        v-show="userType == 'creator' && connectionStatus == 'Disconnect'"
         :to="{ name: 'SendNotification' }"
       >
         Send Notification
       </router-link>
       <router-link
-        v-show="userType == 'creator' && connectionStatus =='Disconnect'"
+        v-show="userType == 'creator' && connectionStatus == 'Disconnect'"
         :to="{ name: 'CreateChannel' }"
       >
         Create Channel
       </router-link>
       <router-link
-        v-show="(userType == 'creator' || userType == 'user') && connectionStatus =='Disconnect'"
+        v-show="
+          (userType == 'creator' || userType == 'user') &&
+          connectionStatus == 'Disconnect'
+        "
         :to="{ name: 'NotificationCounter' }"
       >
         Notification Counter
       </router-link>
-      <img v-show="connectionStatus == 'Connect'" style="width:200px;"  src="../assets/algorand_white.png" alt="Algorand" />
-    </ul> 
+      <img
+        v-show="connectionStatus == 'Connect'"
+        style="width: 200px"
+        src="../assets/algorand_white.png"
+        alt="Algorand"
+      />
+    </ul>
   </div>
 </template>
 
@@ -37,8 +48,8 @@
 import { mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["userType","connectionStatus"]),
-  }
+    ...mapGetters(["userType", "connectionStatus"]),
+  },
 };
 </script>
 

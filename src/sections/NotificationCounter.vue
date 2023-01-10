@@ -4,10 +4,12 @@
       Public Notifications Sent: {{ notificationCounter.publicNotification }}
     </h2>
     <h2 v-if="userType == 'creator'">
-      Personal Notifications Sent: {{ notificationCounter.personalNotification }}
+      Personal Notifications Sent:
+      {{ notificationCounter.personalNotification }}
     </h2>
     <h2 v-if="userType == 'user'">
-      Personal Notifications Received: {{ notificationCounter.personalNotification }}
+      Personal Notifications Received:
+      {{ notificationCounter.personalNotification }}
     </h2>
   </div>
 </template>
@@ -16,11 +18,16 @@ import { mapGetters } from "vuex";
 import store from "../store";
 export default {
   computed: {
-    ...mapGetters(["userAddress", "connectionStatus", "userType","notificationCounter"]),
+    ...mapGetters([
+      "userAddress",
+      "connectionStatus",
+      "userType",
+      "notificationCounter",
+    ]),
   },
-  created(){
-    store.dispatch("getCounter",this.userAddress);
-  }
+  created() {
+    store.dispatch("getCounter", this.userAddress);
+  },
 };
 </script>
 <style scoped>
