@@ -22,7 +22,7 @@ const peraWallet = new PeraWalletConnect();
 import { createApp } from "vue";
 import { useToast } from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
-
+import router from "../router";
 const app = createApp({});
 app.mount("#app");
 const $toast = useToast();
@@ -42,8 +42,8 @@ export default createStore({
       optinState: false,
       searchBarDefaultText: "Search",
       userAppIndex: 0,
-      userType:"",
-      userSelectOverlay:true,
+      userType: "",
+      userSelectOverlay: false,
     };
   },
   getters: {
@@ -87,12 +87,12 @@ export default createStore({
     userAppIndex(state) {
       return state.userAppIndex;
     },
-    userType(state){
+    userType(state) {
       return state.userType;
     },
-    userSelectOverlay(state){
+    userSelectOverlay(state) {
       return state.userSelectOverlay;
-    }
+    },
   },
   mutations: {
     selectAddress(state, address) {
@@ -141,12 +141,12 @@ export default createStore({
     updateUserIndex(state, appIndex) {
       state.userAppIndex = appIndex;
     },
-    addRemoveUserSelectOverlay(state){
+    addRemoveUserSelectOverlay(state) {
       state.userSelectOverlay = !state.userSelectOverlay;
     },
-    updateUserType(state,userType){
+    updateUserType(state, userType) {
       state.userType = userType;
-    }
+    },
   },
   actions: {
     selectAddress(context, address) {
@@ -173,6 +173,7 @@ export default createStore({
       localStorage.removeItem("PeraWallet.Wallet");
       localStorage.removeItem("walletconnect");
       localStorage.removeItem("wallet");
+      localStorage.removeItem("usertype");
       context.commit("disconnect");
     },
     searchTextUpdate(context, searchText) {
@@ -284,7 +285,6 @@ export default createStore({
           dismissible: true,
         });
       } catch (error) {
-        console.log(error);
         context.commit("updateLoaderFalse");
         $toast.open({
           message: "Channel couldnot be unregistered.",
@@ -627,10 +627,10 @@ export default createStore({
           localStorage.setItem("notiboy_address", address);
           localStorage.setItem("wallet", "pera");
           context.dispatch("updateAddress");
-          context.dispatch("checkUserType",address);
-        if(this.userType == "unregistered"){
-          context.commit("addRemoveUserSelectOverlay");
-        }
+          context.dispatch("checkUserType", address);
+          if (this.userType == "unregistered") {
+            context.commit("addRemoveUserSelectOverlay");
+          }
         })
         .catch((e) => console.log(e));
     },
@@ -653,7 +653,6 @@ export default createStore({
           const submittedTxn = await client.sendRawTransaction(signedTxs).do();
           return submittedTxn;
         } catch (error) {
-          console.log(error);
           context.commit("updateLoaderFalse");
           $toast.open({
             message:
@@ -693,33 +692,44 @@ export default createStore({
       context.commit("updateLoaderFalse");
     },
     //Get user type
-    async checkUserType(context,address){
+    async checkUserType(context, address) {
       context.commit("updateLoaderTrue");
-      const optinState = await notiboy.getNotiboyOptinState(
-        address
-      );
-      console.log("optinstate",optinState)
-      const appIndex = await notiboy.getAddressAppIndex(
-        address
-      );
-      console.log("appindex", appIndex)
-      context.commit("updateLoaderFalse");
-      if(optinState == true){
-        if(appIndex != 0){
-          localStorage.setItem("userType","creator");
-          context.commit("updateUserType","creator");
-        }else{
-          localStorage.setItem("userType","user");
-          context.commit("updateUserType","user");
+      const optinState = await notiboy.getNotiboyOptinState(address);
+      const appIndex = await notiboy.getAddressAppIndex(address);
+      if (optinState == true) {
+        if (appIndex != 0) {
+          localStorage.setItem("usertype", "creator");
+          context.commit("updateUserType", "creator");
+          router.push({ name: "SendNotification" });
+          context.commit("updateLoaderFalse");
+        } else {
+          localStorage.setItem("usertype", "user");
+          context.commit("updateUserType", "user");
+          router.push({ name: "PersonalNotification" });
+          context.commit("updateLoaderFalse");
         }
-        context.commit("updateUserIndex",appIndex);
-      }else{
-        localStorage.setItem("userType", "unregistered");
-        context.commit("addRemoveUserSelectOverlay")
-        context.commit("updateUserType","unregistered");
-        context.commit("updateUserIndex",appIndex);
+        context.commit("updateUserIndex", appIndex);
+      } else {
+        localStorage.setItem("usertype", "unregistered");
+        context.commit("addRemoveUserSelectOverlay");
+        context.commit("updateUserType", "unregistered");
+        context.commit("updateUserIndex", appIndex);
+        context.commit("updateLoaderFalse");
       }
-    }
+    },
+    updateExisitngUserType(context) {
+      const userType = localStorage.getItem("usertype");
+      if (userType == "unregistered" || userType == "null") {
+        context.commit("addRemoveUserSelectOverlay");
+        context.commit("updateUserType", userType);
+      } else if (userType == "creator") {
+        context.commit("updateUserType", "creator");
+        router.push({ name: "SendNotification" });
+      } else if (userType == "user") {
+        context.commit("updateUserType", "user");
+        router.push({ name: "PersonalNotification" });
+      }
+    },
   },
   modules: {},
 });

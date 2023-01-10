@@ -27,7 +27,6 @@ export default {
     notificationTime() {
       let time;
       if (this.notification.timeStamp) {
-        console.log(this.notification.timeStamp);
         time = date.format(
           new Date(this.notification.timeStamp * 1000),
           "YYYY/MM/DD HH:mm"

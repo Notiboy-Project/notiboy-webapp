@@ -6,17 +6,29 @@
     <div class="overlay-content">
       <li>{{ updatedAddress }}</li>
       <li v-if="optinState == false" @click="optin">Opt-in</li>
-      <router-link :to="{ name: 'PersonalNotification' }" @click="notiClicked"
+      <router-link
+        v-show="userType == 'user'"
+        :to="{ name: 'PersonalNotification' }"
+        @click="notiClicked"
         >Noti Box</router-link
       >
-      <router-link :to="{ name: 'Channels' }" @click="publicClicked"
+      <router-link
+        v-show="userType == 'user'"
+        :to="{ name: 'Channels' }"
+        @click="publicClicked"
         >Channels</router-link
       >
       <!-- <li @click="privateClicked">Private channels</li> -->
-      <router-link :to="{ name: 'SendNotification' }" @click="sendClicked"
+      <router-link
+        v-show="userType == 'creator'"
+        :to="{ name: 'SendNotification' }"
+        @click="sendClicked"
         >Send Notification</router-link
       >
-      <router-link :to="{ name: 'CreateChannel' }" @click="createClicked"
+      <router-link
+        v-show="userType == 'creator'"
+        :to="{ name: 'CreateChannel' }"
+        @click="createClicked"
         >Create Channels</router-link
       >
       <li @click="walletInteraction">{{ connectionStatus }}</li>
@@ -60,27 +72,22 @@ export default {
 
     notiClicked() {
       this.closeNav();
-      this.$emit("pane-selection", "noticlick");
     },
 
     publicClicked() {
       this.closeNav();
-      this.$emit("pane-selection", "publicclick");
     },
 
     privateClicked() {
       this.closeNav();
-      this.$emit("pane-selection", "privateclick");
     },
 
     createClicked() {
       this.closeNav();
-      this.$emit("pane-selection", "createclick");
     },
 
     sendClicked() {
       this.closeNav();
-      this.$emit("pane-selection", "sendclick");
     },
 
     channelOptin() {

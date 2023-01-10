@@ -8,7 +8,12 @@
         <div>
           <div class="channel-type">
             <div class="channel-type-public">
-              <input type="radio" id="creator" value="creator" v-model="userType" />
+              <input
+                type="radio"
+                id="creator"
+                value="creator"
+                v-model="userType"
+              />
               <label for="public">Creator</label>
             </div>
             <div class="channel-type-private">
@@ -22,9 +27,11 @@
             <p>Continue</p>
           </div>
         </div>
-        <div style="padding-bottom:20px;">
-          <p style="font-size:1.5rem; color:white; text-align:center;">Note: An address cannot 
-simultaneously be <br> channel creator (send notification) & user (receive notification).</p>
+        <div style="padding-bottom: 20px">
+          <p style="font-size: 1.5rem; color: white; text-align: center">
+            Note: An address cannot simultaneously be <br />
+            channel creator (send notification) & user (receive notification).
+          </p>
         </div>
       </div>
     </div>
@@ -33,22 +40,28 @@ simultaneously be <br> channel creator (send notification) & user (receive notif
 
 <script>
 import store from "../store";
+import router from "../router";
 
 export default {
   data() {
     return {
       wallet: [],
       selectedAddress: "",
-      userType:"user"
+      userType: "user",
     };
   },
   methods: {
-    storeUserType(){
-      localStorage.setItem("usertype",this.userType);
-      store.commit("updateUserType",this.userType);
+    storeUserType() {
+      localStorage.setItem("usertype", this.userType);
+      store.commit("updateUserType", this.userType);
+      if (this.userType == "user") {
+        router.push({ name: "PersonalNotification" });
+      } else if (this.userType == "creator") {
+        router.push({ name: "SendNotification" });
+      }
       store.commit("addRemoveUserSelectOverlay");
     },
-  }
+  },
 };
 </script>
 
@@ -65,6 +78,7 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  z-index: 2;
 }
 /* Notification Pane */
 .wallet-pane {

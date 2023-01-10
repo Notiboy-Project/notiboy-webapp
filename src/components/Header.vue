@@ -58,11 +58,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      "userAddress",
-      "updatedAddress",
-      "connectionStatus"
-    ]),
+    ...mapGetters(["userAddress", "updatedAddress", "connectionStatus"]),
   },
   // Declare the event emiited and props passed nav-opened event emiited for opening the mobile nav. Show prop is
   // passed from parent component as a boolean value which determine which navigation to show (mobile or main nav).

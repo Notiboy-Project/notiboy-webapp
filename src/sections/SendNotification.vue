@@ -129,7 +129,6 @@ export default {
           });
         } else if (this.channelType == "bulk") {
           const channelDetails = this.getChannelDetails();
-          console.log(typeof this.mnemonic);
           if (this.mnemonic.length == 0) {
             this.$toast.open({
               message:

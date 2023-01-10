@@ -40,7 +40,7 @@ import Overlay from "@/components/MobileNav.vue";
 import WalletConnect from "@/components/Wallets.vue";
 import Loading from "vue-loading-overlay";
 import { mapGetters } from "vuex";
-import UserType from '@/components/UserType.vue';
+import UserType from "@/components/UserType.vue";
 export default {
   data() {
     return {
@@ -50,7 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["loader","userSelectOverlay"]),
+    ...mapGetters(["loader", "userSelectOverlay"]),
   },
   methods: {
     showWalletConnectOverlay() {
@@ -63,6 +63,7 @@ export default {
   },
   created() {
     this.$store.dispatch("updateAddress");
+    this.$store.dispatch("updateExisitngUserType");
   },
   components: {
     mainSidebar: Sidebar,
@@ -70,8 +71,8 @@ export default {
     // publicPane: PublicPane,
     mobileOverlay: Overlay,
     walletConnect: WalletConnect,
-    userType:UserType,
-    Loading
+    userType: UserType,
+    Loading,
   },
 };
 </script>

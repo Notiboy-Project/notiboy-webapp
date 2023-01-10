@@ -35,6 +35,19 @@
 import MyAlgoConnect from "@randlabs/myalgo-connect";
 import store from "../store";
 import { mapGetters } from "vuex";
+import algosdk from "algosdk";
+import Notiboy from "notiboy-js-sdk";
+const client = new algosdk.Algodv2(
+  "",
+  "https://testnet-api.algonode.cloud",
+  ""
+);
+const indexer = new algosdk.Indexer(
+  "",
+  "https://testnet-idx.algonode.cloud",
+  ""
+);
+const notiboy = new Notiboy(client, indexer);
 export default {
   data() {
     return {
@@ -42,7 +55,7 @@ export default {
       selectedAddress: "",
     };
   },
-  computed:{
+  computed: {
     ...mapGetters(["userType"]),
   },
   methods: {
@@ -63,7 +76,7 @@ export default {
         localStorage.setItem("notiboy_address", address);
         localStorage.setItem("wallet", "myalgo");
         store.dispatch("updateAddress");
-        store.dispatch("checkUserType",address);
+        store.dispatch("checkUserType", address);
       } catch (err) {
         return [];
       }
@@ -72,6 +85,28 @@ export default {
     async connectPeraWallet() {
       await store.dispatch("perawalletConnect");
       this.closeConnectOverlay();
+    },
+
+    async checkUserType(address) {
+      const optinState = await notiboy.getNotiboyOptinState(address);
+      const appIndex = await notiboy.getAddressAppIndex(address);
+      if (optinState == true) {
+        if (appIndex != 0) {
+          localStorage.setItem("usertype", "creator");
+          store.commit("updateUserType", "creator");
+          //router.push({name: 'SendNotification'})
+        } else {
+          localStorage.setItem("usertype", "user");
+          store.commit("updateUserType", "user");
+        }
+        store.commit("updateUserIndex", appIndex);
+      } else {
+        localStorage.setItem("usertype", "unregistered");
+        store.commit("updateUserType", "unregistered");
+        // context.commit("addRemoveUserSelectOverlay")
+        // context.commit("updateUserType","unregistered");
+        // context.commit("updateUserIndex",appIndex);
+      }
     },
 
     // Emit Event to close the wallet connect Overlay

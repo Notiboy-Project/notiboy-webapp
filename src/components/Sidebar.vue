@@ -1,16 +1,25 @@
 <template>
   <div class="sidebar-scroll">
     <ul class="sidebar-menu">
-      <router-link v-show="uesrType == 'user'" :to="{ name: 'PersonalNotification' }" @click="notiClicked">
+      <router-link
+        v-show="userType == 'user'"
+        :to="{ name: 'PersonalNotification' }"
+      >
         Noti Box
       </router-link>
-      <router-link v-show="uesrType == 'user'" :to="{ name: 'Channels' }" @click="publicClicked">
+      <router-link v-show="userType == 'user'" :to="{ name: 'Channels' }">
         Channels
       </router-link>
-      <router-link v-show="uesrType == 'creator'" :to="{ name: 'SendNotification' }" @click="sendClicked">
+      <router-link
+        v-show="userType == 'creator'"
+        :to="{ name: 'SendNotification' }"
+      >
         Send Notification
       </router-link>
-      <router-link v-show="uesrType == 'creator'" :to="{ name: 'CreateChannel' }" @click="createClicked">
+      <router-link
+        v-show="userType == 'creator'"
+        :to="{ name: 'CreateChannel' }"
+      >
         Create Channel
       </router-link>
     </ul>
@@ -20,30 +29,8 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
-  computed:{
-    ...mapGetters(["userType"])
-  },
-  // The methods to emit an event to parent (and from there to side pane) to change the dashboard.
-  methods: {
-    notiClicked() {
-      this.$emit("pane-selection", "noticlick");
-    },
-
-    publicClicked() {
-      this.$emit("pane-selection", "publicclick");
-    },
-
-    privateClicked() {
-      this.$emit("pane-selection", "privateclick");
-    },
-
-    createClicked() {
-      this.$emit("pane-selection", "createclick");
-    },
-
-    sendClicked() {
-      this.$emit("pane-selection", "sendclick");
-    },
+  computed: {
+    ...mapGetters(["userType"]),
   },
 };
 </script>
