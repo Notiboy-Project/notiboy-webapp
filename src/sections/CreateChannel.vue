@@ -19,8 +19,8 @@
     <button v-if="userAppIndex != 0" @click.prevent="deleteChannel">
       Delete Channel
     </button>
-    <p v-if="userAppIndex == 0" style="text-align: center">
-      Note: Channel name limited to 10 characters.
+    <p v-if="userAppIndex == 0" style="text-align: center; line-height:25px;">
+      Note: Channel name limited to 10 characters. <br> Cost of creating a channel is 25 USDCa.
     </p>
     <p v-if="userAppIndex != 0" style="text-align: center">
       Note: Deleting the channel will remove the records from Notiboy Smart

@@ -2,6 +2,9 @@
   <div class="dummytext_container">
     <button @click.prevent="globaloptin">Register<br />(Global Opt-in)</button>
   </div>
+  <p style="line-height:25px; font-weight:bold;">
+    Note: While global opt-in 5 algo will be sent to smart contract <br>as a fees to create box space for storing personal notifications.
+  </p>
 </template>
 
 <style scoped>

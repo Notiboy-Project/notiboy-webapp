@@ -1,12 +1,14 @@
 <template>
   <div class="create-card">
-    <h2 v-if="userType == 'creator'">
-      Public Notifications Sent: {{ notificationCounter.publicNotification }}
-    </h2>
-    <h2 v-if="userType == 'creator'">
-      Personal Notifications Sent:
-      {{ notificationCounter.personalNotification }}
-    </h2>
+    <div>
+      <h2 v-if="userType == 'creator'">
+        Public Notifications Sent: {{ notificationCounter.publicNotification }}
+      </h2>
+      <h2 v-if="userType == 'creator'">
+        Personal Notifications Sent:
+        {{ notificationCounter.personalNotification }}
+      </h2>
+    </div>
     <h2 v-if="userType == 'user'">
       Personal Notifications Received:
       {{ notificationCounter.personalNotification }}

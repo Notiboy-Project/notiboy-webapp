@@ -524,7 +524,7 @@ export default createStore({
       } catch (error) {
         context.commit("updateLoaderFalse");
         $toast.open({
-          message: "Registration unsuccessful",
+          message: "Registration unsuccessful.Check balance.",
           type: "error",
           duration: 5000,
           position: "top-right",
@@ -628,7 +628,6 @@ export default createStore({
     },
     async getCounter(context, address) {
       const notificationCounter = await notiboy.getCounter(address);
-      console.log(notificationCounter);
       context.commit("updateNotificationCounter", notificationCounter);
     },
     //Opt-in state of an address to a smartcontract
@@ -692,15 +691,7 @@ export default createStore({
           const submittedTxn = await client.sendRawTransaction(signedTxn).do();
           return submittedTxn;
         } catch (error) {
-          context.commit("updateLoaderFalse");
-          $toast.open({
-            message:
-              "Could not complete Signing transactions with Pera Wallet.",
-            type: "error",
-            duration: 5000,
-            position: "top-right",
-            dismissible: true,
-          });
+          console.log(error);
         }
       }
     },
