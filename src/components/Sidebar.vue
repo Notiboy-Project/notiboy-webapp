@@ -23,7 +23,13 @@
         v-show="userType == 'creator' && connectionStatus == 'Disconnect'"
         :to="{ name: 'CreateChannel' }"
       >
-        Create Channel
+        Channel
+      </router-link>
+      <router-link
+        v-show="userType == 'creator' && connectionStatus == 'Disconnect'"
+        :to="{ name: 'PublicBroadcast' }"
+      >
+        Broadcasts History
       </router-link>
       <router-link
         v-show="
@@ -33,6 +39,15 @@
         :to="{ name: 'NotificationCounter' }"
       >
         Notification Counter
+      </router-link>
+      <router-link
+        v-show="
+          (userType == 'creator' || userType == 'user') &&
+          connectionStatus == 'Disconnect'
+        "
+        :to="{ name: 'Guide' }"
+      >
+        Guide
       </router-link>
       <img
         v-show="connectionStatus == 'Connect'"

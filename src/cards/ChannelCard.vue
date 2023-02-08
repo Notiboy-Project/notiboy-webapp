@@ -1,10 +1,10 @@
 <template>
   <div class="channel-card">
     <div class="channel-card-details">
-      <div @click="showPublicChannel" class="channel-card-name">
-        <p class="channel-name">{{ channel.channelName }}</p>
+      <div class="channel-card-name">
+        <p class="channel-name">{{ channel.channelName }} &nbsp;</p>
         <img
-          v-if="channel.verificationStatus == 'Verified'"
+          v-if="channel.verificationStatus == 'v'"
           src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
         />
       </div>
@@ -17,29 +17,31 @@
         <p ref="address" style="padding-left: 0.4rem">{{ channel.appIndex }}</p>
       </div>
     </div>
-    <div
-      style="margin-right: 15px"
-      v-show="ishidden == false"
-      @click="checkOptinState"
-      class="optin"
-    >
-      Show Status
-    </div>
-    <div
-      style="margin-right: 15px"
-      v-if="optinStatus == false"
-      @click="channelOptin"
-      class="optin"
-    >
-      Opt-In
-    </div>
-    <div
-      style="margin-right: 15px"
-      v-if="optinStatus == true"
-      @click="channelOptout"
-      class="optin"
-    >
-      Opt-Out
+    <div class="channnel-status">
+      <div
+        style="margin-right: 15px"
+        v-if="channel.userStatus == 'optedin'"
+        @click="showPublicChannel"
+        class="optin"
+      >
+        Broadcasts
+      </div>
+      <div
+        style="margin-right: 15px"
+        v-if="channel.userStatus == 'optedout'"
+        @click="channelOptin"
+        class="optin"
+      >
+        Opt-In
+      </div>
+      <div
+        style="margin-right: 15px"
+        v-if="channel.userStatus == 'optedin'"
+        @click="channelOptout"
+        class="optin"
+      >
+        Opt-Out
+      </div>
     </div>
   </div>
 </template>
@@ -48,25 +50,10 @@
 import { mapGetters } from "vuex";
 import copy from "copy-to-clipboard";
 import store from "../store";
-import algosdk from "algosdk";
-import Notiboy from "notiboy-js-sdk";
-const client = new algosdk.Algodv2(
-  "",
-  "https://testnet-api.algonode.cloud",
-  ""
-);
-const indexer = new algosdk.Indexer(
-  "",
-  "https://testnet-idx.algonode.cloud",
-  ""
-);
-const notiboy = new Notiboy(client, indexer);
 export default {
   data() {
     return {
       channelAddress: this.channel.dappAddress,
-      ishidden: false,
-      optinStatus: Boolean,
     };
   },
   props: {
@@ -89,31 +76,23 @@ export default {
     showPublicChannel() {
       this.$router.push({
         name: "PublicNotification",
-        params: { appIndex: this.channel.appIndex },
+        params: {
+          appIndex: this.channel.appIndex,
+          name: this.channel.channelName,
+        },
       });
-    },
-    async checkOptinState() {
-      this.ishidden = true;
-      this.optinStatus = await notiboy.getChannelScOptinState(
-        this.userAddress,
-        this.channel.appIndex
-      );
     },
     channelOptin() {
       store.dispatch("userChannelOptin", {
         userAddress: this.userAddress,
         channelAppIndex: this.channel.appIndex,
       });
-      this.ishidden = false;
-      this.optinStatus = Boolean;
     },
     channelOptout() {
       store.dispatch("userChannelOptout", {
         userAddress: this.userAddress,
         channelAppIndex: this.channel.appIndex,
       });
-      this.ishidden = false;
-      this.optinStatus = Boolean;
     },
   },
 };
@@ -152,6 +131,10 @@ export default {
   justify-content: center;
   cursor: pointer;
 }
+.channnel-status {
+  display: flex;
+  flex-direction: row;
+}
 .optin {
   display: flex;
   justify-content: center;
@@ -181,6 +164,10 @@ export default {
   .channel-card {
     flex-direction: column;
     align-items: center;
+  }
+
+  .channnel-status {
+    padding-bottom: 1.5rem;
   }
 
   .optin {

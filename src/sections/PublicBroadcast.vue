@@ -1,5 +1,4 @@
 <template>
-  <h2>Channel Name : {{ channelName }}</h2>
   <personal
     v-for="notification in publicNotificationsList"
     :notification="notification"
@@ -19,7 +18,6 @@ import Personal from "@/cards/Personal.vue";
 import NoNotifications from "@/components/NoNotifications.vue";
 import Loading from "vue-loading-overlay";
 import { mapGetters } from "vuex";
-import { useRoute } from "vue-router";
 import store from "../store";
 export default {
   data() {
@@ -30,7 +28,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["publicNotifications", "searchText"]),
+    ...mapGetters(["publicNotifications", "searchText", "userAppIndex"]),
     publicNotificationsList() {
       if (this.searchText != "") {
         return this.publicNotifications.filter((notification) => {
@@ -47,11 +45,8 @@ export default {
     this.isLoading = true;
   },
   mounted() {
-    //store.dispatch("optinState");
-    const route = useRoute();
-    this.channelName = route.params.name;
     store
-      .dispatch("getPublicNotifications", route.params.appIndex)
+      .dispatch("getPublicNotifications", this.userAppIndex.channelAppIndex)
       .then(() => (this.isLoading = false));
   },
   components: {

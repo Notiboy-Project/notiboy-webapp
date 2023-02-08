@@ -5,7 +5,7 @@
       <img
         v-if="
           notification.verificationStatus &&
-          notification.verificationStatus === 'Verified'
+          notification.verificationStatus === 'v'
         "
         src="https://img.icons8.com/external-inkubators-blue-inkubators/25/000000/external-verified-ecommerce-user-interface-inkubators-blue-inkubators.png"
       />

@@ -42,6 +42,7 @@ export default {
   },
   created() {
     this.isLoading = true;
+    store.dispatch("getListOfOptinChannels", this.userAddress);
     store
       .dispatch("getPersonalNotifications", this.userAddress)
       .then(() => (this.isLoading = false));

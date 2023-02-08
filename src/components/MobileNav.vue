@@ -26,10 +26,24 @@
       >
       <router-link
         v-show="userType == 'creator'"
+        :to="{ name: 'PublicBroadcast' }"
+        @click="publicClicked"
+      >
+        Broadcasts History
+      </router-link>
+      <router-link
+        v-show="userType == 'creator'"
         :to="{ name: 'CreateChannel' }"
         @click="createClicked"
-        >Create Channels</router-link
+        >Channel</router-link
       >
+      <router-link
+        v-show="userType == 'creator' || userType == 'user'"
+        :to="{ name: 'Guide' }"
+        @click="guideClicked"
+      >
+        Guide
+      </router-link>
       <li @click="walletInteraction">{{ connectionStatus }}</li>
     </div>
   </div>
@@ -86,6 +100,10 @@ export default {
     },
 
     sendClicked() {
+      this.closeNav();
+    },
+
+    guideClicked() {
       this.closeNav();
     },
 

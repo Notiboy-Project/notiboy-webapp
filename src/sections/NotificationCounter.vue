@@ -1,18 +1,25 @@
 <template>
   <div class="create-card">
-    <div>
-      <h2 v-if="userType == 'creator'">
-        Public Notifications Sent: {{ notificationCounter.publicNotification }}
-      </h2>
-      <h2 v-if="userType == 'creator'">
-        Personal Notifications Sent:
-        {{ notificationCounter.personalNotification }}
-      </h2>
+    <div class="counter-display">
+      <div v-if="userType == 'creator'">
+        <h2>Public</h2>
+        <p class="counter-number">
+          {{ notificationCounter.publicNotification }}
+        </p>
+      </div>
+      <div v-if="userType == 'creator'" class="counter-right">
+        <h2>Personal</h2>
+        <p class="counter-number">
+          {{ notificationCounter.personalNotification }}
+        </p>
+      </div>
     </div>
-    <h2 v-if="userType == 'user'">
-      Personal Notifications Received:
-      {{ notificationCounter.personalNotification }}
-    </h2>
+    <div v-if="userType == 'user'">
+      <h2>Personal</h2>
+      <p class="counter-number">
+        {{ notificationCounter.personalNotification }}
+      </p>
+    </div>
   </div>
 </template>
 <script>
@@ -42,5 +49,16 @@ export default {
   padding-top: 8rem;
   padding-bottom: 5rem;
   font-weight: bold;
+}
+.counter-display {
+  display: flex;
+  justify-content: space-between;
+}
+.counter-number {
+  font-size: 50px;
+  text-align: center;
+}
+.counter-right {
+  margin-left: 50px;
 }
 </style>

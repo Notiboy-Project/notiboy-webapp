@@ -1,29 +1,47 @@
 <template>
   <div class="create-card">
     <input
-      v-if="userAppIndex == 0"
+      v-if="userAppIndex.channelAppIndex == 0"
       class="channel-name"
       v-model="channelName"
       maxlength="10"
       placeholder="Channel Name"
     />
-    <h2 v-if="userAppIndex != 0">
-      Channel is created with appindex {{ userAppIndex }}
+    <h2 style="line-height: 30px" v-if="userAppIndex.channelAppIndex != 0">
+      Id: {{ userAppIndex.channelAppIndex }}<br />
+      Name: {{ userAppIndex.channelName }}
     </h2>
-    <button v-if="userAppIndex == 0" @click.prevent="createChannel">
+    <button
+      v-if="userAppIndex.channelAppIndex == 0 && this.channelName.length > 0"
+      @click.prevent="createChannel"
+    >
       Create Channel
     </button>
-    <button v-if="userAppIndex != 0" @click.prevent="downloadCSVData">
-      Download Subacriber List
+    <button
+      v-if="
+        userAppIndex.channelAppIndex != 0 &&
+        this.subscriberList.length > 0 &&
+        this.subscriberList[0].length == 58
+      "
+      @click.prevent="downloadCSVData"
+    >
+      Download Subscriber List
     </button>
-    <button v-if="userAppIndex != 0" @click.prevent="deleteChannel">
+    <button
+      v-if="userAppIndex.channelAppIndex != 0"
+      @click.prevent="deleteChannel"
+    >
       Delete Channel
     </button>
-    <p v-if="userAppIndex == 0" style="text-align: center; line-height: 25px">
-      Note: Channel name limited to 10 characters. <br />
+    <p
+      v-if="userAppIndex.channelAppIndex == 0"
+      style="text-align: center; line-height: 25px"
+    >
+      Note: Enter channel name. Channel name limited to 10 english characters.
+      <br />
       Cost of creating a channel is 25 USDCa.
     </p>
-    <p v-if="userAppIndex != 0" style="text-align: center">
+    <p v-if="userAppIndex.channelAppIndex != 0" style="text-align: center">
       Note: Deleting the channel will remove the records from Notiboy Smart
       Contract.
     </p>
@@ -52,6 +70,7 @@ export default {
   },
   methods: {
     createChannel() {
+      if (this.channelName.length < 1) return;
       store.dispatch("createChannel", {
         name: this.channelName,
         address: this.userAddress,
@@ -59,7 +78,7 @@ export default {
     },
     deleteChannel() {
       store.dispatch("deleteChannel", {
-        appIndex: this.userAppIndex,
+        appIndex: this.userAppIndex.channelAppIndex,
         address: this.userAddress,
       });
     },
@@ -77,8 +96,8 @@ export default {
   created() {
     if (this.userAddress.length === 58) {
       store.dispatch("getAppIndexFromAddress");
-      if (this.userAppIndex != 0)
-        store.dispatch("getsubscriberList", this.userAppIndex);
+      if (this.userAppIndex.channelAppIndex != 0)
+        store.dispatch("getsubscriberList", this.userAppIndex.channelAppIndex);
     }
   },
 };

@@ -18,6 +18,12 @@
     />
     <div class="main-address">
       <p>{{ updatedAddress }}</p>
+      <img
+        v-if="updatedAddress.length"
+        class="copy-icon"
+        @click="copyToClipBoard()"
+        src="https://img.icons8.com/material-rounded/20/ffffff/copy.png"
+      />
     </div>
     <div @click="walletInteraction" class="wallet">
       <ul class="wallet-background">
@@ -48,6 +54,7 @@
 <script>
 import Loading from "vue-loading-overlay";
 import "vue-loading-overlay/dist/vue-loading.css";
+import copy from "copy-to-clipboard";
 import { mapGetters } from "vuex";
 import store from "../store";
 export default {
@@ -77,6 +84,9 @@ export default {
     },
     channelOptin() {
       store.dispatch("channelOptin", this.userAddress);
+    },
+    copyToClipBoard() {
+      copy(this.userAddress);
     },
     // // The method which will refresh the list of personal notifications and list of channnels on click.
     // doRefresh() {
@@ -165,6 +175,24 @@ label span {
   background-color: var(--teritary);
   padding: 0.65rem;
   cursor: pointer;
+}
+
+.main-address {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copy-icon {
+  width: 18px;
+  height: auto;
+  padding-left: 8px;
+  cursor: pointer;
+}
+
+.copy-icon:active {
+  transform: translateY(4px);
 }
 
 @media only screen and (max-width: 981px) {

@@ -3,12 +3,12 @@ import algosdk from "algosdk";
 import Notiboy from "notiboy-js-sdk";
 const client = new algosdk.Algodv2(
   "",
-  "https://testnet-api.algonode.cloud",
+  "https://mainnet-api.algonode.cloud",
   ""
 );
 const indexer = new algosdk.Indexer(
   "",
-  "https://testnet-idx.algonode.cloud",
+  "https://mainnet-idx.algonode.cloud",
   ""
 );
 const notiboy = new Notiboy(client, indexer);
@@ -41,11 +41,15 @@ export default createStore({
       loader: false,
       optinState: false,
       searchBarDefaultText: "Search",
-      userAppIndex: 0,
+      userAppIndex: {
+        channelAppIndex: 0,
+        channelName: "Null",
+      },
       userType: "",
       userSelectOverlay: false,
       notificationCounter: { personalNotification: 0, publicNotification: 0 },
       subscriberList: [],
+      channelIdList: [],
     };
   },
   getters: {
@@ -100,6 +104,9 @@ export default createStore({
     },
     subscriberList(state) {
       return state.subscriberList;
+    },
+    channelOptinIdList(state) {
+      return state.channelIdList;
     },
   },
   mutations: {
@@ -161,6 +168,9 @@ export default createStore({
     updateSubscriberList(state, subscriberList) {
       state.subscriberList = subscriberList;
     },
+    updateChannelIdList(state, channelIdList) {
+      state.channelIdList = channelIdList;
+    },
   },
   actions: {
     selectAddress(context, address) {
@@ -196,6 +206,24 @@ export default createStore({
     //Creating a channel
     async createChannel(context, channelDetails) {
       try {
+        context.commit("updateLoaderTrue");
+        const account_info = await client
+          .accountInformation(channelDetails.address)
+          .do();
+        const availableBalance = JSON.stringify(
+          account_info["amount"] - account_info["min-balance"]
+        );
+        if (availableBalance < 6000000) {
+          context.commit("updateLoaderFalse");
+          $toast.open({
+            message: "Insufficient Algo Balance.",
+            type: "error",
+            duration: 5000,
+            position: "top-right",
+            dismissible: true,
+          });
+          return;
+        }
         let appId;
         let response;
         //Creating a channel starts
@@ -206,7 +234,6 @@ export default createStore({
           "signUserGeneratedTransactions",
           [channelCreationTransaction]
         );
-        context.commit("updateLoaderTrue");
         response = await algosdk.waitForConfirmation(
           client,
           submittedTxn.txId.toString(),
@@ -221,11 +248,12 @@ export default createStore({
               appId,
               channelDetails.name
             );
-
+          context.commit("updateLoaderFalse");
           const submittedTxn = await context.dispatch(
             "signUserGeneratedTransactions",
             channelRegistrationTransaction
           );
+          context.commit("updateLoaderTrue");
           await algosdk.waitForConfirmation(
             client,
             submittedTxn.txId.toString(),
@@ -233,6 +261,7 @@ export default createStore({
           );
           //Channel Registration Ends
           context.dispatch("getAppIndexFromAddress");
+          router.push({ name: "SendNotification" });
           context.commit("updateLoaderFalse");
 
           $toast.open({
@@ -245,7 +274,8 @@ export default createStore({
         } catch (error) {
           context.commit("updateLoaderFalse");
           $toast.open({
-            message: "Could not complete channel registration.",
+            message:
+              "Could not complete channel registration. Check balance or length of channel name.",
             type: "error",
             duration: 5000,
             position: "top-right",
@@ -256,7 +286,7 @@ export default createStore({
         context.commit("updateLoaderFalse");
         $toast.open({
           message:
-            "Channel not created. Check minimum balance requirement or it may be an internal error.",
+            "Channel not created. Check asset balance or it may be an internal error.",
           type: "error",
           duration: 5000,
           position: "top-right",
@@ -267,12 +297,15 @@ export default createStore({
     //Deleting a channel
     async deleteChannel(context, userDetails) {
       context.commit("updateLoaderTrue");
-      context.dispatch("getAppIndexFromAddress");
+      await context.dispatch("getAppIndexFromAddress");
       let channelDetails;
       let submittedTxn;
       try {
         for (let i = 0; i < context.state.channels.length; i++) {
-          if (context.state.channels[i].appIndex == userDetails.appIndex) {
+          if (
+            context.state.channels[i].appIndex ==
+            context.state.userAppIndex.channelAppIndex
+          ) {
             channelDetails = context.state.channels[i];
           }
         }
@@ -282,15 +315,18 @@ export default createStore({
           channelDetails.channelName,
           channelDetails.channelIndex
         );
+        context.commit("updateLoaderFalse");
         submittedTxn = await context.dispatch(
           "signUserGeneratedTransactions",
           notiboyOptoutTxn
         );
+        context.commit("updateLoaderTrue");
         await algosdk.waitForConfirmation(
           client,
           submittedTxn.txId.toString(),
           4
         );
+        context.dispatch("getAppIndexFromAddress");
         context.commit("updateLoaderFalse");
         $toast.open({
           message: "Channel unregistered.",
@@ -325,18 +361,20 @@ export default createStore({
     //send public notifications
     async sendPublicNotification(context, channelDetails) {
       try {
+        context.commit("updateLoaderTrue");
         const publicNotification = await notiboy
           .notification()
           .sendPublicNotification(
             channelDetails.address,
-            context.state.userAppIndex,
+            context.state.userAppIndex.channelAppIndex,
             channelDetails.notification
           );
-        context.commit("updateLoaderTrue");
+        context.commit("updateLoaderFalse");
         const submittedTxn = await context.dispatch(
           "signUserGeneratedTransactions",
           [publicNotification]
         );
+        context.commit("updateLoaderTrue");
         await algosdk.waitForConfirmation(
           client,
           submittedTxn.txId.toString(),
@@ -374,10 +412,12 @@ export default createStore({
             notificationDetails.channelName,
             notificationDetails.notification
           );
+        context.commit("updateLoaderFalse");
         const submittedTxn = await context.dispatch(
           "signUserGeneratedTransactions",
           [personalNotification]
         );
+        context.commit("updateLoaderTrue");
         await algosdk.waitForConfirmation(
           client,
           submittedTxn.txId.toString(),
@@ -405,6 +445,7 @@ export default createStore({
     //send bulk personal notifications
     async sendBulkPersonalNotification(context, notificationDetails) {
       try {
+        context.commit("updateLoaderTrue");
         const mnemonic = notificationDetails.mnemonic
           .replace(/[, ]+/g, " ")
           .trim();
@@ -422,7 +463,6 @@ export default createStore({
                 notificationDetails.channelName,
                 notificationDetails.receiverDetails[i].Notification
               );
-            context.commit("updateLoaderFalse");
             const submittedTxn = await client
               .sendRawTransaction(personalNotification.signTxn(secretKey))
               .do();
@@ -431,6 +471,7 @@ export default createStore({
               submittedTxn.txId.toString(),
               4
             );
+            context.commit("updateLoaderFalse");
             $toast.open({
               message: `Personal Notification ${i + 1} Sent.`,
               type: "success",
@@ -439,6 +480,14 @@ export default createStore({
               dismissible: true,
             });
           } catch (error) {
+            context.commit("updateLoaderFalse");
+            $toast.open({
+              message: `Wrong Mnemonic or Internal Error.`,
+              type: "error",
+              duration: 5000,
+              position: "top-right",
+              dismissible: true,
+            });
             continue;
           }
         }
@@ -456,6 +505,7 @@ export default createStore({
     async getPersonalNotifications(context, userAddress) {
       try {
         await context.dispatch("getChannelList");
+        context.commit("updateLoaderTrue");
         let personalNotifications = await notiboy
           .notification()
           .getPersonalNotification(userAddress);
@@ -471,7 +521,7 @@ export default createStore({
             ) {
               sortedPersonalNotifications[i].channelName =
                 context.state.channels[j].channelName;
-              sortedPersonalNotifications[i].verificationStatus = "Verified";
+              sortedPersonalNotifications[i].verificationStatus = "v";
             } else if (
               sortedPersonalNotifications[i].appIndex ===
                 context.state.channels[j].appIndex &&
@@ -479,7 +529,7 @@ export default createStore({
             ) {
               sortedPersonalNotifications[i].channelName =
                 context.state.channels[j].channelName;
-              sortedPersonalNotifications[i].verificationStatus = "unVerified";
+              sortedPersonalNotifications[i].verificationStatus = "u";
             }
           }
         }
@@ -487,7 +537,9 @@ export default createStore({
           "updatePersonalNotifications",
           sortedPersonalNotifications
         );
+        context.commit("updateLoaderFalse");
       } catch (error) {
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Something Went Wrong",
           type: "error",
@@ -497,16 +549,32 @@ export default createStore({
         });
       }
     },
-    //End User Global optin
+    //start User Global optin
     async userGlobalOptin(context, userAddress) {
       try {
         context.commit("updateLoaderTrue");
+        const account_info = await client.accountInformation(userAddress).do();
+        const availableBalance = JSON.stringify(
+          account_info["amount"] - account_info["min-balance"]
+        );
+        if (availableBalance < 6000000) {
+          context.commit("updateLoaderFalse");
+          $toast.open({
+            message: "Insufficient Algo Balance.",
+            type: "error",
+            duration: 5000,
+            position: "top-right",
+            dismissible: true,
+          });
+          return;
+        }
         const userGlobalOptin = await notiboy.userContractOptin(userAddress);
-
+        context.commit("updateLoaderFalse");
         const submittedTxn = await context.dispatch(
           "signUserGeneratedTransactions",
           userGlobalOptin
         );
+        context.commit("updateLoaderTrue");
         await algosdk.waitForConfirmation(
           client,
           submittedTxn.txId.toString(),
@@ -524,7 +592,7 @@ export default createStore({
       } catch (error) {
         context.commit("updateLoaderFalse");
         $toast.open({
-          message: "Registration unsuccessful.Check balance.",
+          message: "Registration unsuccessful. Process interruption.",
           type: "error",
           duration: 5000,
           position: "top-right",
@@ -540,16 +608,22 @@ export default createStore({
           userDetails.userAddress,
           userDetails.channelAppIndex
         );
-
+        context.commit("updateLoaderFalse");
         const submittedTxn = await context.dispatch(
           "signUserGeneratedTransactions",
           [channelOptinTxn]
         );
+        context.commit("updateLoaderTrue");
         await algosdk.waitForConfirmation(
           client,
           submittedTxn.txId.toString(),
           4
         );
+        await context.dispatch(
+          "getListOfOptinChannels",
+          userDetails.userAddress
+        );
+        await context.dispatch("getChannelList");
         context.commit("updateLoaderFalse");
         $toast.open({
           message: "Opted Into Channel",
@@ -561,7 +635,7 @@ export default createStore({
       } catch (error) {
         context.commit("updateLoaderFalse");
         $toast.open({
-          message: "Opt-in Unsuccessful.",
+          message: "Opt-in Unsuccessful. Check Balance.",
           type: "error",
           duration: 5000,
           position: "top-right",
@@ -577,16 +651,22 @@ export default createStore({
           userDetails.userAddress,
           userDetails.channelAppIndex
         );
-
+        context.commit("updateLoaderFalse");
         const submittedTxn = await context.dispatch(
           "signUserGeneratedTransactions",
           [channelOptoutTxn]
         );
+        context.commit("updateLoaderTrue");
         await algosdk.waitForConfirmation(
           client,
           submittedTxn.txId.toString(),
           4
         );
+        await context.dispatch(
+          "getListOfOptinChannels",
+          userDetails.userAddress
+        );
+        await context.dispatch("getChannelList");
         context.commit("updateLoaderFalse");
         $toast.open({
           message: "Opted out of Channel",
@@ -609,6 +689,7 @@ export default createStore({
     //Get public notifications
     async getPublicNotifications(context, appIndex) {
       try {
+        context.commit("updateLoaderTrue");
         const publicNotifications = await notiboy
           .notification()
           .getPublicNotification(appIndex);
@@ -616,7 +697,9 @@ export default createStore({
           (a, b) => b.index - a.index
         );
         context.commit("updatePublicNotifications", sortedPublicNotifications);
+        context.commit("updateLoaderFalse");
       } catch (error) {
+        context.commit("updateLoaderFalse");
         $toast.open({
           message: "Something Went Wrong",
           type: "error",
@@ -673,14 +756,6 @@ export default createStore({
           return submittedTxn;
         } catch (error) {
           context.commit("updateLoaderFalse");
-          $toast.open({
-            message:
-              "Could not complete Signing transactions with My Algo Wallet.",
-            type: "error",
-            duration: 5000,
-            position: "top-right",
-            dismissible: true,
-          });
         }
       } else if (selectedWallet == "pera") {
         await context.dispatch("reconnectSession");
@@ -708,7 +783,7 @@ export default createStore({
       const optinState = await notiboy.getNotiboyOptinState(address);
       const appIndex = await notiboy.getAddressAppIndex(address);
       if (optinState == true) {
-        if (appIndex != 0) {
+        if (appIndex.channelAppIndex != 0) {
           localStorage.setItem("usertype", "creator");
           context.commit("updateUserType", "creator");
           router.push({ name: "SendNotification" });
@@ -744,6 +819,17 @@ export default createStore({
     async getsubscriberList(context, appIndex) {
       const subscriberList = await notiboy.getOptinAddressList(appIndex);
       context.commit("updateSubscriberList", subscriberList);
+    },
+    //Create a hash map of list of channel sc to which the user has opted in
+    async getListOfOptinChannels(context, address) {
+      const localState = await indexer
+        .lookupAccountAppLocalStates(address)
+        .do();
+      let channelIdList = new Map();
+      for (let i = 0; i < localState["apps-local-states"].length; i++) {
+        channelIdList.set(localState["apps-local-states"][i]["id"], "-1");
+      }
+      context.commit("updateChannelIdList", channelIdList);
     },
   },
   modules: {},

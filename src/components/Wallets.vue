@@ -39,12 +39,12 @@ import algosdk from "algosdk";
 import Notiboy from "notiboy-js-sdk";
 const client = new algosdk.Algodv2(
   "",
-  "https://testnet-api.algonode.cloud",
+  "https://mainnet-api.algonode.cloud",
   ""
 );
 const indexer = new algosdk.Indexer(
   "",
-  "https://testnet-idx.algonode.cloud",
+  "https://mainnet-idx.algonode.cloud",
   ""
 );
 const notiboy = new Notiboy(client, indexer);

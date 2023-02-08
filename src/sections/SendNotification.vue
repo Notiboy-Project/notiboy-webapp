@@ -40,18 +40,36 @@
       />
     </Transition>
     <Transition>
-      <textarea
-        v-model="notification"
-        v-if="channelType != 'bulk'"
-        placeholder="Please enter the notification"
-        style="resize: none"
-        id="w3review"
-        name="w3review"
-      ></textarea>
+      <div class="publicTextarea" v-if="channelType == 'public'">
+        <textarea
+          v-model="publicNotification"
+          placeholder="Please enter the notification"
+          style="resize: none"
+          id="w3review"
+          name="w3review"
+          maxlength="120"
+        ></textarea>
+        <p>{{ publicNotification.length }}/120</p>
+      </div>
+    </Transition>
+    <Transition>
+      <div class="publicTextarea" v-if="channelType == 'personal'">
+        <textarea
+          v-model="personalNotification"
+          placeholder="Please enter the notification"
+          style="resize: none"
+          id="w3review"
+          name="w3review"
+          maxlength="280"
+        ></textarea>
+        <p>{{ personalNotification.length }}/280</p>
+      </div>
     </Transition>
     <div class="filedetails" v-if="channelType == 'bulk'">
       Please use this csv file template to upload receiver details:
-      <a href="/files/uploadfile.csv" download="uploadfile.csv">Upload File</a>
+      <a href="/files/uploadfile.csv" download="uploadfile.csv"
+        >File Template</a
+      >
     </div>
     <div class="send-buttons">
       <div v-if="channelType == 'bulk'" class="send-buttons_upload">
@@ -74,11 +92,11 @@
       <button @click.prevent="sendNotification">Send Notification</button>
     </div>
     <p style="line-height: 20px">
-      Note: Public notifications limited to 180 characters and Personal
+      Note: Public notifications limited to 120 characters and Personal
       notifications limited to 280 characters.<br />
       <span v-if="channelType == 'bulk'"
-        >Mnemonic will be stored temporarily in the browser and will be removed
-        once you close the browser tab.</span
+        >Mnemonic will be stored temporarily in the browser and removed when you
+        move to another page or close your browser.</span
       >
     </p>
   </div>
@@ -91,7 +109,8 @@ export default {
   data() {
     return {
       channelType: "",
-      notification: "",
+      publicNotification: "",
+      personalNotification: "",
       selectedChannel: [],
       filters: [],
       receiverAddress: "",
@@ -111,12 +130,12 @@ export default {
   methods: {
     sendNotification() {
       try {
-        if (this.userAppIndex == 0) throw Error;
+        if (this.userAppIndex.channelAppIndex == 0) throw Error;
         if (this.channelType == "public") {
           store.dispatch("sendPublicNotification", {
             address: this.userAddress,
             channelName: this.selectedChannel,
-            notification: this.notification,
+            notification: this.publicNotification,
           });
         } else if (this.channelType == "personal") {
           const channelDetails = this.getChannelDetails();
@@ -125,11 +144,13 @@ export default {
             receiverAddress: this.receiverAddress,
             channelAppIndex: channelDetails.appIndex,
             channelName: channelDetails.channelName,
-            notification: this.notification,
+            notification: this.personalNotification,
           });
         } else if (this.channelType == "bulk") {
+          store.commit("updateLoaderTrue");
           const channelDetails = this.getChannelDetails();
           if (this.mnemonic.length == 0) {
+            store.commit("updateLoaderFalse");
             this.$toast.open({
               message:
                 "Wallets cannot process bulk signing. Please input mnemonic to sign transactions.",
@@ -178,7 +199,7 @@ export default {
     },
     getChannelDetails() {
       for (let i = 0; i < this.channels.length; i++) {
-        if (this.channels[i].appIndex == this.userAppIndex) {
+        if (this.channels[i].appIndex == this.userAppIndex.channelAppIndex) {
           return this.channels[i];
         }
       }
@@ -235,6 +256,7 @@ select option {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-bottom: 15px;
 }
 
 .channel-type-private {
@@ -264,7 +286,11 @@ select option {
   width: 30rem;
   height: 3rem;
 }
-
+.publicTextarea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 textarea {
   background-color: var(--primary);
   color: white;
@@ -435,8 +461,9 @@ input[type="radio"]:not(:checked)::before {
 @media only screen and (max-width: 526px) {
   .channel-type {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .channel-type-public {
     padding-left: 3rem;

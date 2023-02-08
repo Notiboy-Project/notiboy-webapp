@@ -7,7 +7,20 @@
     fees to create box space for storing personal notifications.
   </p>
 </template>
-
+<script>
+import store from "../store";
+import { mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters(["userAddress"]),
+  },
+  methods: {
+    globaloptin() {
+      store.dispatch("userGlobalOptin", this.userAddress);
+    },
+  },
+};
+</script>
 <style scoped>
 .dummytext_container {
   display: flex;

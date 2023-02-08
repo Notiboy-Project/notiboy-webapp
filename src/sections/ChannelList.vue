@@ -1,5 +1,5 @@
 <template>
-  <global-optin v-if="optinState == false" @click="globaloptin"></global-optin>
+  <global-optin v-if="optinState == false"></global-optin>
   <div class="channel-container" v-if="optinState == true">
     <channel-card
       v-for="channel in channelList"
@@ -14,23 +14,42 @@ import GlobalOptin from "@/cards/GlobalOptin.vue";
 import { mapGetters } from "vuex";
 import store from "../store";
 export default {
+  data() {
+    return {
+      channelList: [],
+    };
+  },
   computed: {
-    ...mapGetters(["userAddress", "searchText", "channels", "optinState"]),
-    channelList() {
+    ...mapGetters([
+      "userAddress",
+      "searchText",
+      "channels",
+      "optinState",
+      "channelOptinIdList",
+    ]),
+  },
+  //comparing
+  watch: {
+    channels() {
+      for (let i = 0; i < this.channels.length; i++) {
+        if (
+          this.channelOptinIdList &&
+          this.channelOptinIdList.get(this.channels[i].appIndex)
+        ) {
+          this.channels[i].userStatus = "optedin";
+        } else {
+          this.channels[i].userStatus = "optedout";
+        }
+      }
       if (this.searchText != "") {
-        return this.channels.filter((channel) => {
+        this.channelList = this.channels.filter((channel) => {
           return channel.channelName
             .toLowerCase()
             .includes(this.searchText.toLowerCase());
         });
       } else {
-        return this.channels;
+        this.channelList = this.channels;
       }
-    },
-  },
-  methods: {
-    globaloptin() {
-      store.dispatch("userGlobalOptin", this.userAddress);
     },
   },
   created() {

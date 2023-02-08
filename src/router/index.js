@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import PersonalNotification from "../sections/PersonalNotification.vue";
 import PublicNotification from "../sections/PublicNotification.vue";
+import PublicBroadcast from "../sections/PublicBroadcast.vue";
 import Channels from "../sections/ChannelList.vue";
 import SendNotification from "../sections/SendNotification.vue";
 import CreateChannel from "../sections/CreateChannel.vue";
 import NotificationCounter from "../sections/NotificationCounter.vue";
+import Guide from "../sections/Guide.vue";
 import NotFound from "../views/404.vue";
 import store from "../store";
 
@@ -29,9 +31,17 @@ const routes = [
     },
   },
   {
-    path: "/notification/public/:appIndex",
+    path: "/notification/public/:appIndex/:name",
     name: "PublicNotification",
     component: PublicNotification,
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", true);
+    },
+  },
+  {
+    path: "/notification/public",
+    name: "PublicBroadcast",
+    component: PublicBroadcast,
     beforeEnter: () => {
       store.commit("updateSearchBarStatus", true);
     },
@@ -56,6 +66,14 @@ const routes = [
     path: "/notification/counter",
     name: "NotificationCounter",
     component: NotificationCounter,
+    beforeEnter: () => {
+      store.commit("updateSearchBarStatus", false);
+    },
+  },
+  {
+    path: "/notification/guide",
+    name: "Guide",
+    component: Guide,
     beforeEnter: () => {
       store.commit("updateSearchBarStatus", false);
     },
